@@ -1,11 +1,13 @@
 ﻿using SeaBattle.Model;
 using SeaBattle.Resource;
+using SeaBattle.View.Pages;
 using SeaBattle.View.Windows;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using static System.Net.Mime.MediaTypeNames;
@@ -20,6 +22,7 @@ namespace SeaBattle.ViewModel
         #region Private Data
         private RulesWindow RulesWindow = new RulesWindow();
         private ObservableCollection<Ship> _ships = new ObservableCollection<Ship>();
+        private Page _CurrentPage;
 
         #endregion
 
@@ -29,9 +32,16 @@ namespace SeaBattle.ViewModel
             get => _ships;
             set => Set(ref _ships, value);
         }
+        public Page CurrentPage
+        {
+            get => _CurrentPage;
+            set => Set(ref _CurrentPage, value);
+        }
+
 
         public ICommand ExitCommand { get; set; }
         public ICommand RulesCommand { get; set; }
+        public Page LoginPage { get; set; } = new LoginPage();
 
         #endregion
         #endregion
@@ -41,7 +51,7 @@ namespace SeaBattle.ViewModel
             ExitCommand = new Command(ExitCommandAction, CanUseExitCommand);
             RulesCommand = new Command(RulesCommandAction, CanUseRulesCommand);
 
-
+            CurrentPage = LoginPage;
             for (int i = 0; i < 121; i++)
             {
                 Ships.Add(new Ship()
