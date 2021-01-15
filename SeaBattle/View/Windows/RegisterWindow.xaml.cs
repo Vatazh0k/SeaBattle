@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SeaBattle.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows;
@@ -19,7 +20,11 @@ namespace SeaBattle.View.Windows
     {
         public RegisterWindow()
         {
+            var vm = new RegisterWindowViewModel(this);
+            DataContext = vm;
             InitializeComponent();
         }
+
+
     }
 }
