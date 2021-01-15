@@ -7,11 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Model\" />
-    <Folder Include="Resource\" />
-    <Folder Include="ViewModel\" />
     <Folder Include="View\Pages\" />
-    <Folder Include="View\Windows\" />
   </ItemGroup>
 
 </Project>
