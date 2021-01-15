@@ -6,7 +6,7 @@ using System.Windows.Media;
 
 namespace SeaBattle.Model
 {
-    class Ship
+    public class Ship
     {
         public string Content { get; set; }
         public Brush Color { get; set; }

@@ -8,9 +8,6 @@
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="LoginPage">
-    <Page.DataContext>
-        <vm:LoginPageViewModel/>
-    </Page.DataContext>
     
     <Page.Resources>
         <Style TargetType="Button" x:Key="LightweightButton">
@@ -94,7 +91,7 @@
                     Foreground="Blue" Margin="0,248,121,0"
                     Style="{StaticResource LightweightButton}"
                     FontFamily="MV Boli" Height="33"
-                    Command="{Binding ShowRegisterWindowCommand}" Width="56">
+                    Command="{Binding RegCommand}" Width="56">
             <Underline>Create</Underline>
         </Button>
 
@@ -106,7 +103,7 @@
                     FontFamily="MV Boli"
                  VerticalAlignment="Top"
                 HorizontalAlignment="Right"
-                Command="{Binding LogInGame}" Width="67" Height="27">
+                Command="{Binding LoginCommand}" Width="67" Height="27">
 
         </Button>
     </Grid>

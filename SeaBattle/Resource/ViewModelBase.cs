@@ -6,7 +6,7 @@ using System.Text;
 
 namespace SeaBattle.Resource
 {
-    class ViewModelBase : INotifyPropertyChanged
+    public class ViewModelBase : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 

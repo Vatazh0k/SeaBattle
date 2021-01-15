@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SeaBattle.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows;
@@ -18,8 +19,16 @@ namespace SeaBattle.View.Pages
     /// </summary>
     public partial class LoginPage : Page
     {
+        private MainWindowViewModel mainWindowViewModel;
+
         public LoginPage()
+        { }
+
+        public LoginPage(MainWindowViewModel mainWindowViewModel)
         {
+            this.mainWindowViewModel = mainWindowViewModel;
+            var vm = new LoginPageViewModel(mainWindowViewModel);
+            DataContext = vm;
             InitializeComponent();
         }
     }

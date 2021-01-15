@@ -14,7 +14,7 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace SeaBattle.ViewModel
 {
-    class MainWindowViewModel : ViewModelBase
+    public class MainWindowViewModel : ViewModelBase
     {
 
         #region Data
@@ -41,7 +41,7 @@ namespace SeaBattle.ViewModel
 
         public ICommand ExitCommand { get; set; }
         public ICommand RulesCommand { get; set; }
-        public Page LoginPage { get; set; } = new LoginPage();
+        public Page LoginPage { get; set; }
 
         #endregion
         #endregion
@@ -51,6 +51,7 @@ namespace SeaBattle.ViewModel
             ExitCommand = new Command(ExitCommandAction, CanUseExitCommand);
             RulesCommand = new Command(RulesCommandAction, CanUseRulesCommand);
 
+            LoginPage = new LoginPage(this);
             CurrentPage = LoginPage;
             for (int i = 0; i < 121; i++)
             {
