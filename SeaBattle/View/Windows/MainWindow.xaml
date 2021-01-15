@@ -73,8 +73,8 @@
 
 
             <Grid x:Name="Field"
-            Width="394"
-              Height="380"
+            Width="395"
+              Height="390"
               VerticalAlignment="Top"
               HorizontalAlignment="Left"
               Margin="20,40,0,0">
