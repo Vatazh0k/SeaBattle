@@ -6,4 +6,26 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="Resource\Images\DoubleDeckShip.png" />
+    <None Remove="Resource\Images\FourDeckShip.png" />
+    <None Remove="Resource\Images\OneDeckShip.png" />
+    <None Remove="Resource\Images\ThrieDeckShip.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resource\Images\DoubleDeckShip.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resource\Images\FourDeckShip.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resource\Images\OneDeckShip.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resource\Images\ThrieDeckShip.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+
 </Project>

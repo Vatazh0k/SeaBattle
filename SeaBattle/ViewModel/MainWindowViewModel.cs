@@ -20,6 +20,7 @@ namespace SeaBattle.ViewModel
         #region Data
 
         #region Private Data
+        private ShipSelectionWindow selectionWindow;
         private RulesWindow RulesWindow = new RulesWindow();
         private ObservableCollection<Ship> _ships = new ObservableCollection<Ship>();
         private Page _CurrentPage;
@@ -73,9 +74,9 @@ namespace SeaBattle.ViewModel
         private bool CanUseRulesCommand(object p) => true;
         private bool CanUseCreatingShipsCommand(object p)
         {
-            if (CurrentPage is FieldCreatingPage)
+           // if (CurrentPage is FieldCreatingPage)
                 return true;
-            return false;
+          //  return false;
         }
 
         #endregion
@@ -90,7 +91,10 @@ namespace SeaBattle.ViewModel
             RulesWindow.ShowDialog();
         }
         private void CreatingShipsCommandAction(object p)
-        { }
+        {
+            selectionWindow = new ShipSelectionWindow(this);
+            selectionWindow.ShowDialog();
+        }
 
         #endregion
 
