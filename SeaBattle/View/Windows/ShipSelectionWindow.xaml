@@ -33,7 +33,7 @@
         </Grid.RowDefinitions>
 
         <Button x:Name="s1"
-                 Command="{Binding NewShipCreating}"
+                 Command="{Binding NewShipAssignmentCommand}"
                  CommandParameter="{Binding Name, RelativeSource={RelativeSource self}}"
                  Grid.Column="0" Grid.Row="1"
                  Style="{StaticResource LightweightButton}" Margin="0,8">
@@ -41,7 +41,7 @@
         </Button>
 
         <Button  x:Name="s2"
-                 Command="{Binding NewShipCreating}"
+                 Command="{Binding NewShipAssignmentCommand}"
                  CommandParameter="{Binding Name, RelativeSource={RelativeSource self}}"
                  Grid.Column="0" Grid.Row="2"
                  Style="{StaticResource LightweightButton}" Margin="0,8">
@@ -49,7 +49,7 @@
         </Button>
 
         <Button  x:Name="s3"
-                 Command="{Binding NewShipCreating}"
+                 Command="{Binding NewShipAssignmentCommand}"
                  CommandParameter="{Binding Name, RelativeSource={RelativeSource self}}"
                  Grid.Column="0" Grid.Row="3"
                  Style="{StaticResource LightweightButton}" Margin="0,8">
@@ -57,7 +57,7 @@
         </Button>
 
         <Button  x:Name="s4"
-                 Command="{Binding NewShipCreating}"
+                 Command="{Binding NewShipAssignmentCommand}"
                  CommandParameter="{Binding Name, RelativeSource={RelativeSource self}}"
                 Grid.Column="0" Grid.Row="4"
                  Style="{StaticResource LightweightButton}" Margin="0,8">
@@ -66,28 +66,28 @@
 
 
         <Label Grid.Row="1" Grid.Column="1"
-               Content="4"
+               Content="{Binding OneDeckShip}"
                FontSize="20"
                VerticalContentAlignment="Center"
                HorizontalContentAlignment="Center"/>
 
 
         <Label Grid.Row="2" Grid.Column="1"
-               Content="3"
+               Content="{Binding TwoDeckShip}"
                FontSize="20"
                VerticalContentAlignment="Center"
                HorizontalContentAlignment="Center"/>
 
         
         <Label Grid.Row="3" Grid.Column="1"
-               Content="2"
+               Content="{Binding ThrieDeckShip}"
                FontSize="20"
                VerticalContentAlignment="Center"
                HorizontalContentAlignment="Center"/>
 
         
         <Label Grid.Row="4" Grid.Column="1"
-               Content="1"
+               Content="{Binding FourDeckShip}"
                FontSize="20"
                VerticalContentAlignment="Center"
                HorizontalContentAlignment="Center"/>

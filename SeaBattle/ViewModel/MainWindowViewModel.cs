@@ -25,6 +25,13 @@ namespace SeaBattle.ViewModel
         private ObservableCollection<Ship> _ships = new ObservableCollection<Ship>();
         private Page _CurrentPage;
 
+        private int _oneDeckShip = 4;
+        private int _twoDeckShip = 3;
+        private int _thireDeckShip = 2;
+        private int _fourDeckShip = 1;
+
+        private string cellNumber;
+
         #endregion
 
         #region PUblic Data
@@ -39,7 +46,29 @@ namespace SeaBattle.ViewModel
             set => Set(ref _CurrentPage, value);
         }
 
+        public int OneDeckShip
+        {
+            get { return _oneDeckShip; }
+            set => Set(ref _oneDeckShip, value);
+        }
+        public int TwoDeckShip
+        {
+            get { return _twoDeckShip; }
+            set => Set(ref _twoDeckShip, value);
+        }
+        public int ThrieDeckShip
+        {
+            get { return _thireDeckShip; }
+            set => Set(ref _thireDeckShip, value);
+        }
+        public int FourDeckShip
+        {
+            get { return _fourDeckShip; }
+            set => Set(ref _fourDeckShip, value);
+        }
 
+
+        public ICommand NewShipAssignmentCommand { get; set; }
         public ICommand ExitCommand { get; set; }
         public ICommand RulesCommand { get; set; }
         public ICommand CreatingShipsCommand { get; set; }
@@ -53,6 +82,7 @@ namespace SeaBattle.ViewModel
             CreatingShipsCommand = new Command(CreatingShipsCommandAction, CanUseCreatingShipsCommand);
             ExitCommand = new Command(ExitCommandAction, CanUseExitCommand);
             RulesCommand = new Command(RulesCommandAction, CanUseRulesCommand);
+            NewShipAssignmentCommand = new Command(NewShipAssignmentCommandAction, CanUseNewShipAssignmentCommand);
 
             LoginPage = new LoginPage(this);
             CurrentPage = LoginPage;
@@ -70,6 +100,7 @@ namespace SeaBattle.ViewModel
 
         #region CanUseCommands
 
+        private bool CanUseNewShipAssignmentCommand(object p) => true;
         private bool CanUseExitCommand(object p) => true;
         private bool CanUseRulesCommand(object p) => true;
         private bool CanUseCreatingShipsCommand(object p)
@@ -92,8 +123,26 @@ namespace SeaBattle.ViewModel
         }
         private void CreatingShipsCommandAction(object p)
         {
+            cellNumber = null;
+            for (int i = 1; i < p.ToString().Length; i++)
+            {
+                cellNumber += p.ToString()[i];
+            }
+
             selectionWindow = new ShipSelectionWindow(this);
             selectionWindow.ShowDialog();
+        }
+
+        private void NewShipAssignmentCommandAction(object p)
+        {
+            int Cell = Convert.ToInt32(cellNumber);
+            Ships[Cell] = new Ship
+            {
+                Content = "O",
+                Color = new SolidColorBrush(Colors.Red),
+                Border = new Thickness(1)
+            };
+            selectionWindow.Close();
         }
 
         #endregion
