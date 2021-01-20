@@ -105,9 +105,9 @@ namespace SeaBattle.ViewModel
         private bool CanUseRulesCommand(object p) => true;
         private bool CanUseCreatingShipsCommand(object p)
         {
-           // if (CurrentPage is FieldCreatingPage)
+            if (CurrentPage is FieldCreatingPage)
                 return true;
-          //  return false;
+            return false;
         }
 
         #endregion
@@ -136,12 +136,20 @@ namespace SeaBattle.ViewModel
         private void NewShipAssignmentCommandAction(object p)
         {
             int Cell = Convert.ToInt32(cellNumber);
-            Ships[Cell] = new Ship
+
+            if (p.ToString() is "s1")
             {
-                Content = "O",
-                Color = new SolidColorBrush(Colors.Red),
-                Border = new Thickness(1)
-            };
+                if (OneDeckShip is 0) return;
+
+                Ships[Cell] = new Ship
+                {
+                    Content = "O",
+                    Color = new SolidColorBrush(Colors.Red),
+                    Border = new Thickness(1)
+                };
+                OneDeckShip--;
+            }
+
             selectionWindow.Close();
         }
 
