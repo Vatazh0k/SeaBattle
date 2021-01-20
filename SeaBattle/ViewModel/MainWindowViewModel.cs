@@ -41,6 +41,7 @@ namespace SeaBattle.ViewModel
 
         public ICommand ExitCommand { get; set; }
         public ICommand RulesCommand { get; set; }
+        public ICommand CreatingShipsCommand { get; set; }
         public Page LoginPage { get; set; }
 
         #endregion
@@ -48,11 +49,13 @@ namespace SeaBattle.ViewModel
 
         public MainWindowViewModel()
         {
+            CreatingShipsCommand = new Command(CreatingShipsCommandAction, CanUseCreatingShipsCommand);
             ExitCommand = new Command(ExitCommandAction, CanUseExitCommand);
             RulesCommand = new Command(RulesCommandAction, CanUseRulesCommand);
 
             LoginPage = new LoginPage(this);
             CurrentPage = LoginPage;
+
             for (int i = 0; i < 121; i++)
             {
                 Ships.Add(new Ship()
@@ -68,6 +71,12 @@ namespace SeaBattle.ViewModel
 
         private bool CanUseExitCommand(object p) => true;
         private bool CanUseRulesCommand(object p) => true;
+        private bool CanUseCreatingShipsCommand(object p)
+        {
+            if (CurrentPage is FieldCreatingPage)
+                return true;
+            return false;
+        }
 
         #endregion
 
@@ -80,6 +89,8 @@ namespace SeaBattle.ViewModel
         {
             RulesWindow.ShowDialog();
         }
+        private void CreatingShipsCommandAction(object p)
+        { }
 
         #endregion
 

@@ -1,4 +1,5 @@
 ﻿using SeaBattle.Resource;
+using SeaBattle.View.Pages;
 using SeaBattle.View.Windows;
 using System;
 using System.Collections.Generic;
@@ -16,6 +17,7 @@ namespace SeaBattle.ViewModel
         private string _password;
         private MainWindowViewModel mainWindowViewModel;
         private RegisterWindow registerWindow;
+        private Page StartMenuePage;
 
         public string Login
         {
@@ -39,10 +41,20 @@ namespace SeaBattle.ViewModel
         {
             this.mainWindowViewModel = mainWindowViewModel;
             RegCommand = new Command(RegCommandAction, CanUseRegCommand);
+            LoginCommand = new Command(LoginCommandAction, CanUseLoginCommand);
         }
 
         private bool CanUseRegCommand(object p) => true;
+        private bool CanUseLoginCommand(object p)
+        {
+            if (String.IsNullOrWhiteSpace(Login) && String.IsNullOrWhiteSpace(Password)) return false; return true;
+        }
 
+        private void LoginCommandAction(object p)
+        { //TODO: DB;
+            StartMenuePage = new StartMenuePage(mainWindowViewModel);
+            mainWindowViewModel.CurrentPage = StartMenuePage;
+        }
 
         private void RegCommandAction(object p)
         {

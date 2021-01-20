@@ -1,0 +1,88 @@
+﻿<Page x:Class="SeaBattle.View.Pages.StartMenuePage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:SeaBattle.View.Pages"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="StartMenuePage">
+
+    <Page.Resources>
+
+
+        <Style TargetType="Button" x:Key="LightweightButton">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <ContentPresenter Content="{TemplateBinding Content}"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+
+        <Style x:Key="MyWaterMarkStyle" TargetType="{x:Type TextBox}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type TextBox}">
+                        <Grid>
+                            <Border Background="White" BorderBrush="#FF7D8683" BorderThickness="1"/>
+                            <ScrollViewer x:Name="PART_ContentHost" Margin="5,0,0,0" VerticalAlignment="Center" />
+                            <Label Margin="5,0,0,0" x:Name="WaterMarkLabel" Content="{TemplateBinding Tag}" VerticalAlignment="Center"
+                               Visibility="Collapsed" Foreground="Gray" FontFamily="Arial"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="Text" Value=""/>
+                                </MultiTrigger.Conditions>
+                                <Setter Property="Visibility" TargetName="WaterMarkLabel" Value="Visible"/>
+                            </MultiTrigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Foreground" Value="DimGray"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Page.Resources>
+    <Grid>
+        <Button HorizontalAlignment="Right"
+                VerticalAlignment="Top"
+                Margin="0,94,133,0" 
+                Height="50" Width="100"
+                 Style="{StaticResource LightweightButton}"
+                 FontSize="21"
+                 FontFamily="MV Boli"
+                Command="{Binding StartCommand}">
+            <Underline>Start</Underline>
+        </Button>
+
+        <Button HorizontalAlignment="Right"
+                VerticalAlignment="Top" 
+                Margin="0,258,133,0" 
+                Height="50" Width="100"
+                 Style="{StaticResource LightweightButton}"
+                 FontSize="21"
+                  FontFamily="MV Boli"
+                Command="{Binding HelpCommand}">
+            <Underline>Help</Underline>
+        </Button>
+
+        <Button  HorizontalAlignment="Right" 
+                VerticalAlignment="Top"
+                Margin="0,175,153,0" 
+                Height="50" Width="100"
+                 Style="{StaticResource LightweightButton}"
+                 FontSize="21"
+                 FontFamily="MV Boli"
+                 Command="{Binding SettingsCommand}">
+            <Underline>Settings</Underline>
+        </Button>
+
+
+
+    </Grid>
+</Page>

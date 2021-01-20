@@ -6,7 +6,7 @@ namespace SeaBattle.Model
 {
     class Field
     {
-        public string[,] field { get; set; } = new string[11, 11]; //умовна позиція корабля
+        public string[,] field { get; set; } = new string[11, 11]; 
 
         public int OneDeckShipCount { get; set; } = 4;
         public int TwoDeckShipCount { get; set; } = 3;

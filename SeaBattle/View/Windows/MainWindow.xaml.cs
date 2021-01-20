@@ -126,7 +126,7 @@ namespace SeaBattle
             button[i, j].Width = 35;
             button[i, j].Height = 35;
             button[i, j].Background = Brushes.White;
-         // button[i, j].Command = vm.CreatingShipsCommand;
+            button[i, j].Command = vm.CreatingShipsCommand;
             button[i, j].CommandParameter = button[i, j].Name;
         }
         private void ButtonAdd(int i, int j)
