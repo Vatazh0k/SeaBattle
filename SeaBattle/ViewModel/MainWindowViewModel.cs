@@ -1,10 +1,12 @@
-﻿using SeaBattle.Model;
+﻿using SeaBattle.BuisnessLogic;
+using SeaBattle.Model;
 using SeaBattle.Resource;
 using SeaBattle.View.Pages;
 using SeaBattle.View.Windows;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -22,7 +24,7 @@ namespace SeaBattle.ViewModel
         #region Private Data
         private ShipSelectionWindow selectionWindow;
         private RulesWindow RulesWindow = new RulesWindow();
-        private ObservableCollection<Ship> _ships = new ObservableCollection<Ship>();
+        private ObservableCollection<Ship> _ships;
         private Page _CurrentPage;
 
         private int _oneDeckShip = 4;
@@ -87,15 +89,16 @@ namespace SeaBattle.ViewModel
             LoginPage = new LoginPage(this);
             CurrentPage = LoginPage;
 
-            for (int i = 0; i < 121; i++)
+            var ships = Enumerable.Range(0, 121)
+            .Select(i => new Ship
             {
-                Ships.Add(new Ship()
-                {
-                    Content = "",
-                    Color = new SolidColorBrush(Colors.White),
-                    Border = new Thickness(0.5)
-                });
-            }
+                Content = "",
+                Color = new SolidColorBrush(Colors.White),
+                Border = new Thickness(0.5)
+            });
+
+            _ships = new ObservableCollection<Ship>(ships);
+           
         }
 
         #region CanUseCommands
@@ -137,18 +140,7 @@ namespace SeaBattle.ViewModel
         {
             int Cell = Convert.ToInt32(cellNumber);
 
-            if (p.ToString() is "s1")
-            {
-                if (OneDeckShip is 0) return;
-
-                Ships[Cell] = new Ship
-                {
-                    Content = "O",
-                    Color = new SolidColorBrush(Colors.Red),
-                    Border = new Thickness(1)
-                };
-                OneDeckShip--;
-            }
+            ShipPositionValidation.PositionValidation(Cell, Ships, p);
 
             selectionWindow.Close();
         }

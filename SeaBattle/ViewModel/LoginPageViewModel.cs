@@ -47,7 +47,8 @@ namespace SeaBattle.ViewModel
         private bool CanUseRegCommand(object p) => true;
         private bool CanUseLoginCommand(object p)
         {
-            if (String.IsNullOrWhiteSpace(Login) && String.IsNullOrWhiteSpace(Password)) return false; return true;
+            //if (String.IsNullOrWhiteSpace(Login) && String.IsNullOrWhiteSpace(Password)) return false;
+            return true;
         }
 
         private void LoginCommandAction(object p)

@@ -9,15 +9,12 @@ using System.Windows.Input;
 namespace SeaBattle.ViewModel
 {
     class RegisterWindowViewModel : ViewModelBase
-    {
+    {//TODO: login pass . . . 
         #region Data
         private RegisterWindow registerWindow;
 
         public ICommand BackCommand { get; set; }
         #endregion
-
-        public RegisterWindowViewModel()
-        { }
 
         public RegisterWindowViewModel(RegisterWindow registerWindow)
         {

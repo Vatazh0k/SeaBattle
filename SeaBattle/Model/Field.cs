@@ -8,9 +8,5 @@ namespace SeaBattle.Model
     {
         public string[,] field { get; set; } = new string[11, 11]; 
 
-        public int OneDeckShipCount { get; set; } = 4;
-        public int TwoDeckShipCount { get; set; } = 3;
-        public int ThrieDeckShipCount { get; set; } = 2;
-        public int FourDeckShipCount { get; set; } = 1;
     }
 }
