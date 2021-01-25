@@ -92,7 +92,7 @@ namespace SeaBattle.ViewModel
             var ships = Enumerable.Range(0, 121)
             .Select(i => new Ship
             {
-                Content = "",
+                Content = string.Empty,
                 Color = new SolidColorBrush(Colors.White),
                 Border = new Thickness(0.5)
             });
@@ -139,8 +139,30 @@ namespace SeaBattle.ViewModel
         private void NewShipAssignmentCommandAction(object p)
         {
             int Cell = Convert.ToInt32(cellNumber);
+            switch (p.ToString())
+            {
+                default:
+                    break;
 
-            ShipPositionValidation.PositionValidation(Cell, Ships, p);
+                case "s1":
+                    ShipsCountValidation(ref _oneDeckShip, Cell, 1);
+                    break;
+
+                case "s2":
+                    ShipsCountValidation(ref _twoDeckShip, Cell, 2);
+                    break;
+
+                case "s3":
+                    ShipsCountValidation(ref _thireDeckShip, Cell, 3);
+                    break;
+
+                case "s4":
+                    ShipsCountValidation(ref _fourDeckShip, Cell, 4);
+                    break;
+
+
+            }
+
 
             selectionWindow.Close();
         }
@@ -148,7 +170,12 @@ namespace SeaBattle.ViewModel
         #endregion
 
         #region Private Methods
-
+        private void ShipsCountValidation(ref int Ship, int Cell, int DeckCount)
+        {
+            if (Ship is 0) return;
+            if(!ShipPositionValidation.PositionValidation(Cell, Ships, DeckCount)) return;
+            Ship--;
+        }
         #endregion
 
     }
