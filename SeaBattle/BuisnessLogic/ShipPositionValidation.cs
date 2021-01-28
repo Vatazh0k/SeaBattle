@@ -65,6 +65,6 @@ namespace SeaBattle.BuisnessLogic
      
         }
        
-    }
+    } 
 }
  
