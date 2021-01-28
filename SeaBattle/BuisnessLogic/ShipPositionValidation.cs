@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.Text;
 using System.Windows;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace SeaBattle.BuisnessLogic
 {
@@ -25,6 +26,7 @@ namespace SeaBattle.BuisnessLogic
             return true;
         }
 
+        #region PrivateMethods
         private static bool PositionValidationLogic(int cell, ObservableCollection<Ship> ships, int decksCount)
         {
             #region Data
@@ -108,6 +110,7 @@ namespace SeaBattle.BuisnessLogic
                     };
                     break;
 
+
                 case 3:
                     ships[cell] = new Ship
                     {
@@ -159,6 +162,7 @@ namespace SeaBattle.BuisnessLogic
 
             return true;
         }
-
+        #endregion
     }
 }
+ 

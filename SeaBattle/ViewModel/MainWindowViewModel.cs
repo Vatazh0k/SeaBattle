@@ -85,7 +85,7 @@ namespace SeaBattle.ViewModel
             ExitCommand = new Command(ExitCommandAction, CanUseExitCommand);
             RulesCommand = new Command(RulesCommandAction, CanUseRulesCommand);
             NewShipAssignmentCommand = new Command(NewShipAssignmentCommandAction, CanUseNewShipAssignmentCommand);
-
+     
             LoginPage = new LoginPage(this);
             CurrentPage = LoginPage;
 
@@ -102,7 +102,7 @@ namespace SeaBattle.ViewModel
         }
 
         #region CanUseCommands
-
+    
         private bool CanUseNewShipAssignmentCommand(object p) => true;
         private bool CanUseExitCommand(object p) => true;
         private bool CanUseRulesCommand(object p) => true;
@@ -116,6 +116,7 @@ namespace SeaBattle.ViewModel
         #endregion
 
         #region Commands Actions
+
         private void ExitCommandAction(object p)
         {
             Environment.Exit(0);

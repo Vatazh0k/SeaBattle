@@ -1,21 +1,42 @@
-﻿using System;
+﻿using SeaBattle.Resource;
+using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace SeaBattle.ViewModel
 {
-    class FieldCreatingPageViewModel
+    class FieldCreatingPageViewModel : ViewModelBase
     {
-        private MainWindowViewModel mainWindowViewModel;
+        private MainWindowViewModel vm;
 
-
-        public FieldCreatingPageViewModel()
+        public ICommand ReadyCommand { get; set; }
+        public FieldCreatingPageViewModel(MainWindowViewModel vm)
         {
+            this.vm = vm;
+
+            ReadyCommand = new Command(ReadyCommandAction, CanUseReadyCommand);
 
         }
-        public FieldCreatingPageViewModel(MainWindowViewModel mainWindowViewModel)
+
+        private bool CanUseReadyCommand(object p) => true;
+          
+        private void ReadyCommandAction(object p)
         {
-            this.mainWindowViewModel = mainWindowViewModel;
+            if (vm.OneDeckShip is 0 && vm.TwoDeckShip is 0 &&
+              vm.ThrieDeckShip is 0 && vm.FourDeckShip is 0)
+            {
+                Page GameProcessPage = new GameProcessPage();
+                vm.CurrentPage = 
+                
+               
+                
+            }
+            else 
+                MessageBox.Show("Please input all ships", "", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
 }

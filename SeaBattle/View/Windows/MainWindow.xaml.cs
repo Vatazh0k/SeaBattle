@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -121,7 +122,6 @@ namespace SeaBattle
             ContentBinding.Path = new PropertyPath($"Ships[{CellsCounter}].Content");
             ContentBinding.Mode = BindingMode.OneWay;
             button[i, j].SetBinding(Button.ContentProperty, ContentBinding);
-
             button[i, j].Name = $"C{CellsCounter}";
             button[i, j].Width = 35;
             button[i, j].Height = 35;

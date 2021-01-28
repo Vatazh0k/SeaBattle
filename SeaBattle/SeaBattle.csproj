@@ -7,7 +7,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Resource\Images\ShipsForField\**" />
+    <EmbeddedResource Remove="Resource\Images\ShipsForField\**" />
+    <None Remove="Resource\Images\ShipsForField\**" />
+    <Page Remove="Resource\Images\ShipsForField\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="Resource\Images\DoubleDeckShip.png" />
+    <None Remove="Resource\Images\ForPages\DoubleDeckShipForPage.png" />
+    <None Remove="Resource\Images\ForPages\FourDeckShipForPage.png" />
+    <None Remove="Resource\Images\ForPages\OneDeckShipForPage.png" />
+    <None Remove="Resource\Images\ForPages\ThrieDeckShipForPage.png" />
     <None Remove="Resource\Images\FourDeckShip.png" />
     <None Remove="Resource\Images\OneDeckShip.png" />
     <None Remove="Resource\Images\ThrieDeckShip.png" />
@@ -15,6 +26,18 @@
 
   <ItemGroup>
     <Resource Include="Resource\Images\DoubleDeckShip.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resource\Images\ForPages\DoubleDeckShipForPage.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resource\Images\ForPages\FourDeckShipForPage.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resource\Images\ForPages\OneDeckShipForPage.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resource\Images\ForPages\ThrieDeckShipForPage.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Resource\Images\FourDeckShip.png">

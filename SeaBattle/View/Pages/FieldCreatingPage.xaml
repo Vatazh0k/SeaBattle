@@ -4,11 +4,101 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:SeaBattle.View.Pages"
+      xmlns:vm ="clr-namespace:SeaBattle.ViewModel"
       mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="800"
+      d:DesignHeight="380" d:DesignWidth="460"
       Title="FieldCreatingPage">
+    <Page.Resources>
+        <Style TargetType="Button" x:Key="LightweightButton">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <ContentPresenter Content="{TemplateBinding Content}"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        </Page.Resources>
 
-    <Grid>
-        
+        <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="66*"/>
+            <RowDefinition Height="72*"/>
+            <RowDefinition Height="72*"/>
+            <RowDefinition Height="72*"/>
+            <RowDefinition Height="72*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="10*"/>
+            <ColumnDefinition Width="13*"/>
+        </Grid.ColumnDefinitions>
+
+
+        <Label Grid.Column="0"
+               Grid.Row="1" Margin="0,9,127,10">
+            <Image Source="/Resource/Images/ForPages/OneDeckShipForPage.png"/>
+        </Label>
+
+        <Label Grid.Column="1"
+               Grid.Row="1" Margin="10,9,141,10">
+            <Image Source="/Resource/Images/ForPages/DoubleDeckShipForPage.png"/>
+        </Label>
+
+        <Label Grid.Column="0"
+               Grid.Row="2" Margin="0,9,70,8">
+            <Image Source="/Resource/Images/ForPages/ThrieDeckShipForPage.png"/>
+        </Label>
+
+        <Label Grid.Column="1"
+               Grid.Row="2"
+               Margin="10,9,86,0">
+            <Image Source="/Resource/Images/ForPages/FourDeckShipForPage.png"/>
+        </Label>
+
+        <Label Grid.Row="1" Content="{Binding OneDeckShip, 
+            UpdateSourceTrigger=PropertyChanged}"
+               HorizontalContentAlignment="Center" 
+                Grid.Column="0" VerticalAlignment="Center"
+               Width="20"
+               Margin="140,0,0,0">
+
+        </Label>
+
+        <Label Grid.Row="2" Content="{Binding ThrieDeckShip, 
+            UpdateSourceTrigger=PropertyChanged}"
+               HorizontalContentAlignment="Center" 
+                Grid.Column="0" VerticalAlignment="Center"
+               Width="20"
+               Margin="140,0,0,0">
+
+        </Label>
+
+        <Label Grid.Row="1" Content="{Binding TwoDeckShip,
+            UpdateSourceTrigger=PropertyChanged}"
+               HorizontalContentAlignment="Center" 
+                Grid.Column="1" VerticalAlignment="Center"
+               Width="20"
+               Margin="190,0,0,0">
+
+        </Label>
+
+        <Label Grid.Row="2" Content="{Binding FourDeckShip,
+            UpdateSourceTrigger=PropertyChanged}"
+               HorizontalContentAlignment="Center" 
+                Grid.Column="1" VerticalAlignment="Center"
+               Width="20"
+               Margin="190,0,0,0">
+
+        </Label>
+
+        <Button Grid.Column="1" Grid.Row="4"
+                Content="Ready!"
+                Margin="161,20,34,20"
+                FontStyle="Italic"
+                Command="{Binding ReadyCommand}"
+                Style="{StaticResource LightweightButton}"
+                FontSize="16"/>
+
+
     </Grid>
 </Page>
