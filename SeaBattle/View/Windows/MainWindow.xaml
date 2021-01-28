@@ -50,8 +50,8 @@
         </Style>
 
     </Window.Resources>
-    
-    
+
+
     <Grid>
 
         <Grid x:Name="MainGrid">
@@ -81,13 +81,13 @@
             </Grid>
 
             <Grid x:Name="PagePanel"
-              Margin="0,40,10,0"  
+              Margin="0,30,10,0"  
               VerticalAlignment="Top"
               HorizontalAlignment="Right" 
-              Height="380" Width="462">
+              Height="390" Width="462">
 
                 <Frame Content="{Binding CurrentPage}"
-                   NavigationUIVisibility="Hidden">
+                   NavigationUIVisibility="Hidden" Margin="0,-16,0,0">
 
 
                 </Frame>
@@ -109,5 +109,5 @@
 
         </Grid>
     </Grid>
-    
+
 </Window>

@@ -1,4 +1,5 @@
-﻿using SeaBattle.ViewModel;
+﻿using SeaBattle.BuisnessLogic;
+using SeaBattle.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -15,15 +16,18 @@ using System.Windows.Shapes;
 namespace SeaBattle.View.Pages
 {
     /// <summary>
-    /// Interaction logic for GameProcessPage.xaml
+    /// Interaction logic for ComputerFieldPage.xaml
     /// </summary>
-    public partial class GameProcessPage : Page
+    public partial class ComputerFieldPage : Page
     {
-        public GameProcessPage(MainWindowViewModel mainWindowViewModel)
+        public ComputerFieldPage(MainWindowViewModel mainWindowViewModel)
         {
             InitializeComponent();
-            var vm = new GameProcessPageViewModel(mainWindowViewModel);
+            var vm = new ComputerFieldPageViewModel(mainWindowViewModel);
             DataContext = vm;
+
+            FieldCreating<ComputerFieldPageViewModel>.CreateField(vm, Field, vm.MakeDamageCommand);
         }
     }
 }
+

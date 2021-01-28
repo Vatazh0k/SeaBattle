@@ -10,11 +10,11 @@ using System.Windows.Input;
 
 namespace SeaBattle.ViewModel
 {
-    class FieldCreatingPageViewModel 
+    class FieldCreatingPageViewModel
     {
-        #region Dat
+        #region Data
         private MainWindowViewModel vm;
-        private Page GameProcessPage;
+        private Page ComputerFieldPage;
 
         public ICommand ReadyCommand { get; set; }
         #endregion
@@ -31,18 +31,18 @@ namespace SeaBattle.ViewModel
 
         #region Commands
         private bool CanUseReadyCommand(object p) => true;
-          
+
         private void ReadyCommandAction(object p)
         {
             if (vm.OneDeckShip is 0 && vm.TwoDeckShip is 0 &&
               vm.ThrieDeckShip is 0 && vm.FourDeckShip is 0)
             {
-                GameProcessPage = new GameProcessPage(vm);
-                vm.CurrentPage = GameProcessPage;//треба створити класс який буде відовідати за навігацією між сторінками
+                ComputerFieldPage = new ComputerFieldPage(vm);
+                vm.CurrentPage = ComputerFieldPage;//треба створити класс який буде відовідати за навігацією між сторінками
             }
-            else 
+            else
                 MessageBox.Show("Please input all ships", "", MessageBoxButton.OK, MessageBoxImage.Error);
         }
         #endregion
     }
-}
+} 
