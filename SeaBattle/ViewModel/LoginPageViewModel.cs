@@ -34,16 +34,19 @@ namespace SeaBattle.ViewModel
         public ICommand RegCommand { get; set; }
         #endregion
 
-        public LoginPageViewModel()
-        { }
-
+        #region Ctor
         public LoginPageViewModel(MainWindowViewModel mainWindowViewModel)
         {
             this.mainWindowViewModel = mainWindowViewModel;
+
+            #region Commands
             RegCommand = new Command(RegCommandAction, CanUseRegCommand);
             LoginCommand = new Command(LoginCommandAction, CanUseLoginCommand);
+            #endregion
         }
+        #endregion
 
+        #region Commands
         private bool CanUseRegCommand(object p) => true;
         private bool CanUseLoginCommand(object p)
         {
@@ -51,16 +54,17 @@ namespace SeaBattle.ViewModel
             return true;
         }
 
+
         private void LoginCommandAction(object p)
         { //TODO: DB;
             StartMenuePage = new StartMenuePage(mainWindowViewModel);
             mainWindowViewModel.CurrentPage = StartMenuePage;
         }
-
         private void RegCommandAction(object p)
         {
             registerWindow = new RegisterWindow();
             registerWindow.ShowDialog();
         }
+        #endregion
     }
 }

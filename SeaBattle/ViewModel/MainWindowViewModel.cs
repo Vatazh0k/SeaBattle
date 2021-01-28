@@ -81,11 +81,13 @@ namespace SeaBattle.ViewModel
 
         public MainWindowViewModel()
         {
+            #region Commands
             CreatingShipsCommand = new Command(CreatingShipsCommandAction, CanUseCreatingShipsCommand);
             ExitCommand = new Command(ExitCommandAction, CanUseExitCommand);
             RulesCommand = new Command(RulesCommandAction, CanUseRulesCommand);
             NewShipAssignmentCommand = new Command(NewShipAssignmentCommandAction, CanUseNewShipAssignmentCommand);
-     
+            #endregion
+
             LoginPage = new LoginPage(this);
             CurrentPage = LoginPage;
 
@@ -98,11 +100,11 @@ namespace SeaBattle.ViewModel
             });
 
             _ships = new ObservableCollection<Ship>(ships);
-           
+
         }
 
         #region CanUseCommands
-    
+
         private bool CanUseNewShipAssignmentCommand(object p) => true;
         private bool CanUseExitCommand(object p) => true;
         private bool CanUseRulesCommand(object p) => true;
@@ -136,7 +138,6 @@ namespace SeaBattle.ViewModel
             selectionWindow = new ShipSelectionWindow(this);
             selectionWindow.ShowDialog();
         }
-
         private void NewShipAssignmentCommandAction(object p)
         {
             int Cell = Convert.ToInt32(cellNumber);
@@ -171,13 +172,118 @@ namespace SeaBattle.ViewModel
         #endregion
 
         #region Private Methods
+        private string[,] CellsAssignment(string[,] tempArr, ObservableCollection<Ship> Ships)
+        {
+            for (int i = 0; i < 11; i++)
+            {
+                for (int j = 0; j < 11; j++)
+                {
+                    tempArr[i, j] = Ships[i * 11 + j].Content;
+                }
+            }
+            return tempArr;
+        }
         private void ShipsCountValidation(ref int Ship, int Cell, int DeckCount)
         {
             if (Ship is 0) return;
-            if(!ShipPositionValidation.PositionValidation(Cell, Ships, DeckCount)) return;
-            Ship--;
+
+            string[,] tempArr = new string[11, 11];
+
+            tempArr = CellsAssignment(tempArr, Ships);
+
+            if (!ShipPositionValidation.PositionValidationLogic(Cell, tempArr, DeckCount))
+            {
+                MessageBox.Show("You can create ship here!", "Error",
+                  MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+            else
+            {
+                switch (DeckCount)
+                {
+                   
+                    default:
+                        break;
+                    #region ShipsCreating
+                    case 1:
+                        Ships[Cell] = new Ship
+                        {
+                            Content = "O",
+                            Border = new Thickness(1),
+                            Color = new SolidColorBrush(Colors.Black)
+                        };
+                        break;
+
+                    case 2:
+                        Ships[Cell] = new Ship
+                        {
+                            Content = "O",
+                            Border = new Thickness(1, 1, 0, 1),
+                            Color = new SolidColorBrush(Colors.Black)
+                        };
+                        Ships[Cell + 1] = new Ship
+                        {
+                            Content = "O",
+                            Border = new Thickness(0, 1, 1, 1),
+                            Color = new SolidColorBrush(Colors.Black)
+                        };
+                        break;
+
+
+                    case 3:
+                        Ships[Cell] = new Ship
+                        {
+                            Content = "O",
+                            Border = new Thickness(1, 1, 0, 1),
+                            Color = new SolidColorBrush(Colors.Black)
+                        };
+                        Ships[Cell + 1] = new Ship
+                        {
+                            Content = "O",
+                            Border = new Thickness(0, 1, 0, 1),
+                            Color = new SolidColorBrush(Colors.Black)
+                        };
+                        Ships[Cell + 2] = new Ship
+                        {
+                            Content = "O",
+                            Border = new Thickness(0, 1, 1, 1),
+                            Color = new SolidColorBrush(Colors.Black)
+                        };
+                        break;
+                    case 4:
+                        Ships[Cell] = new Ship
+                        {
+                            Content = "O",
+                            Border = new Thickness(1, 1, 0, 1),
+                            Color = new SolidColorBrush(Colors.Black)
+                        };
+                        Ships[Cell + 1] = new Ship
+                        {
+                            Content = "O",
+                            Border = new Thickness(0, 1, 0, 1),
+                            Color = new SolidColorBrush(Colors.Black)
+                        };
+                        Ships[Cell + 2] = new Ship
+                        {
+                            Content = "O",
+                            Border = new Thickness(0, 1, 0, 1),
+                            Color = new SolidColorBrush(Colors.Black)
+                        };
+                        Ships[Cell + 3] = new Ship
+                        {
+                            Content = "O",
+                            Border = new Thickness(0, 1, 1, 1),
+                            Color = new SolidColorBrush(Colors.Black)
+                        };
+                        break;
+                        #endregion
+                }
+
+                Ship--;
+            }
         }
         #endregion
 
     }
 }
+  

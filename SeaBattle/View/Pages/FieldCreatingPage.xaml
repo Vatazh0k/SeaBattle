@@ -35,23 +35,23 @@
 
 
         <Label Grid.Column="0"
-               Grid.Row="1" Margin="0,9,127,10">
+               Grid.Row="1" Margin="27,10,108,10">
             <Image Source="/Resource/Images/ForPages/OneDeckShipForPage.png"/>
         </Label>
 
         <Label Grid.Column="1"
-               Grid.Row="1" Margin="10,9,141,10">
+               Grid.Row="1" Margin="10,10,147,10">
             <Image Source="/Resource/Images/ForPages/DoubleDeckShipForPage.png"/>
         </Label>
 
         <Label Grid.Column="0"
-               Grid.Row="2" Margin="0,9,70,8">
+               Grid.Row="2" Margin="27,10,51,8">
             <Image Source="/Resource/Images/ForPages/ThrieDeckShipForPage.png"/>
         </Label>
 
         <Label Grid.Column="1"
                Grid.Row="2"
-               Margin="10,9,86,0">
+               Margin="10,10,90,0">
             <Image Source="/Resource/Images/ForPages/FourDeckShipForPage.png"/>
         </Label>
 
@@ -92,12 +92,13 @@
         </Label>
 
         <Button Grid.Column="1" Grid.Row="4"
-                Content="Ready!"
                 Margin="161,20,34,20"
                 FontStyle="Italic"
                 Command="{Binding ReadyCommand}"
                 Style="{StaticResource LightweightButton}"
-                FontSize="16"/>
+                FontSize="19">
+            <Underline>Ready!</Underline>
+        </Button>
 
 
     </Grid>

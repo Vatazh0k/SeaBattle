@@ -19,22 +19,20 @@ namespace SeaBattle.ViewModel
         public ICommand StartCommand { get; set; }
         #endregion
 
-
-        public StartMenuePageViewModel()
-        {
-
-        }
         public StartMenuePageViewModel(MainWindowViewModel mainWindowViewModel)
         {
             this.mainWindowViewModel = mainWindowViewModel;
 
+            #region Commands
             HelpCommand = new Command(HelpCommandAction, CanUseCommand);
             SettingsCommand = new Command(SettingsCommandAction, CanUseCommand);
             StartCommand = new Command(StartCommandAction, CanUseCommand);
+            #endregion
         }
 
-
+        #region Commands
         private bool CanUseCommand(object p) => true;
+
 
         private void HelpCommandAction(object p)
         {//TODO:
@@ -51,5 +49,7 @@ namespace SeaBattle.ViewModel
             FieldCreatingPage = new FieldCreatingPage(mainWindowViewModel);
             mainWindowViewModel.CurrentPage = FieldCreatingPage;
         }
+        #endregion
     }
 }
+ 

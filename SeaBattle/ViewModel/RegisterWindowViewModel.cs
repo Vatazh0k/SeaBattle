@@ -9,7 +9,7 @@ using System.Windows.Input;
 namespace SeaBattle.ViewModel
 {
     class RegisterWindowViewModel : ViewModelBase
-    {//TODO: login pass . . . 
+    {//TODO: login password . . . 
         #region Data
         private RegisterWindow registerWindow;
 
