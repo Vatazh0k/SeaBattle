@@ -6,7 +6,8 @@ namespace SeaBattle.Model
 {
     class Field
     {
-        public string[,] field { get; set; } = new string[11, 11]; 
+        public string[,] ComputerField { get; set; } = new string[11, 11];
+        public string[,] UserField { get; set; } = new string[11, 11];
 
     }
 }

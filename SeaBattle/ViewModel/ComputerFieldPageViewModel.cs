@@ -2,10 +2,8 @@
 using SeaBattle.Model;
 using SeaBattle.Resource;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -73,38 +71,76 @@ namespace SeaBattle.ViewModel
         private void MakeDamageCommandAction(object p)
         {
             #region Data
-            int Cell;
+            int Cell = 0;
             string cellString = string.Empty;
+
             for (int i = 1; i < p.ToString().Length; i++)
+            {
                 cellString += p.ToString()[i];
-            Cell = Convert.ToInt32(cellString);
+                Cell = Convert.ToInt32(cellString);
+            }
             #endregion
 
-            if (Ships[Cell].Content == " ")// в геймп процес, передавать " " || "O" 
-            {
-                Ships[Cell] = new Ship
-                {
-                    Color = new SolidColorBrush(Colors.Red),
-                    Content = "O"
-                };
-            }// isComputerMove = true;
+            CellIndex Indexes = SearchCellIndexes(Cell);
+
+            Field fields = CellsAssignment();
+
+            bool isMissed = GameProcess.DamageCreating(fields.ComputerField, Indexes.I_index, Indexes.J_index);
+            if (isMissed is true)
+            { 
+                //закрасить крестиком
+            }
+
+            isComputerMove = true;
         }
         #endregion
 
         #region PrivateMethods
+        private Field CellsAssignment()
+        {
+            Field field = new Field();
+
+            for (int i = 0; i < 11; i++)
+            {
+                for (int j = 0; j < 11; j++)
+                {
+                    field.ComputerField[i, j] = Ships[i * 11 + j].Content;
+                    field.UserField[i, j] = vm.Ships[i * 11 + j].Content;
+                }
+            }
+            return field;
+        }
+        private CellIndex SearchCellIndexes(int cell)
+        {
+            CellIndex indexes = new CellIndex();
+
+            for (int i = 0; i < 11; i++)
+            {
+                for (int j = 0; j < 11; j++)
+                {
+                    if (i * 11 + j == cell)
+                    {
+                        indexes.I_index = i;
+                        indexes.J_index = j;
+                    }
+                }
+            }
+
+            return indexes;
+        }
         private void ShipsGeneration(int ShipCount, int DeksCount)
         {
-            #region Data
             string[,] tempArr = new string[11, 11];
             tempArr = CellsAssignment(tempArr, Ships);
+
             var Random = new Random();
-            int Cell;
-            #endregion
 
             for (int i = 0; i < ShipCount; i++)
             {
-                Cell = Random.Next(11, 121);
-                if (!ShipPositionValidation.PositionValidationLogic(Cell, tempArr, DeksCount))
+                int Cell = Random.Next(11, 121);
+                CellIndex Indexes = SearchCellIndexes(Cell);
+
+                if (!ShipPositionValidation.PositionValidationLogic(Indexes.I_index, Indexes.J_index, tempArr, DeksCount))
                     i--;
                 else
                 {
@@ -136,36 +172,17 @@ namespace SeaBattle.ViewModel
                             break;
                     }
 
-                    int FirstIndex = SerarchCellIndexs(Cell).Item1;
-                    int SecondIndex = SerarchCellIndexs(Cell).Item2;
-                    tempArr[FirstIndex, SecondIndex] = "O";
+                    tempArr[Indexes.I_index, Indexes.J_index] = "O";
                 }
             }
-        }
-        private (int, int) SerarchCellIndexs(int Cell)
-        {
-            int fixI = 0, fixJ = 0;
-            for (int k = 0; k < 11; k++)
-            {
-                for (int j = 0; j < 11; j++)
-                {
-                    if (k * 11 + j == Cell)
-                    {
-                        fixI = k;
-                        fixJ = j;
-                    }
-
-                }
-            }
-            return (fixI, fixJ);
         }
         private void ShipsOptions(int Cell)
         {
             Ships[Cell] = new Ship
             {
-                Content = " ",
-                Border = new Thickness(0.5),
-                Color = new SolidColorBrush(Colors.White)
+                Content = "S",//" ",
+                Border = new Thickness(1),//new Thickness(0.5),
+                Color = new SolidColorBrush(Colors.Black)//new SolidColorBrush(Colors.White)
 
             };
         }

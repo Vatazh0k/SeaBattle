@@ -11,37 +11,17 @@ namespace SeaBattle.BuisnessLogic
 {
     static class ShipPositionValidation
     {
-        public static bool PositionValidationLogic(int cell, string[,] ships, int decksCount)
+        public static bool PositionValidationLogic(int CellIndex_I, int CellIndex_J, string[,] ships, int decksCount)
         {
-            #region Data
-            int Fixed_I_Index = 0;
-            int Fixed_J_Index = 0;
-
             int J_Iteration_Count = 0;
             int I_teration_Count = 0;
-            #endregion
 
-            #region IndexsSearch
-            for (int i = 0; i < 11; i++)
-            {
-                for (int j = 0; j < 11; j++)
-                {
-                    if (i * 11 + j == cell)
-                    {
-                        Fixed_I_Index = i;
-                        Fixed_J_Index = j;
-                    }
-                }
-            }
-            #endregion
-
-            #region PosValidation
             try
             {
-                for (int i = Fixed_I_Index - 1; i < Fixed_I_Index + 2; i++)
+                for (int i = CellIndex_I - 1; i < CellIndex_I + 2; i++)
                 {
                     J_Iteration_Count = 0;
-                    for (int j = Fixed_J_Index - 1; j < Fixed_J_Index + decksCount + 1; j++)
+                    for (int j = CellIndex_J - 1; j < CellIndex_J + decksCount + 1; j++)
                     {
                         if (!string.IsNullOrEmpty(ships[i, j])) return false;
 
@@ -60,7 +40,7 @@ namespace SeaBattle.BuisnessLogic
             }
 
             return true;
-            #endregion
+
 
      
         }

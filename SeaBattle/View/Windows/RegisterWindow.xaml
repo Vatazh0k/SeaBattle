@@ -4,8 +4,11 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SeaBattle.View.Windows"
+        xmlns:Commands="clr-namespace:SeaBattle.Resource"
         mc:Ignorable="d"
       Title="RegisterWindow" Height="454.639" Width="371.65" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
+
+  
 
     <Window.Resources>
 
@@ -119,7 +122,7 @@
                  Style="{StaticResource LightweightButton}"
                     FontFamily="MV Boli"
                 FontSize="15"
-                Command="{Binding BackCommand}">
+                 IsCancel="True">
             Back
         </Button>
     </Grid>

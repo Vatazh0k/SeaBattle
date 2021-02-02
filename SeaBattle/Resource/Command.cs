@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Windows;
 using System.Windows.Input;
 
 namespace SeaBattle.Resource
@@ -31,5 +32,11 @@ namespace SeaBattle.Resource
         {
             _execute(parameter);
         }
+    }
+
+    public class CloseCommand
+    {
+        public static readonly ICommand closeCommand =
+            new Command(o => ((Window)o).Close());
     }
 }

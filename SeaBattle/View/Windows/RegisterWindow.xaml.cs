@@ -20,8 +20,6 @@ namespace SeaBattle.View.Windows
     {
         public RegisterWindow()
         {
-            var vm = new RegisterWindowViewModel(this);
-            DataContext = vm;
             InitializeComponent();
         }
 

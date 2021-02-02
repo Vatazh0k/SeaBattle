@@ -18,9 +18,6 @@ namespace SeaBattle.View.Windows
     /// </summary>
     public partial class ShipSelectionWindow : Window
     {
-        public ShipSelectionWindow()
-        { }
-
         public ShipSelectionWindow(MainWindowViewModel vm)
         {
             InitializeComponent();

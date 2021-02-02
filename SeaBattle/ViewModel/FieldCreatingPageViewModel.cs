@@ -34,14 +34,14 @@ namespace SeaBattle.ViewModel
 
         private void ReadyCommandAction(object p)
         {
-            if (vm.OneDeckShip is 0 && vm.TwoDeckShip is 0 &&
-              vm.ThrieDeckShip is 0 && vm.FourDeckShip is 0)
+            /*if (vm.OneDeckShip is 0 && vm.TwoDeckShip is 0 &&
+              vm.ThrieDeckShip is 0 && vm.FourDeckShip is 0)*/
             {
                 ComputerFieldPage = new ComputerFieldPage(vm);
                 vm.CurrentPage = ComputerFieldPage;//треба створити класс який буде відовідати за навігацією між сторінками
             }
-            else
-                MessageBox.Show("Please input all ships", "", MessageBoxButton.OK, MessageBoxImage.Error);
+        //    else
+          //      MessageBox.Show("Please input all ships", "", MessageBoxButton.OK, MessageBoxImage.Error);
         }
         #endregion
     }

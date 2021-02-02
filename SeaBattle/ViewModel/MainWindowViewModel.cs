@@ -31,7 +31,6 @@ namespace SeaBattle.ViewModel
         private int _twoDeckShip = 3;
         private int _thireDeckShip = 2;
         private int _fourDeckShip = 1;
-
         private string cellNumber;
 
         #endregion
@@ -183,6 +182,24 @@ namespace SeaBattle.ViewModel
             }
             return tempArr;
         }
+        private CellIndex SearchCellIndexes(int cell)
+        {
+            CellIndex indexes = new CellIndex();
+
+            for (int i = 0; i < 11; i++)
+            {
+                for (int j = 0; j < 11; j++)
+                {
+                    if (i * 11 + j == cell)
+                    {
+                        indexes.I_index = i;
+                        indexes.J_index = j;
+                    }
+                }
+            }
+            
+            return indexes;
+        }
         private void ShipsCountValidation(ref int Ship, int Cell, int DeckCount)
         {
             if (Ship is 0) return;
@@ -190,8 +207,9 @@ namespace SeaBattle.ViewModel
             string[,] tempArr = new string[11, 11];
 
             tempArr = CellsAssignment(tempArr, Ships);
+            CellIndex Indexes = SearchCellIndexes(Cell);
 
-            if (!ShipPositionValidation.PositionValidationLogic(Cell, tempArr, DeckCount))
+            if (!ShipPositionValidation.PositionValidationLogic(Indexes.I_index, Indexes.J_index, tempArr, DeckCount))
             {
                 MessageBox.Show("You can create ship here!", "Error",
                   MessageBoxButton.OK, MessageBoxImage.Error);
