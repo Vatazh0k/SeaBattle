@@ -226,7 +226,7 @@ namespace SeaBattle.ViewModel
                     case 1:
                         Ships[Cell] = new Ship
                         {
-                            Content = "O",
+                            Content = "W",
                             Border = new Thickness(1),
                             Color = new SolidColorBrush(Colors.Black)
                         };
@@ -235,13 +235,13 @@ namespace SeaBattle.ViewModel
                     case 2:
                         Ships[Cell] = new Ship
                         {
-                            Content = "O",
+                            Content = "W",
                             Border = new Thickness(1, 1, 0, 1),
                             Color = new SolidColorBrush(Colors.Black)
                         };
                         Ships[Cell + 1] = new Ship
                         {
-                            Content = "O",
+                            Content = "W",
                             Border = new Thickness(0, 1, 1, 1),
                             Color = new SolidColorBrush(Colors.Black)
                         };
@@ -251,19 +251,19 @@ namespace SeaBattle.ViewModel
                     case 3:
                         Ships[Cell] = new Ship
                         {
-                            Content = "O",
+                            Content = "W",
                             Border = new Thickness(1, 1, 0, 1),
                             Color = new SolidColorBrush(Colors.Black)
                         };
                         Ships[Cell + 1] = new Ship
                         {
-                            Content = "O",
+                            Content = "W",
                             Border = new Thickness(0, 1, 0, 1),
                             Color = new SolidColorBrush(Colors.Black)
                         };
                         Ships[Cell + 2] = new Ship
                         {
-                            Content = "O",
+                            Content = "W",
                             Border = new Thickness(0, 1, 1, 1),
                             Color = new SolidColorBrush(Colors.Black)
                         };
@@ -271,25 +271,25 @@ namespace SeaBattle.ViewModel
                     case 4:
                         Ships[Cell] = new Ship
                         {
-                            Content = "O",
+                            Content = "W",
                             Border = new Thickness(1, 1, 0, 1),
                             Color = new SolidColorBrush(Colors.Black)
                         };
                         Ships[Cell + 1] = new Ship
                         {
-                            Content = "O",
+                            Content = "W",
                             Border = new Thickness(0, 1, 0, 1),
                             Color = new SolidColorBrush(Colors.Black)
                         };
                         Ships[Cell + 2] = new Ship
                         {
-                            Content = "O",
+                            Content = "W",
                             Border = new Thickness(0, 1, 0, 1),
                             Color = new SolidColorBrush(Colors.Black)
                         };
                         Ships[Cell + 3] = new Ship
                         {
-                            Content = "O",
+                            Content = "W",
                             Border = new Thickness(0, 1, 1, 1),
                             Color = new SolidColorBrush(Colors.Black)
                         };

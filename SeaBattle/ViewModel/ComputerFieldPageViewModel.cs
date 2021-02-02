@@ -4,6 +4,7 @@ using SeaBattle.Resource;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -70,7 +71,8 @@ namespace SeaBattle.ViewModel
 
         private void MakeDamageCommandAction(object p)
         {
-            #region Data
+            isComputerMove = true;
+
             int Cell = 0;
             string cellString = string.Empty;
 
@@ -79,23 +81,132 @@ namespace SeaBattle.ViewModel
                 cellString += p.ToString()[i];
                 Cell = Convert.ToInt32(cellString);
             }
-            #endregion
 
             CellIndex Indexes = SearchCellIndexes(Cell);
 
             Field fields = CellsAssignment();
 
             bool isMissed = GameProcess.DamageCreating(fields.ComputerField, Indexes.I_index, Indexes.J_index);
+
             if (isMissed is true)
-            { 
-                //закрасить крестиком
+            {
+                Ships[Cell] = new Ship
+                {
+                    Content = "X",
+                    Color = new SolidColorBrush(Colors.Red),
+                    Border = new Thickness(0.5)
+                };
             }
 
-            isComputerMove = true;
+            else 
+            {
+                ConsequencesOfAttack(fields);
+                isComputerMove = false;
+            }
+
+            while (isComputerMove != false)
+            {
+
+
+                if (isComputerMove == true)
+                {
+                    isComputerMove = false;
+                    //async // с 88 по 102 седлать методом и при ударе юхера пол вызывать//заморозить окно
+                    var R = new Random();
+                    int I;
+                    int J;
+                    while (true)
+                    {
+                        I = R.Next(1, 9);
+                        J = R.Next(1, 9);
+                        if (fields.UserField[I, J] == "X" && fields.UserField[I, J] == "O") continue; break;
+                    }
+
+                    isMissed = GameProcess.DamageCreating(fields.UserField, I, J);
+                    
+                    for (int i = 0; i < 11; i++)
+                    {
+                        for (int j = 0; j < 11; j++)
+                        {
+                            if (i == I && j == J)
+                                Cell = i * 11 + j;
+                        }
+                    }
+
+                    if (isMissed is true)
+                    {
+                        vm.Ships[Cell] = new Ship
+                        {
+                            Content = "X",
+                            Color = new SolidColorBrush(Colors.Red),
+                            Border = new Thickness(0.5)
+                        };
+                    }
+
+                    else
+                    {
+                        isComputerMove = true;
+                        for (int i = 0; i < 11; i++)
+                        {
+                            for (int j = 0; j < 11; j++)
+                            {
+                                if (fields.UserField[i, j] == "X" && vm.Ships[i * 11 + j].Content != "X")
+                                {
+                                    vm.Ships[i * 11 + j] = new Ship
+                                    {
+                                        Content = fields.UserField[i, j],
+                                        Color = new SolidColorBrush(Colors.Red),
+                                        Border = new Thickness(0.5)
+
+                                    };
+                                }
+                                else if (fields.UserField[i, j] == "O" && vm.Ships[i * 11 + j].Content != "O")
+                                {
+                                    vm.Ships[i * 11 + j] = new Ship
+                                    {
+                                        Content = fields.UserField[i, j],
+                                        Color = new SolidColorBrush(Colors.Black),
+                                        Border = new Thickness(1)
+                                    };
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
         }
         #endregion
 
         #region PrivateMethods
+        private void ConsequencesOfAttack(Field fields)
+        {
+            for (int i = 0; i < 11; i++)
+            {
+                for (int j = 0; j < 11; j++)
+                {
+                    if (fields.ComputerField[i, j] == "X" && Ships[i * 11 + j].Content != "X")
+                    {
+                        Ships[i * 11 + j] = new Ship
+                        {
+                            Content = fields.ComputerField[i, j],
+                            Color = new SolidColorBrush(Colors.Red),
+                            Border = new Thickness(0.5)
+
+                        };
+                    }
+                    else if (fields.ComputerField[i, j] == "O" && Ships[i * 11 + j].Content != "O")
+                    {
+                        Ships[i * 11 + j] = new Ship
+                        {
+                            Content = fields.ComputerField[i, j],
+                            Color = new SolidColorBrush(Colors.Black),
+                            Border = new Thickness(1)
+                        };
+                    }
+                }
+            }
+        }
         private Field CellsAssignment()
         {
             Field field = new Field();
@@ -180,9 +291,9 @@ namespace SeaBattle.ViewModel
         {
             Ships[Cell] = new Ship
             {
-                Content = "S",//" ",
-                Border = new Thickness(1),//new Thickness(0.5),
-                Color = new SolidColorBrush(Colors.Black)//new SolidColorBrush(Colors.White)
+                Content = " ",
+                Border = new Thickness(0.5),
+                Color = new SolidColorBrush(Colors.White)
 
             };
         }
