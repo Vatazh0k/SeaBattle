@@ -7,10 +7,10 @@ namespace SeaBattle.BuisnessLogic
     public static class GameProcess
     {
         private const string MissedMark = "X";
-        private const string KilledMark = "O";
+        private const string KilledMark = "W";
         public static bool DamageCreating(string[,] Field, int i, int j)
         {
-            if (String.IsNullOrEmpty(Field[i, j]) || (Field[i, j] == MissedMark))
+            if (Field[i, j] is null)
             {
                 Field = MissedAttack(Field, i, j);
                 return true;
@@ -21,31 +21,25 @@ namespace SeaBattle.BuisnessLogic
                 return false;
             }
         }
-
-        #region PrivateMethods
-
-        private static string[,] MissedAttack(string[,] Field, int i, int j)
+        public static bool ChekedTheShipState(string[,] Field, int i, int j)
         {
-            Field[i, j] = MissedMark;
-            return Field;
-        }
-        private static string[,] SucsessfullAttack(string[,] Field, int i, int j)
-        {
-            Field[i, j] = KilledMark;
-
             int IndexOfTheFirstShpsDeck = 0;
+
             int DecksCount = CountingDecksCount(Field, i, j, ref IndexOfTheFirstShpsDeck);
+
             IndexOfTheFirstShpsDeck = j - IndexOfTheFirstShpsDeck;
 
-            bool isTheShipKilled = CheckingTheShipState(Field, i, IndexOfTheFirstShpsDeck, DecksCount);
+            bool isTheShipKilled = ShipState(Field, i, IndexOfTheFirstShpsDeck, DecksCount);
 
-            if (isTheShipKilled is true)
+            if(isTheShipKilled)
             {
                 Field = ShipsFuneral(Field, i, IndexOfTheFirstShpsDeck, DecksCount);
+                return true;
             }
-            
-            return Field;
+            return false;
         }
+
+        #region PrivateMethods
         private static string[,] ShipsFuneral(string[,] Field, int i, int j, int DecksCount)
         {
 
@@ -56,12 +50,24 @@ namespace SeaBattle.BuisnessLogic
 
                     if (n == 11) continue;
                     if (m == 11) break;
-                    if (Field[n, m] == KilledMark) Field[n, m] = "o";
-                    else
+                    if (Field[n, m] == KilledMark) continue;
                     Field[n, m] = MissedMark;
                 }
             }
             return Field;
+        }
+        private static bool ShipState(string[,] field, int i, int j, int decksCount)
+        {
+
+            for (int k = 0; k < decksCount; k++)
+            {
+                if (field[i, j + k] == KilledMark)
+                {
+                    continue;
+                }
+                return false;
+            }
+            return true;
         }
         private static int CountingDecksCount(string[,] Field, int i, int j, ref int firtShipDeck)
         {
@@ -70,7 +76,7 @@ namespace SeaBattle.BuisnessLogic
             {
                 for (int k = 1; k <= 4; k++)
                 {
-                    if (String.IsNullOrEmpty(Field[i, j + k]) || (Field[i, j + k] == MissedMark))
+                    if (String.IsNullOrEmpty(Field[i, j + k]) || (Field[i, j + k] == "X"))
                     {
                         break;
                     }
@@ -82,7 +88,7 @@ namespace SeaBattle.BuisnessLogic
             {
                 for (int k = -1; k >= -4; k--)
                 {
-                    if (String.IsNullOrEmpty(Field[i, j + k]) || (Field[i, j + k] == MissedMark))
+                    if (String.IsNullOrEmpty(Field[i, j + k]) || (Field[i, j + k] == "X"))
                     {
                         break;
                     }
@@ -95,17 +101,15 @@ namespace SeaBattle.BuisnessLogic
             return decksCount;
 
         }
-        private static bool CheckingTheShipState(string[,] Field, int i, int j, int deckCount)
+        private static string[,] MissedAttack(string[,] Field, int i, int j)
         {
-            for (int k = 0; k < deckCount; k++)
-            {
-                if (Field[i, j + k] == KilledMark)
-                {
-                    continue;
-                }
-                return false;
-            }
-            return true;
+            Field[i, j] = MissedMark;
+            return Field;
+        }
+        private static string[,] SucsessfullAttack(string[,] Field, int i, int j)
+        {
+            Field[i, j] = KilledMark;
+            return Field;
         }
         #endregion
     }

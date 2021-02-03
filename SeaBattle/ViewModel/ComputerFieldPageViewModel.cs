@@ -18,7 +18,7 @@ namespace SeaBattle.ViewModel
         private ObservableCollection<Ship> _ships;
         bool isComputerMove = false;
         private const string MissedMark = "X";
-        private const string KilledMark = "O";
+        private const string KilledMark = "W";
 
         private int OneDeckShipDecksCount = 1;
         private int TwoDeckShipDeksCount = 2;
@@ -31,7 +31,7 @@ namespace SeaBattle.ViewModel
         private int FourDeckShipCount = 1;
 
         private int NumberOfRemainingUserShips = 10;
-        private int NumberOfRemainingComputerShips = 20;
+        private int NumberOfRemainingComputerShips = 10;
         #endregion
 
         #region PublicData
@@ -63,12 +63,12 @@ namespace SeaBattle.ViewModel
 
             _ships = new ObservableCollection<Ship>(ships);
 
-          /*  #region ShipsGenerating
+            #region ShipsGenerating
             ShipsGeneration(FourDeckShipCount, FourDeckShipDeksCount);
             ShipsGeneration(thrieDeckShipCount, ThrieDeckShipDeksCount);
             ShipsGeneration(OneDeckShipCount, OneDeckShipDecksCount);
             ShipsGeneration(TwoDeckShipCount, TwoDeckShipDeksCount);
-            #endregion*/
+            #endregion
         }
 
         #region Commands
@@ -76,8 +76,6 @@ namespace SeaBattle.ViewModel
 
         private void MakeDamageCommandAction(object p)
         {
-            isComputerMove = true;
-
             int Cell = 0;
             string cellString = string.Empty;
 
@@ -88,174 +86,86 @@ namespace SeaBattle.ViewModel
             }
 
             CellIndex Indexes = SearchCellIndexes(Cell);
-
             Field fields = CellsAssignment();
 
-            if (fields.ComputerField[Indexes.I_index, Indexes.J_index] == MissedMark ||
-                fields.ComputerField[Indexes.I_index, Indexes.J_index] == KilledMark)
-            {
-                isComputerMove = false;
-                return; 
-            }
+            if (fields.ComputerField[Indexes.I_index, Indexes.J_index] == KilledMark ||
+                fields.ComputerField[Indexes.I_index, Indexes.J_index] == MissedMark) return;
+
+            //isComputerMove = true;
 
             bool isMissed = GameProcess.DamageCreating(fields.ComputerField, Indexes.I_index, Indexes.J_index);
 
             if (isMissed is true)
             {
-                MissedAction(Ships, Cell);
+                MissedAction(Cell, Ships, Colors.Red, MissedMark);
             }
-
-            else 
+            if (isMissed is false)
             {
-               // ConsequencesOfAttack(fields.ComputerField, Ships);
-                isComputerMove = false;
+                bool isShipKilled = GameProcess.ChekedTheShipState(fields.ComputerField, Indexes.I_index, Indexes.J_index);
 
-                NumberOfRemainingComputerShips--;
-                if (NumberOfRemainingComputerShips is 0)
-                    MessageBox.Show("Congratulation", "You win", MessageBoxButton.OK, MessageBoxImage.Information);
-            }
-            //async//заморозить окно//алгортим удара переделать
-
-            // ComputersMoveAction(fields, Cell);
-            while (isComputerMove != false)
-            {
-                if (isComputerMove == true)
+                if (isShipKilled is false)
                 {
-                    isComputerMove = false;
-
-                    CellIndex CellsIndexes = SearchRandomCells(fields.UserField);
-
-                    isMissed = GameProcess.DamageCreating(fields.UserField, CellsIndexes.I_index, CellsIndexes.J_index);
-
-                    Cell = SearchCellIndex(CellsIndexes.I_index, CellsIndexes.J_index);
-
-                    if (isMissed is true)
+                    MissedAction(Cell, Ships, Colors.Black, KilledMark);
+                }
+                if (isShipKilled is true)
+                {
+                    NumberOfRemainingComputerShips--;
+                    Ships = ConsequencesOfAttack(fields.ComputerField, Ships);
+                    if (NumberOfRemainingComputerShips is 0) 
                     {
-                        MissedAction(vm.Ships, Cell);
-                    }
-
-                    else
-                    {
+                        MessageBox.Show("You win!", "Congratulation", MessageBoxButton.OK, MessageBoxImage.Information);
                         isComputerMove = true;
-                        bool isShipKilled = ConsequencesOfAttack(fields.UserField, vm.Ships, MissedMark);
-                        if(isShipKilled)
-                        NumberOfRemainingUserShips--;
-                        if (NumberOfRemainingUserShips is 0)
-                        {
-                            MessageBox.Show("Try again", "You lose", MessageBoxButton.OK, MessageBoxImage.Error);
-                            break;
-                        }
+                        return;
                     }
+     
                 }
             }
+
+            //сделать ход компьютера
+
+
         }
         #endregion
 
         #region PrivateMethods
-        private void ComputersMoveAction(Field fields, int Cell)
+        private ObservableCollection<Ship> ConsequencesOfAttack(string[,] field, ObservableCollection<Ship> Ships)
         {
-            bool isMissed;
-          
-        }
-        private void MissedAction(ObservableCollection<Ship> Ships, int Cell)
-        {
-            Ships[Cell] = new Ship
-            {
-                Content = MissedMark,
-                Color = new SolidColorBrush(Colors.Red),
-                Border = new Thickness(0.5)
-            };
-        }
-        private int SearchCellIndex(int I, int J)
-        {
-            int Cell = 0;
             for (int i = 0; i < 11; i++)
             {
                 for (int j = 0; j < 11; j++)
                 {
-                    if (i == I && j == J)
-                        Cell = i * 11 + j;
-                }
-            }
-            return Cell;
-        }
-        private int CountingNullElements(string[,] userField)
-        {
-            int nullElementsCount = 0;
-            for (int i = 0; i < 11; i++)
-            {
-                for (int j = 0; j < 11; j++)
-                {
-                    if (userField[i, j] is null)
-                        nullElementsCount++;
-                }
-            }
-            return nullElementsCount;
-        }
-        private CellIndex SearchRandomCells(string [,] UserField)
-        {
-            CellIndex cellIndex = new CellIndex();
-            var random = new Random();
-            int ItterationCount = 0;
-            while (true)
-            {
-                if (CountingNullElements(UserField) == 0) break;
-
-                ItterationCount++;
-                cellIndex.I_index = random.Next(1, 9);
-                cellIndex.J_index = random.Next(1, 9);
-
-                if (ItterationCount == 11)
-                {
-                    for (int i = 10; i >= 0; i--)
-                    {
-                        for (int j = 10; j >= 0; j--)
-                        {
-                            if (UserField[i, j] != MissedMark)
-                            {
-                                cellIndex.I_index = i;
-                                cellIndex.J_index = j;
-                                return cellIndex;
-                            }
-                        }
-                    }
-                }
-                if (UserField[cellIndex.I_index, cellIndex.J_index] == MissedMark ||
-                   (UserField[cellIndex.I_index, cellIndex.J_index] == KilledMark))
-                    continue;
-                break;
-            }
-            return cellIndex;
-        }
-        private bool ConsequencesOfAttack(string[,] Field, ObservableCollection<Ship> Ships, string Mark)
-        {
-            bool isShipKilled = false;
-            for (int i = 0; i < 11; i++)
-            {
-                for (int j = 0; j < 11; j++)
-                {
-                    if (Field[i, j] == MissedMark && Ships[i * 11 + j].Content != MissedMark)
+                    if (field[i, j] == MissedMark && Ships[i * 11 + j].Content != MissedMark)
                     {
                         Ships[i * 11 + j] = new Ship
                         {
-                            Content = Field[i, j],
+                            Content = field[i, j],
                             Color = new SolidColorBrush(Colors.Red),
                             Border = new Thickness(0.5)
+
                         };
-                        isShipKilled = true;
                     }
-                    else if (Field[i, j] == KilledMark)
+                    else if (field[i, j] == KilledMark)
                     {
                         Ships[i * 11 + j] = new Ship
                         {
-                            Content = Mark,
-                            Color = new SolidColorBrush(Colors.DarkRed),
+                            Content = field[i, j],
+                            Color = new SolidColorBrush(Colors.Black),
                             Border = new Thickness(1)
                         };
                     }
                 }
             }
-            if (isShipKilled) return true; return false;
+            return Ships;
+        }
+        private void MissedAction(int cell, ObservableCollection<Ship> ships, Color color, string Mark)
+        {
+            ships[cell] = new Ship
+            {
+                Content = Mark,
+                Color = new SolidColorBrush(color),
+                Border = new Thickness(0.5)
+            };
+
         }
         private Field CellsAssignment()
         {
@@ -266,12 +176,7 @@ namespace SeaBattle.ViewModel
                 for (int j = 0; j < 11; j++)
                 {
                     field.ComputerField[i, j] = Ships[i * 11 + j].Content;
-                    //   field.UserField[i, j] = vm.Ships[i * 11 + j].Content;
-                    if (vm.Ships[i * 11 + j].Content == "O")
-                        field.UserField[i, j] = " ";
-
-                    else
-                        field.UserField[i, j] = vm.Ships[i * 11 + j].Content;
+                    field.UserField[i, j] = vm.Ships[i * 11 + j].Content;
                 }
             }
             return field;
