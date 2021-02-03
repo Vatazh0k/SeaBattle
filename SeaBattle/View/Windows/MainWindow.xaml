@@ -84,7 +84,7 @@
               Margin="0,30,10,0"  
               VerticalAlignment="Top"
               HorizontalAlignment="Right" 
-              Height="390" Width="462">
+              Height="489" Width="462">
 
                 <Frame Content="{Binding CurrentPage}"
                    NavigationUIVisibility="Hidden" Margin="0,-16,0,0">

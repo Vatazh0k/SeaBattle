@@ -91,7 +91,7 @@
 
         </Label>
 
-        <Button Grid.Column="1" Grid.Row="4"
+        <Button Grid.Column="1" Grid.Row="3"
                 Margin="161,20,34,20"
                 FontStyle="Italic"
                 Command="{Binding ReadyCommand}"
