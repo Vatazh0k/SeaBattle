@@ -63,12 +63,12 @@ namespace SeaBattle.ViewModel
 
             _ships = new ObservableCollection<Ship>(ships);
 
-            #region ShipsGenerating
+          /*  #region ShipsGenerating
             ShipsGeneration(FourDeckShipCount, FourDeckShipDeksCount);
             ShipsGeneration(thrieDeckShipCount, ThrieDeckShipDeksCount);
             ShipsGeneration(OneDeckShipCount, OneDeckShipDecksCount);
             ShipsGeneration(TwoDeckShipCount, TwoDeckShipDeksCount);
-            #endregion
+            #endregion*/
         }
 
         #region Commands
@@ -102,17 +102,12 @@ namespace SeaBattle.ViewModel
 
             if (isMissed is true)
             {
-                Ships[Cell] = new Ship
-                {
-                    Content = MissedMark,
-                    Color = new SolidColorBrush(Colors.Red),
-                    Border = new Thickness(0.5)
-                };
+                MissedAction(Ships, Cell);
             }
 
             else 
             {
-                ConsequencesOfAttack(fields.ComputerField, Ships);
+               // ConsequencesOfAttack(fields.ComputerField, Ships);
                 isComputerMove = false;
 
                 NumberOfRemainingComputerShips--;
@@ -121,6 +116,7 @@ namespace SeaBattle.ViewModel
             }
             //async//заморозить окно//алгортим удара переделать
 
+            // ComputersMoveAction(fields, Cell);
             while (isComputerMove != false)
             {
                 if (isComputerMove == true)
@@ -135,30 +131,41 @@ namespace SeaBattle.ViewModel
 
                     if (isMissed is true)
                     {
-                        vm.Ships[Cell] = new Ship
-                        {
-                            Content = MissedMark,
-                            Color = new SolidColorBrush(Colors.Red),
-                            Border = new Thickness(0.5)
-                        };
+                        MissedAction(vm.Ships, Cell);
                     }
 
                     else
                     {
                         isComputerMove = true;
-                        ConsequencesOfAttack(fields.UserField, vm.Ships);
-
+                        bool isShipKilled = ConsequencesOfAttack(fields.UserField, vm.Ships, MissedMark);
+                        if(isShipKilled)
                         NumberOfRemainingUserShips--;
-                        if(NumberOfRemainingUserShips is 10)
+                        if (NumberOfRemainingUserShips is 0)
+                        {
                             MessageBox.Show("Try again", "You lose", MessageBoxButton.OK, MessageBoxImage.Error);
+                            break;
+                        }
                     }
                 }
             }
-
         }
         #endregion
 
         #region PrivateMethods
+        private void ComputersMoveAction(Field fields, int Cell)
+        {
+            bool isMissed;
+          
+        }
+        private void MissedAction(ObservableCollection<Ship> Ships, int Cell)
+        {
+            Ships[Cell] = new Ship
+            {
+                Content = MissedMark,
+                Color = new SolidColorBrush(Colors.Red),
+                Border = new Thickness(0.5)
+            };
+        }
         private int SearchCellIndex(int I, int J)
         {
             int Cell = 0;
@@ -172,6 +179,19 @@ namespace SeaBattle.ViewModel
             }
             return Cell;
         }
+        private int CountingNullElements(string[,] userField)
+        {
+            int nullElementsCount = 0;
+            for (int i = 0; i < 11; i++)
+            {
+                for (int j = 0; j < 11; j++)
+                {
+                    if (userField[i, j] is null)
+                        nullElementsCount++;
+                }
+            }
+            return nullElementsCount;
+        }
         private CellIndex SearchRandomCells(string [,] UserField)
         {
             CellIndex cellIndex = new CellIndex();
@@ -179,32 +199,37 @@ namespace SeaBattle.ViewModel
             int ItterationCount = 0;
             while (true)
             {
+                if (CountingNullElements(UserField) == 0) break;
+
                 ItterationCount++;
                 cellIndex.I_index = random.Next(1, 9);
                 cellIndex.J_index = random.Next(1, 9);
 
                 if (ItterationCount == 11)
                 {
-                    for (int i = 0; i < 11; i++)
+                    for (int i = 10; i >= 0; i--)
                     {
-                        for (int j = 0; j < 11; j++)
+                        for (int j = 10; j >= 0; j--)
                         {
                             if (UserField[i, j] != MissedMark)
                             {
                                 cellIndex.I_index = i;
                                 cellIndex.J_index = j;
+                                return cellIndex;
                             }
                         }
                     }
                 }
-                if (UserField[cellIndex.I_index, cellIndex.J_index] == MissedMark)
+                if (UserField[cellIndex.I_index, cellIndex.J_index] == MissedMark ||
+                   (UserField[cellIndex.I_index, cellIndex.J_index] == KilledMark))
                     continue;
                 break;
             }
             return cellIndex;
         }
-        private void ConsequencesOfAttack(string[,] Field, ObservableCollection<Ship> Ships)
+        private bool ConsequencesOfAttack(string[,] Field, ObservableCollection<Ship> Ships, string Mark)
         {
+            bool isShipKilled = false;
             for (int i = 0; i < 11; i++)
             {
                 for (int j = 0; j < 11; j++)
@@ -216,20 +241,21 @@ namespace SeaBattle.ViewModel
                             Content = Field[i, j],
                             Color = new SolidColorBrush(Colors.Red),
                             Border = new Thickness(0.5)
-
                         };
+                        isShipKilled = true;
                     }
-                    else if (Field[i, j] == KilledMark && Ships[i * 11 + j].Content != KilledMark)
+                    else if (Field[i, j] == KilledMark)
                     {
                         Ships[i * 11 + j] = new Ship
                         {
-                            Content = Field[i, j],
+                            Content = Mark,
                             Color = new SolidColorBrush(Colors.DarkRed),
                             Border = new Thickness(1)
                         };
                     }
                 }
             }
+            if (isShipKilled) return true; return false;
         }
         private Field CellsAssignment()
         {
@@ -240,7 +266,12 @@ namespace SeaBattle.ViewModel
                 for (int j = 0; j < 11; j++)
                 {
                     field.ComputerField[i, j] = Ships[i * 11 + j].Content;
-                    field.UserField[i, j] = vm.Ships[i * 11 + j].Content;
+                    //   field.UserField[i, j] = vm.Ships[i * 11 + j].Content;
+                    if (vm.Ships[i * 11 + j].Content == "O")
+                        field.UserField[i, j] = " ";
+
+                    else
+                        field.UserField[i, j] = vm.Ships[i * 11 + j].Content;
                 }
             }
             return field;

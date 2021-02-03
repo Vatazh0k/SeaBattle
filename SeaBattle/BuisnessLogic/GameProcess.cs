@@ -56,7 +56,8 @@ namespace SeaBattle.BuisnessLogic
 
                     if (n == 11) continue;
                     if (m == 11) break;
-                    if (Field[n, m] == KilledMark) continue;
+                    if (Field[n, m] == KilledMark) Field[n, m] = "o";
+                    else
                     Field[n, m] = MissedMark;
                 }
             }
