@@ -102,6 +102,7 @@ namespace SeaBattle.BuisnessLogic
             Binding ContentBinding = new Binding();
             ContentBinding.Source = vm;
             ContentBinding.Path = new PropertyPath($"Ships[{i * 11 + j}].Content");
+            ContentBinding.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
             ContentBinding.Mode = BindingMode.OneWay;
             button[i, j].SetBinding(Button.ContentProperty, ContentBinding);
 

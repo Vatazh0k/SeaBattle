@@ -89,21 +89,21 @@ namespace SeaBattle.ViewModel
             CellIndex Indexes = SearchCellIndexes(Cell);
             Field fields = CellsAssignment();
 
-            UserMove(fields, Indexes, Cell);
+            UserTurn(fields, Indexes, Cell);
 
-            //ComputerMoveAsync(fields.UserField);//не розумію в чому пробелма//freeze on 1sek
+            //ComputerTurnAsync(fields.UserField);//не можу заморозити форму оскілки SolidColorBrush це Freezable, якій є похідним від DispatcherObject
 
-            ComputerMove(fields.UserField);
+            ComputerTurn(fields.UserField);
 
         }
         #endregion
-
+         
         #region PrivateMethods
-        private async void ComputerMoveAsync(string[,] userField)
+        private async void ComputerTurnAsync(string[,] userField)
         {
-            await Task.Run(() => ComputerMove(userField));
+            await Task.Run(() => ComputerTurn(userField));
         }
-        private void ComputerMove(string[,] userField)
+        private void ComputerTurn(string[,] userField)
         {
             while (isComputerMove != false)
             {
@@ -143,9 +143,8 @@ namespace SeaBattle.ViewModel
                     }
                 }
             }
-            
         }
-        private void UserMove(Field fields, CellIndex Indexes, int Cell)
+        private void UserTurn(Field fields, CellIndex Indexes, int Cell)
         {
             if (fields.ComputerField[Indexes.I_index, Indexes.J_index] == KilledMark ||
                fields.ComputerField[Indexes.I_index, Indexes.J_index] == MissedMark) return;
@@ -181,7 +180,7 @@ namespace SeaBattle.ViewModel
                 }
             }
         }
-
+         
         private int ConvertIndexesToCell(CellIndex indexes)
         {
             int cell = 0;
