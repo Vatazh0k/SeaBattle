@@ -91,18 +91,12 @@ namespace SeaBattle.ViewModel
 
             UserTurn(fields, Indexes, Cell);
 
-            //ComputerTurnAsync(fields.UserField);//не можу заморозити форму оскілки SolidColorBrush це Freezable, якій є похідним від DispatcherObject
-
             ComputerTurn(fields.UserField);
 
         }
         #endregion
          
         #region PrivateMethods
-        private async void ComputerTurnAsync(string[,] userField)
-        {
-            await Task.Run(() => ComputerTurn(userField));
-        }
         private void ComputerTurn(string[,] userField)
         {
             while (isComputerMove != false)
