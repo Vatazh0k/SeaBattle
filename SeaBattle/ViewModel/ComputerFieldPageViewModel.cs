@@ -68,7 +68,7 @@ namespace SeaBattle.ViewModel
 
             _ships = new ObservableCollection<Ship>(ships);
 
-            #region ShipsGenerating
+           #region ShipsGenerating
             ShipsGeneration(FourDeckShipCount, FourDeckShipDeksCount);
             ShipsGeneration(thrieDeckShipCount, ThrieDeckShipDeksCount);
             ShipsGeneration(OneDeckShipCount, OneDeckShipDecksCount);
