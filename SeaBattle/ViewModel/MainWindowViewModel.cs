@@ -177,9 +177,11 @@ namespace SeaBattle.ViewModel
             {
                 for (int j = 0; j < 11; j++)
                 {
+                    tempArr[i, j] = null;
                     if (Ships[i * 11 + j].isOnField == true)
+                    {
                         tempArr[i, j] = "O";
-                    else tempArr[i, j] = null;
+                    }
                 }
             }
             return tempArr;
@@ -210,7 +212,6 @@ namespace SeaBattle.ViewModel
                 {
                     Source = new BitmapImage(new Uri(Path, UriKind.Relative)),
                     Stretch = Stretch.Fill
-
                 },
                 isOnField = true,
                 Border = new Thickness(left,top,right,bottom),

@@ -60,7 +60,7 @@ namespace SeaBattle.ViewModel
             var ships = Enumerable.Range(0, 121)
             .Select(i => new Ship
             {
-                Content = new Image(),
+               // Content = new Image(),
                 Border = new Thickness(0.5),
                 isOnField = false,
                 isDead = false
@@ -233,11 +233,11 @@ namespace SeaBattle.ViewModel
                     {
                         Ships[i * 11 + j] = new Ship
                         {
-                            Content = new Image
-                            {
-                                Source = new BitmapImage(new Uri(PathToShipContent.MissedMark, UriKind.Relative)),
-                                 Stretch = Stretch.Fill
-                            },
+                            //Content = new Image
+                            //{
+                            //    Source = new BitmapImage(new Uri(PathToShipContent.MissedMark, UriKind.Relative)),
+                            //     Stretch = Stretch.Fill
+                            //},
                             Border = new Thickness(1),
                         };
                     }
@@ -245,11 +245,11 @@ namespace SeaBattle.ViewModel
                     {
                         Ships[i * 11 + j] = new Ship
                         {
-                            Content = new Image
-                            {
-                                Source = new BitmapImage(new Uri(PathToShipContent.KilledShip, UriKind.Relative)),
-                                 Stretch = Stretch.Fill
-                            },
+                           // Content = new Image
+                           // {
+                           //     Source = new BitmapImage(new Uri(PathToShipContent.KilledShip, UriKind.Relative)),
+                           //      Stretch = Stretch.Fill
+                           // },
                             Border = new Thickness(1),
                         };
                     }
@@ -261,11 +261,11 @@ namespace SeaBattle.ViewModel
         {
             ships[cell] = new Ship
             {
-                Content = new System.Windows.Controls.Image
-                {
-                    Source = new BitmapImage(new Uri(Mark, UriKind.Relative)),
-                    Stretch = Stretch.Fill
-                },
+                //Content = new System.Windows.Controls.Image
+                //{
+                //    Source = new BitmapImage(new Uri(Mark, UriKind.Relative)),
+                //    Stretch = Stretch.Fill
+                //},
                 Border = new Thickness(BorderSize),
             };
 
@@ -360,11 +360,11 @@ namespace SeaBattle.ViewModel
         {
             Ships[Cell] = new Ship
             {
-                Content = new Image
-                {
-                    Source = new BitmapImage(new Uri(PathToShipContent.EmptyCell, UriKind.Relative)),
-                    Stretch = Stretch.Fill
-                },
+                //Content = new Image
+                //{
+                //    Source = new BitmapImage(new Uri(PathToShipContent.EmptyCell, UriKind.Relative)),
+                //    Stretch = Stretch.Fill
+                //},
                 isOnField = true,
                 Border = new Thickness(1)
             };
@@ -383,7 +383,7 @@ namespace SeaBattle.ViewModel
             }
             return tempArr;
         }
-        #endregion
+        #endregion*/
     }
 }
    
