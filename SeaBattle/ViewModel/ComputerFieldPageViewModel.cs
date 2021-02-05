@@ -7,8 +7,10 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace SeaBattle.ViewModel
 {
@@ -19,7 +21,8 @@ namespace SeaBattle.ViewModel
         private ObservableCollection<Ship> _ships;
         bool isComputerMove = false;
         private const string MissedMark = "X";
-        private const string KilledMark = "W";
+        private const string ShipMark = "O";
+        private const string EmptyCellMark = " ";
 
         private int OneDeckShipDecksCount = 1;
         private int TwoDeckShipDeksCount = 2;
@@ -57,9 +60,10 @@ namespace SeaBattle.ViewModel
             var ships = Enumerable.Range(0, 121)
             .Select(i => new Ship
             {
-                Content = null,
-                Color = new SolidColorBrush(Colors.White),
-                Border = new Thickness(0.5)
+                Content = new Image(),
+                Border = new Thickness(0.5),
+                isOnField = false,
+                isDead = false
             });
 
             _ships = new ObservableCollection<Ship>(ships);
@@ -111,7 +115,7 @@ namespace SeaBattle.ViewModel
 
                 if (isMissed is true)
                 {
-                    MissedAction(Cell, vm.Ships, Colors.Red, MissedMark, 0.5);
+                    MissedAction(Cell, vm.Ships, PathToShipContent.MissedMark, 0.5);
                 }
                 if (isMissed is false)
                 {
@@ -121,7 +125,7 @@ namespace SeaBattle.ViewModel
 
                     if (isShipKilled is false)
                     {
-                        MissedAction(Cell, vm.Ships, Colors.Black, KilledMark, 1);
+                        MissedAction(Cell, vm.Ships, PathToShipContent.KilledShip, 1);
                     }
                     if (isShipKilled is true)
                     {
@@ -140,7 +144,7 @@ namespace SeaBattle.ViewModel
         }
         private void UserTurn(Field fields, CellIndex Indexes, int Cell)
         {
-            if (fields.ComputerField[Indexes.I_index, Indexes.J_index] == KilledMark ||
+            if (fields.ComputerField[Indexes.I_index, Indexes.J_index] == ShipMark ||
                fields.ComputerField[Indexes.I_index, Indexes.J_index] == MissedMark) return;
 
             isComputerMove = true;
@@ -149,7 +153,7 @@ namespace SeaBattle.ViewModel
 
             if (isMissed is true)
             {
-                MissedAction(Cell, Ships, Colors.Red, MissedMark, 0.5);
+                MissedAction(Cell, Ships, PathToShipContent.MissedMark, 0.5);
             }
             if (isMissed is false)
             {
@@ -158,7 +162,7 @@ namespace SeaBattle.ViewModel
 
                 if (isShipKilled is false)
                 {
-                    MissedAction(Cell, Ships, Colors.Black, KilledMark, 0.5);
+                    MissedAction(Cell, Ships, PathToShipContent.KilledShip, 0.5);
                 }
                 if (isShipKilled is true)
                 {
@@ -212,7 +216,7 @@ namespace SeaBattle.ViewModel
         }
         private bool CellPositionValidation(string[,] userField, int i, int j)
         {
-            if (userField[i, j] == KilledMark || userField[i, j] == MissedMark)
+            if (userField[i, j] == ShipMark || userField[i, j] == MissedMark)
             {
                 return false;
             }
@@ -225,36 +229,44 @@ namespace SeaBattle.ViewModel
             {
                 for (int j = 0; j < 11; j++)
                 {
-                    if (field[i, j] == MissedMark && Ship[i * 11 + j].Content != MissedMark)
+                    if (field[i, j] == MissedMark && Ship[i * 11 + j].Content.ToString() != PathToShipContent.MissedMark)
                     {
-                        Ship[i * 11 + j] = new Ship
+                        Ships[i * 11 + j] = new Ship
                         {
-                            Content = field[i, j],
-                            Color = new SolidColorBrush(Colors.Red),
-                            Border = new Thickness(0.5)
-
+                            Content = new Image
+                            {
+                                Source = new BitmapImage(new Uri(PathToShipContent.MissedMark, UriKind.Relative)),
+                                 Stretch = Stretch.Fill
+                            },
+                            Border = new Thickness(1),
                         };
                     }
-                    else if (field[i, j] == KilledMark)
+                    else if (field[i, j] == ShipMark)
                     {
-                        Ship[i * 11 + j] = new Ship
+                        Ships[i * 11 + j] = new Ship
                         {
-                            Content = field[i, j],
-                            Color = new SolidColorBrush(Colors.Black),
-                            Border = new Thickness(1)
+                            Content = new Image
+                            {
+                                Source = new BitmapImage(new Uri(PathToShipContent.KilledShip, UriKind.Relative)),
+                                 Stretch = Stretch.Fill
+                            },
+                            Border = new Thickness(1),
                         };
                     }
                 }
             }
             return Ship;
         }
-        private void MissedAction(int cell, ObservableCollection<Ship> ships, Color color, string Mark, double BorderSize)
+        private void MissedAction(int cell, ObservableCollection<Ship> ships, string Mark, double BorderSize)
         {
             ships[cell] = new Ship
             {
-                Content = Mark,
-                Color = new SolidColorBrush(color),
-                Border = new Thickness(BorderSize)
+                Content = new System.Windows.Controls.Image
+                {
+                    Source = new BitmapImage(new Uri(Mark, UriKind.Relative)),
+                    Stretch = Stretch.Fill
+                },
+                Border = new Thickness(BorderSize),
             };
 
         }
@@ -266,8 +278,14 @@ namespace SeaBattle.ViewModel
             {
                 for (int j = 0; j < 11; j++)
                 {
-                    field.ComputerField[i, j] = Ships[i * 11 + j].Content;
-                    field.UserField[i, j] = vm.Ships[i * 11 + j].Content;
+                    if(Ships[i * 11 + j].isDead)
+                    field.ComputerField[i, j] = ShipMark;
+                    if (Ships[i * 11 + j].isOnField && !Ships[i * 11 + j].isDead)
+                        field.ComputerField[i, j] = EmptyCellMark;
+                    if (vm.Ships[i * 11 + j].isDead)
+                    field.UserField[i, j] = ShipMark;
+                    if (vm.Ships[i * 11 + j].isOnField && !vm.Ships[i * 11 + j].isDead)
+                        field.UserField[i, j] = EmptyCellMark;
                 }
             }
             return field;
@@ -334,7 +352,7 @@ namespace SeaBattle.ViewModel
                             break;
                     }
 
-                    tempArr[Indexes.I_index, Indexes.J_index] = KilledMark;
+                    tempArr[Indexes.I_index, Indexes.J_index] = ShipMark;
                 }
             }
         }
@@ -342,10 +360,13 @@ namespace SeaBattle.ViewModel
         {
             Ships[Cell] = new Ship
             {
-                Content = " ",
-                Border = new Thickness(0.5),
-                Color = new SolidColorBrush(Colors.White)
-
+                Content = new Image
+                {
+                    Source = new BitmapImage(new Uri(PathToShipContent.EmptyCell, UriKind.Relative)),
+                    Stretch = Stretch.Fill
+                },
+                isOnField = true,
+                Border = new Thickness(1)
             };
         }
         private string[,] CellsAssignment(string[,] tempArr, ObservableCollection<Ship> Ships)
@@ -354,7 +375,10 @@ namespace SeaBattle.ViewModel
             {
                 for (int j = 0; j < 11; j++)
                 {
-                    tempArr[i, j] = Ships[i * 11 + j].Content;
+                    if (Ships[i * 11 + j].isDead == true)
+                        tempArr[i, j] = ShipMark;
+                    if(Ships[i * 11 + j].isOnField == true && Ships[i * 11 + j].isDead == false)
+                        tempArr[i, j] = EmptyCellMark;
                 }
             }
             return tempArr;

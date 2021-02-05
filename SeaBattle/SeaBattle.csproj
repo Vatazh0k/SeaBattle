@@ -7,13 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Resource\Images\ShipsForField\**" />
-    <EmbeddedResource Remove="Resource\Images\ShipsForField\**" />
-    <None Remove="Resource\Images\ShipsForField\**" />
-    <Page Remove="Resource\Images\ShipsForField\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Remove="Resource\Images\DoubleDeckShip.png" />
     <None Remove="Resource\Images\ForPages\DoubleDeckShipForPage.png" />
     <None Remove="Resource\Images\ForPages\FourDeckShipForPage.png" />
@@ -21,6 +14,19 @@
     <None Remove="Resource\Images\ForPages\ThrieDeckShipForPage.png" />
     <None Remove="Resource\Images\FourDeckShip.png" />
     <None Remove="Resource\Images\OneDeckShip.png" />
+    <None Remove="Resource\Images\ShipsForField\DethShip.png" />
+    <None Remove="Resource\Images\ShipsForField\EmptyCell.png" />
+    <None Remove="Resource\Images\ShipsForField\FirstDeck_DoubleDeckShip.png" />
+    <None Remove="Resource\Images\ShipsForField\FirstDeck_FourDeckShip.png" />
+    <None Remove="Resource\Images\ShipsForField\FirstDeck_ThrieDeckShip.png" />
+    <None Remove="Resource\Images\ShipsForField\FourDeck_FourDeckShip.png" />
+    <None Remove="Resource\Images\ShipsForField\MissedMark.png" />
+    <None Remove="Resource\Images\ShipsForField\OneDeckShip.png" />
+    <None Remove="Resource\Images\ShipsForField\SecondDeck_DoubleDeckShip.png" />
+    <None Remove="Resource\Images\ShipsForField\SecondDeck_FourDeckShip.png" />
+    <None Remove="Resource\Images\ShipsForField\SecondDeck_ThrieDeckShip.png" />
+    <None Remove="Resource\Images\ShipsForField\ThirdDeck_ThrieDeckShip.png" />
+    <None Remove="Resource\Images\ShipsForField\ThrieDeck_FourDeckShip.png" />
     <None Remove="Resource\Images\ThrieDeckShip.png" />
   </ItemGroup>
 
@@ -44,6 +50,45 @@
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Resource\Images\OneDeckShip.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resource\Images\ShipsForField\DethShip.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resource\Images\ShipsForField\EmptyCell.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resource\Images\ShipsForField\FirstDeck_DoubleDeckShip.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resource\Images\ShipsForField\FirstDeck_FourDeckShip.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resource\Images\ShipsForField\FirstDeck_ThrieDeckShip.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resource\Images\ShipsForField\FourDeck_FourDeckShip.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resource\Images\ShipsForField\MissedMark.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resource\Images\ShipsForField\OneDeckShip.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resource\Images\ShipsForField\SecondDeck_DoubleDeckShip.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resource\Images\ShipsForField\SecondDeck_FourDeckShip.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resource\Images\ShipsForField\SecondDeck_ThrieDeckShip.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resource\Images\ShipsForField\ThirdDeck_ThrieDeckShip.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resource\Images\ShipsForField\ThrieDeck_FourDeckShip.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Resource\Images\ThrieDeckShip.png">

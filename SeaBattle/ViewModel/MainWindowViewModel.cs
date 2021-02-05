@@ -12,7 +12,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using static System.Net.Mime.MediaTypeNames;
+using System.Windows.Media.Imaging;
 
 namespace SeaBattle.ViewModel
 {
@@ -93,8 +93,8 @@ namespace SeaBattle.ViewModel
             var ships = Enumerable.Range(0, 121)
             .Select(i => new Ship
             {
-                Content = null,
-                Color = new SolidColorBrush(Colors.White),
+                Content = new Image(),
+                isOnField = false,
                 Border = new Thickness(0.5)
             });
 
@@ -177,7 +177,9 @@ namespace SeaBattle.ViewModel
             {
                 for (int j = 0; j < 11; j++)
                 {
-                    tempArr[i, j] = Ships[i * 11 + j].Content;
+                    if (Ships[i * 11 + j].isOnField == true)
+                        tempArr[i, j] = "O";
+                    else tempArr[i, j] = null;
                 }
             }
             return tempArr;
@@ -199,6 +201,20 @@ namespace SeaBattle.ViewModel
             }
             
             return indexes;
+        }
+        private void ShipOptions(string Path, int Cell, int left, int top, int right, int bottom)
+        {
+            Ships[Cell] = new Ship
+            {
+                Content = new Image
+                {
+                    Source = new BitmapImage(new Uri(Path, UriKind.Relative)),
+                    Stretch = Stretch.Fill
+
+                },
+                isOnField = true,
+                Border = new Thickness(left,top,right,bottom),
+            };
         }
         private void ShipsCountValidation(ref int Ship, int Cell, int DeckCount)
         {
@@ -224,75 +240,25 @@ namespace SeaBattle.ViewModel
                         break;
                     #region ShipsCreating
                     case 1:
-                        Ships[Cell] = new Ship
-                        {
-                            Content = "O",
-                            Border = new Thickness(1),
-                            Color = new SolidColorBrush(Colors.Black)
-                        };
+                        ShipOptions(PathToShipContent.OneDeckShip, Cell, 1,1,1,1);
                         break;
 
                     case 2:
-                        Ships[Cell] = new Ship
-                        {
-                            Content = "O",
-                            Border = new Thickness(1, 1, 0, 1),
-                            Color = new SolidColorBrush(Colors.Black)
-                        };
-                        Ships[Cell + 1] = new Ship
-                        {
-                            Content = "O",
-                            Border = new Thickness(0, 1, 1, 1),
-                            Color = new SolidColorBrush(Colors.Black)
-                        };
+                        ShipOptions(PathToShipContent.TwoDeckShip_FirstDeck, Cell, 1,1,0,1);
+                        ShipOptions(PathToShipContent.TwoDeckShip_SecondDeck, Cell+1, 0,1,1,1);
                         break;
 
 
                     case 3:
-                        Ships[Cell] = new Ship
-                        {
-                            Content = "O",
-                            Border = new Thickness(1, 1, 0, 1),
-                            Color = new SolidColorBrush(Colors.Black)
-                        };
-                        Ships[Cell + 1] = new Ship
-                        {
-                            Content = "O",
-                            Border = new Thickness(0, 1, 0, 1),
-                            Color = new SolidColorBrush(Colors.Black)
-                        };
-                        Ships[Cell + 2] = new Ship
-                        {
-                            Content = "O",
-                            Border = new Thickness(0, 1, 1, 1),
-                            Color = new SolidColorBrush(Colors.Black)
-                        };
+                        ShipOptions(PathToShipContent.ThrieDeckShip_FirstDeck, Cell, 1,1,0,1);
+                        ShipOptions(PathToShipContent.ThrieDeckShip_SecondDeck, Cell+1, 0,1,0,1);
+                        ShipOptions(PathToShipContent.ThrieDeckShip_ThirdDeck, Cell+2, 0,1,1,1);
                         break;
                     case 4:
-                        Ships[Cell] = new Ship
-                        {
-                            Content = "O",
-                            Border = new Thickness(1, 1, 0, 1),
-                            Color = new SolidColorBrush(Colors.Black)
-                        };
-                        Ships[Cell + 1] = new Ship
-                        {
-                            Content = "O",
-                            Border = new Thickness(0, 1, 0, 1),
-                            Color = new SolidColorBrush(Colors.Black)
-                        };
-                        Ships[Cell + 2] = new Ship
-                        {
-                            Content = "O",
-                            Border = new Thickness(0, 1, 0, 1),
-                            Color = new SolidColorBrush(Colors.Black)
-                        };
-                        Ships[Cell + 3] = new Ship
-                        {
-                            Content = "O",
-                            Border = new Thickness(0, 1, 1, 1),
-                            Color = new SolidColorBrush(Colors.Black)
-                        };
+                        ShipOptions(PathToShipContent.FourDeckShip_FirstDeck, Cell, 1,1,0,1);
+                        ShipOptions(PathToShipContent.FourDeckShip_SecondDeck, Cell+1, 0,1,0,1);
+                        ShipOptions(PathToShipContent.FourDeckShip_ThirdDeck, Cell+2, 0,1,0,1);
+                        ShipOptions(PathToShipContent.FourDeckShip_FourDeck, Cell+3, 0,1,1,1);
                         break;
                         #endregion
                 }
