@@ -81,7 +81,6 @@ namespace SeaBattle.ViewModel
 
         #region Commands
         private bool CanUseMakeDamageCommand(object p) => !isComputerMove;
-
         private void MakeDamageCommandAction(object p)
         {
             int Cell = 0;
@@ -385,7 +384,7 @@ namespace SeaBattle.ViewModel
             }
             return tempArr;
         }
-        #endregion*/
+        #endregion
     }
 }
    

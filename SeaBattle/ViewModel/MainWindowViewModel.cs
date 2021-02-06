@@ -271,4 +271,4 @@ namespace SeaBattle.ViewModel
 
     }
 } 
-  
+   

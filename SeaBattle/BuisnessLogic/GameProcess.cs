@@ -38,8 +38,6 @@ namespace SeaBattle.BuisnessLogic
             }
             return false;
         }
-
-        #region PrivateMethods
         public static string[,] ShipsFuneral(string[,] Field, int i, int j, int DecksCount)
         {
 
@@ -55,19 +53,6 @@ namespace SeaBattle.BuisnessLogic
                 }
             }
             return Field;
-        }
-        private static bool ShipState(string[,] field, int i, int j, int decksCount)
-        {
-
-            for (int k = 0; k < decksCount; k++)
-            {
-                if (field[i, j + k] == KilledMark)
-                {
-                    continue;
-                }
-                return false;
-            }
-            return true;
         }
         public static int CountingDecksCount(string[,] Field, int i, int j, ref int firtShipDeck)
         {
@@ -101,6 +86,22 @@ namespace SeaBattle.BuisnessLogic
             return decksCount;
 
         }
+
+        #region PrivateMethods
+
+        private static bool ShipState(string[,] field, int i, int j, int decksCount)
+        {
+
+            for (int k = 0; k < decksCount; k++)
+            {
+                if (field[i, j + k] == KilledMark)
+                {
+                    continue;
+                }
+                return false;
+            }
+            return true;
+        } 
         private static string[,] MissedAttack(string[,] Field, int i, int j)
         {
             Field[i, j] = MissedMark;
