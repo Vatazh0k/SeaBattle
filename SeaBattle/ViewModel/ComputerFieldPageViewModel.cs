@@ -95,8 +95,7 @@ namespace SeaBattle.ViewModel
 
             CellIndex Indexes = SearchCellIndexes(Cell);
 
-            UserTurn(fields, Indexes, Cell);///сделать чтоб если комп попал покорабл убивался весь
-            //отображать кол во оставшихся корабликов, изменить вьюшку с созданием кораблей, сделать чтоб если комп попал по кораблю, он убивал его всего.
+            UserTurn(fields, Indexes, Cell);
 
             ComputerTurn(fields.UserField);
 
@@ -114,34 +113,36 @@ namespace SeaBattle.ViewModel
 
                 bool isMissed = GameProcess.DamageCreating(userField, indexes.I_index, indexes.J_index);
 
-                isComputerMove = false;
-
                 if (isMissed is true)
                 {
+                    isComputerMove = false;
                     MissedAction(Cell, vm.Ships, PathToShipContent.MissedMark, 0.5);
                 }
                 if (isMissed is false)
                 {
-                    isComputerMove = true;
+                    int IndexOfTheFirstShpsDeck = 0;
 
-                    bool isShipKilled = GameProcess.ChekedTheShipState(userField, indexes.I_index, indexes.J_index);
+                    int DecksCount = GameProcess.CountingDecksCount(userField, indexes.I_index, indexes.J_index, ref IndexOfTheFirstShpsDeck);
 
-                    if (isShipKilled is false)
+                    IndexOfTheFirstShpsDeck = indexes.J_index - IndexOfTheFirstShpsDeck;
+
+                    for (int i = IndexOfTheFirstShpsDeck; i < DecksCount + IndexOfTheFirstShpsDeck; i++)
                     {
-                        MissedAction(Cell, vm.Ships, PathToShipContent.KilledShip, 1);
+                        userField[indexes.I_index,i] = ShipMark;
                     }
-                    if (isShipKilled is true)
-                    {
-                        NumberOfRemainingUserShips--;
-                        vm.Ships = ConsequencesOfAttack(userField, vm.Ships);
-                        if (NumberOfRemainingUserShips is 0)
-                        {
-                            MessageBox.Show("You loose!", "", MessageBoxButton.OK, MessageBoxImage.Information);
-                            isComputerMove = true;
-                            return;
-                        }
 
+                    userField = GameProcess.ShipsFuneral(userField, indexes.I_index, IndexOfTheFirstShpsDeck, DecksCount);
+
+                    NumberOfRemainingUserShips--;
+                    vm.Ships = ConsequencesOfAttack(userField, vm.Ships);
+                    if (NumberOfRemainingUserShips is 0)
+                    {
+                        MessageBox.Show("You loose!", "", MessageBoxButton.OK, MessageBoxImage.Information);
+                        isComputerMove = true;
+                        return;
                     }
+
+
                 }
             }
         }
@@ -367,7 +368,7 @@ namespace SeaBattle.ViewModel
                     Stretch = Stretch.Fill
                 },
                 isOnField = true,
-                Border = new Thickness(1)
+                Border = new Thickness(0.5)
             };
         }
         private string[,] CellsAssignment(string[,] tempArr, ObservableCollection<Ship> Ships)
@@ -379,7 +380,7 @@ namespace SeaBattle.ViewModel
                     if (Ships[i * 11 + j].isDead == true)
                         tempArr[i, j] = ShipMark;
                     if (Ships[i * 11 + j].isOnField == true && Ships[i * 11 + j].isDead == false)
-                        tempArr[i, j] = EmptyCellMark;//isMissed;
+                        tempArr[i, j] = EmptyCellMark;
                 }
             }
             return tempArr;

@@ -40,7 +40,7 @@ namespace SeaBattle.BuisnessLogic
         }
 
         #region PrivateMethods
-        private static string[,] ShipsFuneral(string[,] Field, int i, int j, int DecksCount)
+        public static string[,] ShipsFuneral(string[,] Field, int i, int j, int DecksCount)
         {
 
             for (int n = i - 1; n <= i + 1; n++)
@@ -69,14 +69,14 @@ namespace SeaBattle.BuisnessLogic
             }
             return true;
         }
-        private static int CountingDecksCount(string[,] Field, int i, int j, ref int firtShipDeck)
+        public static int CountingDecksCount(string[,] Field, int i, int j, ref int firtShipDeck)
         {
             int decksCount = 1;
             try
             {
                 for (int k = 1; k <= 4; k++)
                 {
-                    if (String.IsNullOrEmpty(Field[i, j + k]) || (Field[i, j + k] == "X"))
+                    if (String.IsNullOrEmpty(Field[i, j + k]) || (Field[i, j + k] == MissedMark))
                     {
                         break;
                     }
@@ -88,7 +88,7 @@ namespace SeaBattle.BuisnessLogic
             {
                 for (int k = -1; k >= -4; k--)
                 {
-                    if (String.IsNullOrEmpty(Field[i, j + k]) || (Field[i, j + k] == "X"))
+                    if (String.IsNullOrEmpty(Field[i, j + k]) || (Field[i, j + k] == MissedMark))
                     {
                         break;
                     }

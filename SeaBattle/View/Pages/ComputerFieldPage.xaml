@@ -9,15 +9,19 @@
       Title="ComputerFieldPage">
 
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="373*"/>
+            <ColumnDefinition Width="427*"/>
+        </Grid.ColumnDefinitions>
 
-       
-            <Grid x:Name="Field"
+
+        <Grid x:Name="Field"
             Width="395"
               Height="390"
               VerticalAlignment="Top"
               HorizontalAlignment="Left"
-              Margin="57,20,0,0">
-            </Grid>
+              Margin="57,20,0,0" Grid.ColumnSpan="2">
+        </Grid>
 
 
     </Grid>

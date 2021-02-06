@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="Sea War" 
         MinHeight="588" MinWidth="898.625"
-        Height="588" Width="898.625"  
+        Height="470" Width="898.625"  
         WindowStartupLocation="CenterScreen" >
 
     <Window.Resources>
@@ -78,6 +78,32 @@
               VerticalAlignment="Top"
               HorizontalAlignment="Left"
               Margin="20,40,0,0">
+            </Grid>
+
+            <Grid x:Name="ShipsPanel" 
+                  HorizontalAlignment="Left"
+                  VerticalAlignment="Bottom"
+                  Width="395"
+                  Height="142">
+
+
+
+              <!--"  <Label Margin="0,27,340,61">
+                    <Image Source="/Resource/Images/ForPages/OneDeckShipForPage.png"/>
+                </Label>
+
+                <Label Margin="258,81,23,-8">
+                    <Image Source="/Resource/Images/ForPages/DoubleDeckShipForPage.png"/>
+                </Label>
+
+                <Label Margin="0,86,285,0" >
+                    <Image Source="/Resource/Images/ForPages/ThrieDeckShipForPage.png"/>
+                </Label>
+
+                <Label Margin="241,10,-13,80" >
+                    <Image Source="/Resource/Images/ForPages/FourDeckShipForPage.png"/>
+                </Label> -->
+                
             </Grid>
 
             <Grid x:Name="PagePanel"
