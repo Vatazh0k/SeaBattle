@@ -7,7 +7,7 @@ namespace SeaBattle.BuisnessLogic
     public static class GameProcess
     {
         private const string MissedMark = "X";
-        private const string KilledMark = "W";
+        private const string KilledMark = "O";
         public static bool DamageCreating(string[,] Field, int i, int j)
         {
             if (Field[i, j] is null)

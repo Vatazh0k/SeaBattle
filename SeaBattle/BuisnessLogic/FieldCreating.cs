@@ -93,11 +93,6 @@ namespace SeaBattle.BuisnessLogic
             BorderBinding.Mode = BindingMode.OneWay;
             button[i, j].SetBinding(Button.BorderThicknessProperty, BorderBinding);
 
-            Binding colorBinding = new Binding();
-            colorBinding.Source = vm;
-            colorBinding.Path = new PropertyPath($"Ships[{i * 11 + j}].Color");
-            colorBinding.Mode = BindingMode.OneWay;
-            button[i, j].SetBinding(Button.ForegroundProperty, colorBinding);
 
             Binding ContentBinding = new Binding();
             ContentBinding.Source = vm;

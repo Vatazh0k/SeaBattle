@@ -19,6 +19,7 @@ namespace SeaBattle.ViewModel
         #region PrivateData
         private MainWindowViewModel vm;
         private ObservableCollection<Ship> _ships;
+        private Field fields;
         bool isComputerMove = false;
         private const string MissedMark = "X";
         private const string ShipMark = "O";
@@ -60,7 +61,7 @@ namespace SeaBattle.ViewModel
             var ships = Enumerable.Range(0, 121)
             .Select(i => new Ship
             {
-               // Content = new Image(),
+                Content = new Image(),
                 Border = new Thickness(0.5),
                 isOnField = false,
                 isDead = false
@@ -74,6 +75,8 @@ namespace SeaBattle.ViewModel
             ShipsGeneration(OneDeckShipCount, OneDeckShipDecksCount);
             ShipsGeneration(TwoDeckShipCount, TwoDeckShipDeksCount);
             #endregion
+
+            fields = CellsAssignment();
         } 
 
         #region Commands
@@ -91,9 +94,9 @@ namespace SeaBattle.ViewModel
             }
 
             CellIndex Indexes = SearchCellIndexes(Cell);
-            Field fields = CellsAssignment();
 
-            UserTurn(fields, Indexes, Cell);
+            UserTurn(fields, Indexes, Cell);///сделать чтоб если комп попал покорабл убивался весь
+            //отображать кол во оставшихся корабликов, изменить вьюшку с созданием кораблей, сделать чтоб если комп попал по кораблю, он убивал его всего.
 
             ComputerTurn(fields.UserField);
 
@@ -158,6 +161,7 @@ namespace SeaBattle.ViewModel
             if (isMissed is false)
             {
                 isComputerMove = false;
+
                 bool isShipKilled = GameProcess.ChekedTheShipState(fields.ComputerField, Indexes.I_index, Indexes.J_index);
 
                 if (isShipKilled is false)
@@ -231,25 +235,25 @@ namespace SeaBattle.ViewModel
                 {
                     if (field[i, j] == MissedMark && Ship[i * 11 + j].Content.ToString() != PathToShipContent.MissedMark)
                     {
-                        Ships[i * 11 + j] = new Ship
+                        Ship[i * 11 + j] = new Ship
                         {
-                            //Content = new Image
-                            //{
-                            //    Source = new BitmapImage(new Uri(PathToShipContent.MissedMark, UriKind.Relative)),
-                            //     Stretch = Stretch.Fill
-                            //},
-                            Border = new Thickness(1),
+                            Content = new Image
+                            {
+                                Source = new BitmapImage(new Uri(PathToShipContent.MissedMark, UriKind.Relative)),
+                                Stretch = Stretch.Fill
+                            },
+                            Border = new Thickness(0.5),
                         };
                     }
                     else if (field[i, j] == ShipMark)
                     {
-                        Ships[i * 11 + j] = new Ship
+                        Ship[i * 11 + j] = new Ship
                         {
-                           // Content = new Image
-                           // {
-                           //     Source = new BitmapImage(new Uri(PathToShipContent.KilledShip, UriKind.Relative)),
-                           //      Stretch = Stretch.Fill
-                           // },
+                            Content = new Image
+                            {
+                                Source = new BitmapImage(new Uri(PathToShipContent.KilledShip, UriKind.Relative)),
+                                Stretch = Stretch.Fill
+                            },
                             Border = new Thickness(1),
                         };
                     }
@@ -261,11 +265,11 @@ namespace SeaBattle.ViewModel
         {
             ships[cell] = new Ship
             {
-                //Content = new System.Windows.Controls.Image
-                //{
-                //    Source = new BitmapImage(new Uri(Mark, UriKind.Relative)),
-                //    Stretch = Stretch.Fill
-                //},
+                Content = new Image
+                {
+                    Source = new BitmapImage(new Uri(Mark, UriKind.Relative)),
+                    Stretch = Stretch.Fill
+                },
                 Border = new Thickness(BorderSize),
             };
 
@@ -278,14 +282,11 @@ namespace SeaBattle.ViewModel
             {
                 for (int j = 0; j < 11; j++)
                 {
-                    if(Ships[i * 11 + j].isDead)
-                    field.ComputerField[i, j] = ShipMark;
-                    if (Ships[i * 11 + j].isOnField && !Ships[i * 11 + j].isDead)
-                        field.ComputerField[i, j] = EmptyCellMark;
-                    if (vm.Ships[i * 11 + j].isDead)
-                    field.UserField[i, j] = ShipMark;
-                    if (vm.Ships[i * 11 + j].isOnField && !vm.Ships[i * 11 + j].isDead)
-                        field.UserField[i, j] = EmptyCellMark;
+                    if(Ships[i * 11 + j].isOnField)
+                    field.ComputerField[i, j] = EmptyCellMark;
+                    if (vm.Ships[i * 11 + j].isOnField)
+                    field.UserField[i, j] = EmptyCellMark;
+        
                 }
             }
             return field;
@@ -359,12 +360,12 @@ namespace SeaBattle.ViewModel
         private void ShipsOptions(int Cell)
         {
             Ships[Cell] = new Ship
-            {
-                //Content = new Image
-                //{
-                //    Source = new BitmapImage(new Uri(PathToShipContent.EmptyCell, UriKind.Relative)),
-                //    Stretch = Stretch.Fill
-                //},
+            { 
+                Content = new Image
+                {
+                    Source = new BitmapImage(new Uri(PathToShipContent.EmptyCell, UriKind.Relative)),
+                    Stretch = Stretch.Fill
+                },
                 isOnField = true,
                 Border = new Thickness(1)
             };
@@ -377,8 +378,8 @@ namespace SeaBattle.ViewModel
                 {
                     if (Ships[i * 11 + j].isDead == true)
                         tempArr[i, j] = ShipMark;
-                    if(Ships[i * 11 + j].isOnField == true && Ships[i * 11 + j].isDead == false)
-                        tempArr[i, j] = EmptyCellMark;
+                    if (Ships[i * 11 + j].isOnField == true && Ships[i * 11 + j].isDead == false)
+                        tempArr[i, j] = EmptyCellMark;//isMissed;
                 }
             }
             return tempArr;
