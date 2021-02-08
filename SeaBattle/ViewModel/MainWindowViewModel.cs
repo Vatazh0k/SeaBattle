@@ -27,10 +27,10 @@ namespace SeaBattle.ViewModel
         private ObservableCollection<Ship> _ships;
         private Page _CurrentPage;
 
-        private int _oneDeckShip = 4;
-        private int _twoDeckShip = 3;
-        private int _thireDeckShip = 2;
-        private int _fourDeckShip = 1;
+        private int _oneDeckShip;
+        private int _twoDeckShip;
+        private int _thireDeckShip;
+        private int _fourDeckShip;
         private string cellNumber;
 
         #endregion
@@ -86,7 +86,6 @@ namespace SeaBattle.ViewModel
             RulesCommand = new Command(RulesCommandAction, CanUseRulesCommand);
             NewShipAssignmentCommand = new Command(NewShipAssignmentCommandAction, CanUseNewShipAssignmentCommand);
             #endregion
-
             LoginPage = new LoginPage(this);
             CurrentPage = LoginPage;
 
@@ -146,19 +145,23 @@ namespace SeaBattle.ViewModel
                     break;
 
                 case "s1":
-                    ShipsCountValidation(ref _oneDeckShip, Cell, 1);
+                    if (OneDeckShip is 0) break;
+                    ShipsCountValidation(Cell, 1);
                     break;
 
                 case "s2":
-                    ShipsCountValidation(ref _twoDeckShip, Cell, 2);
+                    if (TwoDeckShip is 0) break;
+                    ShipsCountValidation(Cell, 2);
                     break;
 
                 case "s3":
-                    ShipsCountValidation(ref _thireDeckShip, Cell, 3);
+                    if (ThrieDeckShip is 0) break;
+                    ShipsCountValidation(Cell, 3);
                     break;
 
                 case "s4":
-                    ShipsCountValidation(ref _fourDeckShip, Cell, 4);
+                    if (FourDeckShip is 0) break;
+                    ShipsCountValidation(Cell, 4);
                     break;
 
 
@@ -217,9 +220,8 @@ namespace SeaBattle.ViewModel
                 Border = new Thickness(left,top,right,bottom),
             };
         }
-        private void ShipsCountValidation(ref int Ship, int Cell, int DeckCount)
+        private void ShipsCountValidation(int Cell, int DeckCount)
         {
-            if (Ship is 0) return;
 
             string[,] tempArr = new string[11, 11];
 
@@ -242,11 +244,13 @@ namespace SeaBattle.ViewModel
                     #region ShipsCreating
                     case 1:
                         ShipOptions(PathToShipContent.OneDeckShip, Cell, 1,1,1,1);
+                        OneDeckShip--;
                         break;
 
                     case 2:
                         ShipOptions(PathToShipContent.TwoDeckShip_FirstDeck, Cell, 1,1,0,1);
                         ShipOptions(PathToShipContent.TwoDeckShip_SecondDeck, Cell+1, 0,1,1,1);
+                        TwoDeckShip--;
                         break;
 
 
@@ -254,17 +258,17 @@ namespace SeaBattle.ViewModel
                         ShipOptions(PathToShipContent.ThrieDeckShip_FirstDeck, Cell, 1,1,0,1);
                         ShipOptions(PathToShipContent.ThrieDeckShip_SecondDeck, Cell+1, 0,1,0,1);
                         ShipOptions(PathToShipContent.ThrieDeckShip_ThirdDeck, Cell+2, 0,1,1,1);
+                        ThrieDeckShip--;
                         break;
                     case 4:
                         ShipOptions(PathToShipContent.FourDeckShip_FirstDeck, Cell, 1,1,0,1);
                         ShipOptions(PathToShipContent.FourDeckShip_SecondDeck, Cell+1, 0,1,0,1);
                         ShipOptions(PathToShipContent.FourDeckShip_ThirdDeck, Cell+2, 0,1,0,1);
                         ShipOptions(PathToShipContent.FourDeckShip_FourDeck, Cell+3, 0,1,1,1);
+                        FourDeckShip--;
                         break;
                         #endregion
                 }
-
-                Ship--;
             }
         }
         #endregion

@@ -4,9 +4,10 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SeaBattle"
+        xmlns:vm="clr-namespace:SeaBattle.ViewModel"
         mc:Ignorable="d"
         Title="Sea War" 
-        MinHeight="588" MinWidth="898.625"
+        MinHeight="620" MinWidth="898.625"
         Height="470" Width="898.625"  
         WindowStartupLocation="CenterScreen" >
 
@@ -80,7 +81,8 @@
               Margin="20,40,0,0">
             </Grid>
 
-            <Grid x:Name="ShipsPanel" 
+            <Grid
+                  x:Name="ShipsPanel" 
                   HorizontalAlignment="Left"
                   VerticalAlignment="Bottom"
                   Width="395"
@@ -88,22 +90,50 @@
 
 
 
-              <!--"  <Label Margin="0,27,340,61">
+                <Label Margin="31,10,317,88">
                     <Image Source="/Resource/Images/ForPages/OneDeckShipForPage.png"/>
                 </Label>
 
-                <Label Margin="258,81,23,-8">
+                <Label Margin="83,10,234,86">
                     <Image Source="/Resource/Images/ForPages/DoubleDeckShipForPage.png"/>
                 </Label>
 
-                <Label Margin="0,86,285,0" >
-                    <Image Source="/Resource/Images/ForPages/ThrieDeckShipForPage.png"/>
+                <Label Margin="276,10,0,80" >
+                    <Image Source="/Resource/Images/ForPages/FourDeckShipForPage.png"/>
+                </Label>
+                
+                <Image Source="/Resource/Images/ForPages/ThrieDeckShipForPage.png" 
+                       Margin="175,14,139,89"/>
+
+                <Label VerticalAlignment="Bottom"
+                       HorizontalAlignment="Left"
+                       Margin="50,0,0,40"
+                       Content="{Binding OneDeckShip, UpdateSourceTrigger=PropertyChanged}">
+                    
                 </Label>
 
-                <Label Margin="241,10,-13,80" >
-                    <Image Source="/Resource/Images/ForPages/FourDeckShipForPage.png"/>
-                </Label> -->
-                
+                <Label VerticalAlignment="Bottom"
+                       HorizontalAlignment="Center"
+                       Margin="0,0,147,40"
+                       Content="{Binding TwoDeckShip}">
+
+                </Label>
+
+                <Label VerticalAlignment="Bottom"
+                       HorizontalAlignment="Center"
+                       Margin="40,0,0,40"
+                       Content="{Binding ThrieDeckShip}">
+
+                </Label>
+
+
+                <Label VerticalAlignment="Bottom"
+                       HorizontalAlignment="Right"
+                       Margin="0,0,52,40"
+                       Content="{Binding FourDeckShip}">
+
+                </Label>
+
             </Grid>
 
             <Grid x:Name="PagePanel"

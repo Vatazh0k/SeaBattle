@@ -21,8 +21,32 @@
               VerticalAlignment="Top"
               HorizontalAlignment="Left"
               Margin="57,20,0,0" Grid.ColumnSpan="2">
+
         </Grid>
 
+
+        <Label VerticalAlignment="Bottom"
+                   HorizontalAlignment="Right"
+                   Margin="0,0,45,50"
+                   Content="Enemy ships left - "
+                   FontSize="16" Grid.Column="1"/>
+
+        <Label VerticalAlignment="Bottom"
+                   HorizontalAlignment="Right"
+                   Margin="0,0,45,19"
+                   Content="Missed attacks - "
+                   FontSize="16" Grid.Column="1"/>
+
+        <Label Content="{Binding NumberOfRemainingComputerShips}" 
+               HorizontalAlignment="Right"
+               VerticalAlignment="Bottom"
+               Grid.Column="1"
+               Margin="0,0,30,52"/>
+
+        <Label Content="{Binding MissCounter}" HorizontalAlignment="Right"
+               VerticalAlignment="Bottom"
+               Grid.Column="1"
+               Margin="0,0,30,20"/>
 
     </Grid>
 

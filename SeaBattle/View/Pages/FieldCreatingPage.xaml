@@ -18,81 +18,43 @@
                 </Setter.Value>
             </Setter>
         </Style>
-        </Page.Resources>
+    </Page.Resources>
 
-        <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="66*"/>
-            <RowDefinition Height="72*"/>
-            <RowDefinition Height="72*"/>
-            <RowDefinition Height="72*"/>
-            <RowDefinition Height="72*"/>
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="10*"/>
-            <ColumnDefinition Width="13*"/>
-        </Grid.ColumnDefinitions>
+    <Grid>
 
+        <Label Margin="142,89,78,91"
+              FontFamily="MV Boli"
+               FontSize="21"
+            >Fill in the field!</Label>
 
-        <Label Grid.Column="0"
-               Grid.Row="1" Margin="27,10,108,10">
-            <Image Source="/Resource/Images/ForPages/OneDeckShipForPage.png"/>
-        </Label>
+        <Button VerticalAlignment="Bottom"
+                HorizontalAlignment="Left"
+                Width="165"
+                Height="30"
+                Style="{StaticResource LightweightButton}"
+                Margin="10,0,0,160"
+                FontSize="18"
+                FontStyle="Italic"
+                Command="{Binding ShipsAutoGeneration}">
+            <Underline>Field autogeneration</Underline>
+        </Button>
 
-        <Label Grid.Column="1"
-               Grid.Row="1" Margin="10,10,147,10">
-            <Image Source="/Resource/Images/ForPages/DoubleDeckShipForPage.png"/>
-        </Label>
+        <Button  VerticalAlignment="Bottom"
+                HorizontalAlignment="Left"
+                Width="92"
+                Height="30"
+                Style="{StaticResource LightweightButton}"
+                Margin="10,0,0,114"
+                FontSize="18"
+                FontStyle="Italic"
+                Command="{Binding CleanField}">
+            <Underline>CelanField</Underline>
+        </Button>
 
-        <Label Grid.Column="0"
-               Grid.Row="2" Margin="27,10,51,8">
-            <Image Source="/Resource/Images/ForPages/ThrieDeckShipForPage.png"/>
-        </Label>
-
-        <Label Grid.Column="1"
-               Grid.Row="2"
-               Margin="10,10,90,0">
-            <Image Source="/Resource/Images/ForPages/FourDeckShipForPage.png"/>
-        </Label>
-
-        <Label Grid.Row="1" Content="{Binding OneDeckShip, 
-            UpdateSourceTrigger=PropertyChanged}"
-               HorizontalContentAlignment="Center" 
-                Grid.Column="0" VerticalAlignment="Center"
-               Width="20"
-               Margin="140,0,0,0">
-
-        </Label>
-
-        <Label Grid.Row="2" Content="{Binding ThrieDeckShip, 
-            UpdateSourceTrigger=PropertyChanged}"
-               HorizontalContentAlignment="Center" 
-                Grid.Column="0" VerticalAlignment="Center"
-               Width="20"
-               Margin="140,0,0,0">
-
-        </Label>
-
-        <Label Grid.Row="1" Content="{Binding TwoDeckShip,
-            UpdateSourceTrigger=PropertyChanged}"
-               HorizontalContentAlignment="Center" 
-                Grid.Column="1" VerticalAlignment="Center"
-               Width="20"
-               Margin="190,0,0,0">
-
-        </Label>
-
-        <Label Grid.Row="2" Content="{Binding FourDeckShip,
-            UpdateSourceTrigger=PropertyChanged}"
-               HorizontalContentAlignment="Center" 
-                Grid.Column="1" VerticalAlignment="Center"
-               Width="20"
-               Margin="190,0,0,0">
-
-        </Label>
-
-        <Button Grid.Column="1" Grid.Row="3"
-                Margin="161,20,34,20"
+        <Button
+                HorizontalAlignment="Right"
+                VerticalAlignment="Bottom"
+                Margin="0,0,49,99"
                 FontStyle="Italic"
                 Command="{Binding ReadyCommand}"
                 Style="{StaticResource LightweightButton}"

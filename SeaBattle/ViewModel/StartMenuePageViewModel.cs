@@ -47,6 +47,10 @@ namespace SeaBattle.ViewModel
         private void StartCommandAction(object p)
         {
             FieldCreatingPage = new FieldCreatingPage(mainWindowViewModel);
+            mainWindowViewModel.OneDeckShip = 4;
+            mainWindowViewModel.TwoDeckShip = 3;
+            mainWindowViewModel.ThrieDeckShip = 2;
+            mainWindowViewModel.FourDeckShip = 1;
             mainWindowViewModel.CurrentPage = FieldCreatingPage;
         }
         #endregion

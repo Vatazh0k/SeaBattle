@@ -36,10 +36,22 @@ namespace SeaBattle.ViewModel
         private int FourDeckShipCount = 1;
 
         private int NumberOfRemainingUserShips = 10;
-        private int NumberOfRemainingComputerShips = 10;
+        private int _NumberOfRemainingComputerShips = 10;
+        private int _missedCounter = 0;
         #endregion
 
         #region PublicData
+        public int MissCounter
+        {
+            get { return _missedCounter; }
+            set => Set(ref _missedCounter, value);
+        }
+
+        public int NumberOfRemainingComputerShips
+        {
+            get => _NumberOfRemainingComputerShips;
+            set => Set(ref _NumberOfRemainingComputerShips, value);
+        }
         public ObservableCollection<Ship> Ships
         {
             get => _ships;
@@ -94,7 +106,7 @@ namespace SeaBattle.ViewModel
 
             CellIndex Indexes = SearchCellIndexes(Cell);
 
-            UserTurn(fields, Indexes, Cell);
+            UserTurn(fields, Indexes, Cell);//сделат типа бул и если выиграл то ретурн, опутитить пониже корабли в при созданниии поля,подправить код
 
             ComputerTurn(fields.UserField);
 
@@ -114,6 +126,7 @@ namespace SeaBattle.ViewModel
 
                 if (isMissed is true)
                 {
+                    MissCounter++;
                     isComputerMove = false;
                     MissedAction(Cell, vm.Ships, PathToShipContent.MissedMark, 0.5);
                 }
@@ -122,6 +135,26 @@ namespace SeaBattle.ViewModel
                     int IndexOfTheFirstShpsDeck = 0;
 
                     int DecksCount = GameProcess.CountingDecksCount(userField, indexes.I_index, indexes.J_index, ref IndexOfTheFirstShpsDeck);
+
+                    switch (DecksCount)
+                    {
+                        default:
+                            break;
+
+                        case 1:
+                            vm.OneDeckShip--;
+                            break;
+                        case 2:
+                            vm.TwoDeckShip--;
+                            break;
+                        case 3:
+                            vm.ThrieDeckShip--;
+                            break;
+                        case 4:
+                            vm.FourDeckShip--;
+                            break;
+
+                    }
 
                     IndexOfTheFirstShpsDeck = indexes.J_index - IndexOfTheFirstShpsDeck;
 
