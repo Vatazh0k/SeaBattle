@@ -56,9 +56,10 @@ namespace SeaBattle.ViewModel
                     isOnField = false
                 };
             }
-        } 
+        }
         private void ShipsAutoGenerationAction(object p)
         {
+            tempArr = CellAssigning();
             ShipsGeneration(vm.FourDeckShip, 4);
             ShipsGeneration(vm.ThrieDeckShip, 3);
             ShipsGeneration(vm.OneDeckShip, 1);
@@ -79,6 +80,18 @@ namespace SeaBattle.ViewModel
         #endregion
 
         #region PrivateMethods
+        private string[,] CellAssigning()
+        {
+            for (int i = 0; i < 11; i++)
+            {
+                for (int j = 0; j < 11; j++)
+                {
+                    if(vm.Ships[i * 11 + j].isOnField is true)
+                    tempArr[i, j] = ShipMark;
+                }
+            }
+            return tempArr;
+        }
         private void ShipsReplenishment()
         {
             vm.FourDeckShip = 1;

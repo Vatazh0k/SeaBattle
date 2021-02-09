@@ -109,27 +109,22 @@ namespace SeaBattle.ViewModel
 
             bool isGameover = UserTurn(fields, Indexes, Cell);
             if (isGameover is true) return;
-            //подправить код, уменшить код, 
-            //сделать чтоб не убивал весь корабль, а бил индекс + 1,
-            //добавить возможеость развернуть корабль.
 
             ComputerTurn(fields.UserField);
 
         }
         #endregion
-         
+          
         #region PrivateMethods
         private void ComputerTurn(string[,] userField)
         {
-            int NextAttackCellNumber = 0;
-
-            CellIndex indexes = SearchRandomCell(userField);
-
-            int Cell = ConvertIndexesToCell(indexes);
-
             while (isComputerMove != false)
             {
-                bool isMissed = GameProcess.DamageCreating(userField, indexes.I_index, indexes.J_index + NextAttackCellNumber);
+                CellIndex indexes = SearchRandomCell(userField);
+
+                int Cell = ConvertIndexesToCell(indexes);
+
+                bool isMissed = GameProcess.DamageCreating(userField, indexes.I_index, indexes.J_index);
 
                 if (isMissed is true)
                 {
@@ -140,7 +135,6 @@ namespace SeaBattle.ViewModel
                 if (isMissed is false)
                 {
                     int IndexOfTheFirstShpsDeck = 0;
-                    NextAttackCellNumber++;
 
                     int DecksCount = GameProcess.CountingDecksCount(userField, indexes.I_index, indexes.J_index, ref IndexOfTheFirstShpsDeck);
 

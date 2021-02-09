@@ -67,4 +67,4 @@ namespace SeaBattle.ViewModel
         }
         #endregion
     }
-}
+} 
