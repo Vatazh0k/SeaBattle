@@ -86,10 +86,7 @@ namespace SeaBattle.BuisnessLogic
             return decksCount;
 
         }
-
-        #region PrivateMethods
-
-        private static bool ShipState(string[,] field, int i, int j, int decksCount)
+        public static bool ShipState(string[,] field, int i, int j, int decksCount)
         {
 
             for (int k = 0; k < decksCount; k++)
@@ -101,7 +98,8 @@ namespace SeaBattle.BuisnessLogic
                 return false;
             }
             return true;
-        } 
+        }
+        #region PrivateMethods
         private static string[,] MissedAttack(string[,] Field, int i, int j)
         {
             Field[i, j] = MissedMark;

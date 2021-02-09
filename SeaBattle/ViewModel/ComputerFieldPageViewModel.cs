@@ -21,6 +21,7 @@ namespace SeaBattle.ViewModel
         private ObservableCollection<Ship> _ships;
         private Field fields;
         bool isComputerMove = false;
+        private string[,] TempArr = new string[11,11];
         private const string MissedMark = "X";
         private const string ShipMark = "O";
         private const string EmptyCellMark = " ";
@@ -120,13 +121,15 @@ namespace SeaBattle.ViewModel
         #region PrivateMethods
         private void ComputerTurn(string[,] userField)
         {
+            int NextAttackCellNumber = 0;
+
+            CellIndex indexes = SearchRandomCell(userField);
+
+            int Cell = ConvertIndexesToCell(indexes);
+
             while (isComputerMove != false)
             {
-                CellIndex indexes = SearchRandomCell(userField);
-
-                int Cell = ConvertIndexesToCell(indexes);
-
-                bool isMissed = GameProcess.DamageCreating(userField, indexes.I_index, indexes.J_index);
+                bool isMissed = GameProcess.DamageCreating(userField, indexes.I_index, indexes.J_index + NextAttackCellNumber);
 
                 if (isMissed is true)
                 {
@@ -137,6 +140,7 @@ namespace SeaBattle.ViewModel
                 if (isMissed is false)
                 {
                     int IndexOfTheFirstShpsDeck = 0;
+                    NextAttackCellNumber++;
 
                     int DecksCount = GameProcess.CountingDecksCount(userField, indexes.I_index, indexes.J_index, ref IndexOfTheFirstShpsDeck);
 
@@ -271,7 +275,7 @@ namespace SeaBattle.ViewModel
             {
                 for (int j = 0; j < 11; j++)
                 {
-                    if (field[i, j] == MissedMark && Ship[i * 11 + j].Content.ToString() != PathToShipContent.MissedMark)
+                    if (field[i, j] == MissedMark)
                     {
                         Ship[i * 11 + j] = new Ship
                         {
@@ -349,9 +353,6 @@ namespace SeaBattle.ViewModel
         }
         private void ShipsGeneration(int ShipCount, int DeksCount)
         {
-            string[,] tempArr = new string[11, 11];
-            tempArr = CellsAssignment(tempArr, Ships);
-
             var Random = new Random();
 
             for (int i = 0; i < ShipCount; i++)
@@ -359,8 +360,11 @@ namespace SeaBattle.ViewModel
                 int Cell = Random.Next(11, 121);
                 CellIndex Indexes = SearchCellIndexes(Cell);
 
-                if (!ShipPositionValidation.PositionValidationLogic(Indexes.I_index, Indexes.J_index, tempArr, DeksCount))
+                if (!ShipPositionValidation.PositionValidationLogic(Indexes.I_index, Indexes.J_index, TempArr, DeksCount))
+                {
                     i--;
+                    continue;
+                }
                 else
                 {
                     switch (DeksCount)
@@ -369,41 +373,31 @@ namespace SeaBattle.ViewModel
                             break;
 
                         case 1:
-                            ShipsOptions(Cell);
-                            tempArr[Indexes.I_index, Indexes.J_index] = ShipMark;
+                            ShipsOptions(Cell, Indexes.I_index, Indexes.J_index);
                             break;
 
                         case 2:
-                            ShipsOptions(Cell);
-                            ShipsOptions(Cell + 1);
-                            tempArr[Indexes.I_index, Indexes.J_index] = ShipMark;
-                            tempArr[Indexes.I_index, Indexes.J_index+1] = ShipMark;
+                            ShipsOptions(Cell, Indexes.I_index, Indexes.J_index);
+                            ShipsOptions(Cell + 1, Indexes.I_index, Indexes.J_index + 1);
                             break;
 
                         case 3:
-                            ShipsOptions(Cell);
-                            ShipsOptions(Cell + 1);
-                            ShipsOptions(Cell + 2);
-                            tempArr[Indexes.I_index, Indexes.J_index] = ShipMark;
-                            tempArr[Indexes.I_index, Indexes.J_index+1] = ShipMark;
-                            tempArr[Indexes.I_index, Indexes.J_index+2] = ShipMark;
+                            ShipsOptions(Cell, Indexes.I_index, Indexes.J_index);
+                            ShipsOptions(Cell + 1, Indexes.I_index, Indexes.J_index + 1);
+                            ShipsOptions(Cell + 2, Indexes.I_index, Indexes.J_index + 2);
                             break;
 
                         case 4:
-                            ShipsOptions(Cell);
-                            ShipsOptions(Cell + 1);
-                            ShipsOptions(Cell + 2);
-                            ShipsOptions(Cell + 3);
-                            tempArr[Indexes.I_index, Indexes.J_index] = ShipMark;
-                            tempArr[Indexes.I_index, Indexes.J_index+1] = ShipMark;
-                            tempArr[Indexes.I_index, Indexes.J_index+2] = ShipMark;
-                            tempArr[Indexes.I_index, Indexes.J_index+3] = ShipMark;
+                            ShipsOptions(Cell, Indexes.I_index, Indexes.J_index);
+                            ShipsOptions(Cell + 1, Indexes.I_index, Indexes.J_index + 1);
+                            ShipsOptions(Cell + 2, Indexes.I_index, Indexes.J_index + 2);
+                            ShipsOptions(Cell + 3, Indexes.I_index, Indexes.J_index + 3);
                             break;
                     }
                 }
             }
         }
-        private void ShipsOptions(int Cell)
+        private void ShipsOptions(int Cell, int i, int j)
         {
             Ships[Cell] = new Ship
             { 
@@ -415,20 +409,7 @@ namespace SeaBattle.ViewModel
                 isOnField = true,
                 Border = new Thickness(0.5)
             };
-        }
-        private string[,] CellsAssignment(string[,] tempArr, ObservableCollection<Ship> Ships)
-        {
-            for (int i = 0; i < 11; i++)
-            {
-                for (int j = 0; j < 11; j++)
-                {
-                    if (Ships[i * 11 + j].isDead == true)
-                        tempArr[i, j] = ShipMark;
-                    if (Ships[i * 11 + j].isOnField == true && Ships[i * 11 + j].isDead == false)
-                        tempArr[i, j] = EmptyCellMark;
-                }
-            }
-            return tempArr;
+            TempArr[i, j] = ShipMark;
         }
         #endregion
     }
