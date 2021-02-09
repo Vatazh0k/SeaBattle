@@ -106,7 +106,11 @@ namespace SeaBattle.ViewModel
 
             CellIndex Indexes = SearchCellIndexes(Cell);
 
-            UserTurn(fields, Indexes, Cell);//сделат типа бул и если выиграл то ретурн, опутитить пониже корабли в при созданниии поля,подправить код
+            bool isGameover = UserTurn(fields, Indexes, Cell);
+            if (isGameover is true) return;
+            //подправить код, уменшить код, 
+            //сделать чтоб не убивал весь корабль, а бил индекс + 1,
+            //добавить возможеость развернуть корабль.
 
             ComputerTurn(fields.UserField);
 
@@ -178,10 +182,10 @@ namespace SeaBattle.ViewModel
                 }
             }
         }
-        private void UserTurn(Field fields, CellIndex Indexes, int Cell)
+        private bool UserTurn(Field fields, CellIndex Indexes, int Cell)
         {
             if (fields.ComputerField[Indexes.I_index, Indexes.J_index] == ShipMark ||
-               fields.ComputerField[Indexes.I_index, Indexes.J_index] == MissedMark) return;
+               fields.ComputerField[Indexes.I_index, Indexes.J_index] == MissedMark) return false;
 
             isComputerMove = true;
 
@@ -209,11 +213,12 @@ namespace SeaBattle.ViewModel
                     {
                         MessageBox.Show("You win!", "Congratulation", MessageBoxButton.OK, MessageBoxImage.Information);
                         isComputerMove = true;
-                        return;
+                        return true;
                     }
 
                 }
             }
+            return false;
         }
          
         private int ConvertIndexesToCell(CellIndex indexes)
@@ -365,17 +370,23 @@ namespace SeaBattle.ViewModel
 
                         case 1:
                             ShipsOptions(Cell);
+                            tempArr[Indexes.I_index, Indexes.J_index] = ShipMark;
                             break;
 
                         case 2:
                             ShipsOptions(Cell);
                             ShipsOptions(Cell + 1);
+                            tempArr[Indexes.I_index, Indexes.J_index] = ShipMark;
+                            tempArr[Indexes.I_index, Indexes.J_index+1] = ShipMark;
                             break;
 
                         case 3:
                             ShipsOptions(Cell);
                             ShipsOptions(Cell + 1);
                             ShipsOptions(Cell + 2);
+                            tempArr[Indexes.I_index, Indexes.J_index] = ShipMark;
+                            tempArr[Indexes.I_index, Indexes.J_index+1] = ShipMark;
+                            tempArr[Indexes.I_index, Indexes.J_index+2] = ShipMark;
                             break;
 
                         case 4:
@@ -383,10 +394,12 @@ namespace SeaBattle.ViewModel
                             ShipsOptions(Cell + 1);
                             ShipsOptions(Cell + 2);
                             ShipsOptions(Cell + 3);
+                            tempArr[Indexes.I_index, Indexes.J_index] = ShipMark;
+                            tempArr[Indexes.I_index, Indexes.J_index+1] = ShipMark;
+                            tempArr[Indexes.I_index, Indexes.J_index+2] = ShipMark;
+                            tempArr[Indexes.I_index, Indexes.J_index+3] = ShipMark;
                             break;
                     }
-
-                    tempArr[Indexes.I_index, Indexes.J_index] = ShipMark;
                 }
             }
         }

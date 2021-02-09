@@ -10,13 +10,12 @@ using System.Windows.Media;
 
 namespace SeaBattle.BuisnessLogic
 {
-    public static class FieldCreating<T>
-    {
-        public static void CreateField(T vm, Grid Field, ICommand command)
-        {
+    public static class FieldCreating<T>                                
+    {                                                                   
+        public static void CreateField(T ViewModel, Grid Field, object command)
+        {                                                               
             #region Data
             Button[,] button = new Button[11, 11];
-
             char[] Alphabet = new char[] { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J' };
 
             #endregion
@@ -32,7 +31,7 @@ namespace SeaBattle.BuisnessLogic
 
                     if (i is 0)
                     {
-                        ButtonSettings(i, j, button, vm, command);
+                        ButtonSettings(i, j, button, ViewModel, command);
                         button[i, j].Content = Alphabet[j - 1];
                         button[i, j].Foreground = Brushes.Black;
                         button[i, j].FontFamily = new FontFamily("MV Boli");
@@ -46,7 +45,7 @@ namespace SeaBattle.BuisnessLogic
 
                     if (j is 0)
                     {
-                        ButtonSettings(i, j, button, vm, command);
+                        ButtonSettings(i, j, button, ViewModel, command);
                         button[i, j].Content = i;
                         button[i, j].Foreground = Brushes.Black;
                         button[i, j].FontFamily = new FontFamily("MV Boli");
@@ -59,7 +58,7 @@ namespace SeaBattle.BuisnessLogic
                     }
 
 
-                    ButtonSettings(i, j, button, vm, command);
+                    ButtonSettings(i, j, button, ViewModel, command);
 
                     ButtonAdd(i, j, button, Field);
 
@@ -82,7 +81,7 @@ namespace SeaBattle.BuisnessLogic
             Field.ColumnDefinitions.Add(column);
             Field.RowDefinitions.Add(row);
         }
-        private static void ButtonSettings(int i, int j, Button[,] button, T vm, ICommand command)
+        private static void ButtonSettings(int i, int j, Button[,] button, T vm, object command)
         {
             button[i, j] = new Button();
             button[i, j].BorderBrush = Brushes.Gray;
@@ -105,7 +104,7 @@ namespace SeaBattle.BuisnessLogic
             button[i, j].Width = 35;
             button[i, j].Height = 35;
             button[i, j].Background = Brushes.White;
-            button[i, j].Command = command;
+            button[i, j].Command = (ICommand)command;
             button[i, j].CommandParameter = button[i, j].Name;
         }
         private static void ButtonAdd(int i, int j, Button[,] button, Grid Field)
@@ -115,6 +114,6 @@ namespace SeaBattle.BuisnessLogic
             Field.Children.Add(button[i, j]);
         }
 
-        #endregion
+        #endregion 
     }
-}   
+}     

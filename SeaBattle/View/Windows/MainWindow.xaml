@@ -90,38 +90,38 @@
 
 
 
-                <Label Margin="31,10,317,88">
+                <Label Margin="32,50,317,48">
                     <Image Source="/Resource/Images/ForPages/OneDeckShipForPage.png"/>
                 </Label>
 
-                <Label Margin="83,10,234,86">
+                <Label Margin="83,48,234,48">
                     <Image Source="/Resource/Images/ForPages/DoubleDeckShipForPage.png"/>
                 </Label>
 
-                <Label Margin="276,10,0,80" >
+                <Label Margin="276,45,0,45" >
                     <Image Source="/Resource/Images/ForPages/FourDeckShipForPage.png"/>
                 </Label>
-                
+
                 <Image Source="/Resource/Images/ForPages/ThrieDeckShipForPage.png" 
-                       Margin="175,14,139,89"/>
+                       Margin="177,52,137,51"/>
 
                 <Label VerticalAlignment="Bottom"
                        HorizontalAlignment="Left"
-                       Margin="50,0,0,40"
+                       Margin="50,0,0,21"
                        Content="{Binding OneDeckShip, UpdateSourceTrigger=PropertyChanged}">
-                    
+
                 </Label>
 
                 <Label VerticalAlignment="Bottom"
-                       HorizontalAlignment="Center"
-                       Margin="0,0,147,40"
+                       HorizontalAlignment="Left"
+                       Margin="122,0,0,21"
                        Content="{Binding TwoDeckShip}">
 
                 </Label>
 
                 <Label VerticalAlignment="Bottom"
                        HorizontalAlignment="Center"
-                       Margin="40,0,0,40"
+                       Margin="40,0,0,21"
                        Content="{Binding ThrieDeckShip}">
 
                 </Label>
@@ -129,7 +129,7 @@
 
                 <Label VerticalAlignment="Bottom"
                        HorizontalAlignment="Right"
-                       Margin="0,0,52,40"
+                       Margin="0,0,52,21"
                        Content="{Binding FourDeckShip}">
 
                 </Label>

@@ -112,6 +112,6 @@ namespace SeaBattle.BuisnessLogic
             Field[i, j] = KilledMark;
             return Field;
         }
-        #endregion
-    }
+        #endregion 
+    } 
 } 

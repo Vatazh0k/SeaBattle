@@ -26,12 +26,12 @@ namespace SeaBattle.ViewModel
         private RulesWindow RulesWindow = new RulesWindow();
         private ObservableCollection<Ship> _ships;
         private Page _CurrentPage;
+        private string cellNumber;
 
         private int _oneDeckShip;
         private int _twoDeckShip;
         private int _thireDeckShip;
         private int _fourDeckShip;
-        private string cellNumber;
 
         #endregion
 
@@ -67,14 +67,13 @@ namespace SeaBattle.ViewModel
             get { return _fourDeckShip; }
             set => Set(ref _fourDeckShip, value);
         }
+        public Page LoginPage { get; set; }
 
 
         public ICommand NewShipAssignmentCommand { get; set; }
         public ICommand ExitCommand { get; set; }
         public ICommand RulesCommand { get; set; }
         public ICommand CreatingShipsCommand { get; set; }
-        public Page LoginPage { get; set; }
-
         #endregion
         #endregion
 
@@ -164,7 +163,6 @@ namespace SeaBattle.ViewModel
                     ShipsCountValidation(Cell, 4);
                     break;
 
-
             }
 
 
@@ -231,7 +229,7 @@ namespace SeaBattle.ViewModel
             if (!ShipPositionValidation.PositionValidationLogic(Indexes.I_index, Indexes.J_index, tempArr, DeckCount))
             {
                 MessageBox.Show("You can create ship here!", "Error",
-                  MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
             else
@@ -273,6 +271,6 @@ namespace SeaBattle.ViewModel
         }
         #endregion
 
-    }
-} 
+    } 
+}  
    

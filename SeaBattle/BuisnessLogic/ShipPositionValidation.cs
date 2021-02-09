@@ -11,7 +11,7 @@ namespace SeaBattle.BuisnessLogic
 {
     static class ShipPositionValidation
     {
-        public static bool PositionValidationLogic(int CellIndex_I, int CellIndex_J, string[,] ships, int decksCount)
+        public static bool PositionValidationLogic(int CellIndex_I, int CellIndex_J, string[,] ships, int decksCount)//преедать дирекшн и менять первый или второ цикл
         {
             int J_Iteration_Count = 0;
             int I_teration_Count = 0;

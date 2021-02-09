@@ -22,6 +22,7 @@ namespace SeaBattle.ViewModel
         private Page ComputerFieldPage;
         private readonly string ShipMark = "O";
         private readonly string EmptyCellMark = " ";
+        private string[,] tempArr = new string[11, 11];
 
         public ICommand ShipsAutoGeneration { get; set; }
         public ICommand ReadyCommand { get; set; }
@@ -42,10 +43,10 @@ namespace SeaBattle.ViewModel
         private bool CanUseCommands(object p) => true;
         private void CelanTheFieldAction(object p)
         {
-            vm.FourDeckShip = 1;
-            vm.ThrieDeckShip = 2;
-            vm.TwoDeckShip = 3;
-            vm.OneDeckShip = 4;
+            ShipsReplenishment();
+
+            tempArr = new string[11, 11];
+
             for (int i = 0; i < 121; i++)
             {
                 vm.Ships[i] = new Ship
@@ -56,7 +57,7 @@ namespace SeaBattle.ViewModel
                     isOnField = false
                 };
             }
-        }
+        } 
         private void ShipsAutoGenerationAction(object p)
         {
             ShipsGeneration(vm.FourDeckShip, 4);
@@ -69,10 +70,7 @@ namespace SeaBattle.ViewModel
             if (vm.OneDeckShip is 0 && vm.TwoDeckShip is 0 &&
               vm.ThrieDeckShip is 0 && vm.FourDeckShip is 0)
             {
-                vm.FourDeckShip = 1;
-                vm.ThrieDeckShip = 2;
-                vm.TwoDeckShip = 3;
-                vm.OneDeckShip = 4;
+                ShipsReplenishment();
                 ComputerFieldPage = new ComputerFieldPage(vm);
                 vm.CurrentPage = ComputerFieldPage;//треба створити класс який буде відовідати за навігацією між сторінками
             }
@@ -82,6 +80,13 @@ namespace SeaBattle.ViewModel
         #endregion
 
         #region PrivateMethods
+        private void ShipsReplenishment()
+        {
+            vm.FourDeckShip = 1;
+            vm.ThrieDeckShip = 2;
+            vm.TwoDeckShip = 3;
+            vm.OneDeckShip = 4;
+        }
         private CellIndex SearchCellIndexes(int cell)
         {
             CellIndex indexes = new CellIndex();
@@ -100,7 +105,7 @@ namespace SeaBattle.ViewModel
 
             return indexes;
         }
-        private void ShipsOptions(string Path, int Cell, double left, double top, double right, double botom)
+        private void ShipsOptions(string Path, int Cell, double left, double top, double right, double botom, int i, int j)
         {
             vm.Ships[Cell] = new Ship
             {
@@ -112,26 +117,10 @@ namespace SeaBattle.ViewModel
                 isOnField = true,
                 Border = new Thickness(left, top, right, botom)
             };
-        }
-        private string[,] CellsAssignment(string[,] tempArr, ObservableCollection<Ship> Ships)
-        {
-            for (int i = 0; i < 11; i++)
-            {
-                for (int j = 0; j < 11; j++)
-                {
-                    if (Ships[i * 11 + j].isDead == true)
-                        tempArr[i, j] = ShipMark;
-                    if (Ships[i * 11 + j].isOnField == true && Ships[i * 11 + j].isDead == false)
-                        tempArr[i, j] = EmptyCellMark;
-                }
-            }
-            return tempArr;
+            tempArr[i, j] = ShipMark;
         }
         private void ShipsGeneration(int ShipCount, int DeksCount)
         {
-            string[,] tempArr = new string[11, 11];
-            tempArr = CellsAssignment(tempArr, vm.Ships);
-
             var Random = new Random();
 
             for (int i = 0; i < ShipCount; i++)
@@ -140,7 +129,10 @@ namespace SeaBattle.ViewModel
                 CellIndex Indexes = SearchCellIndexes(Cell);
 
                 if (!ShipPositionValidation.PositionValidationLogic(Indexes.I_index, Indexes.J_index, tempArr, DeksCount))
+                {
                     i--;
+                    continue;
+                }
                 else
                 {
                     switch (DeksCount)
@@ -149,36 +141,36 @@ namespace SeaBattle.ViewModel
                             break;
 
                         case 1:
-                            ShipsOptions(PathToShipContent.OneDeckShip, Cell, 1, 1, 1, 1);
+                            ShipsOptions(PathToShipContent.OneDeckShip, Cell, 1, 1, 1, 1, Indexes.I_index, Indexes.J_index);
                             vm.OneDeckShip--;
                             break;
 
                         case 2:
-                            ShipsOptions(PathToShipContent.TwoDeckShip_FirstDeck, Cell, 1, 1, 0, 1);
-                            ShipsOptions(PathToShipContent.TwoDeckShip_SecondDeck, Cell + 1, 0, 1, 1, 1);
+                            ShipsOptions(PathToShipContent.TwoDeckShip_FirstDeck, Cell, 1, 1, 0, 1, Indexes.I_index, Indexes.J_index);
+                            ShipsOptions(PathToShipContent.TwoDeckShip_SecondDeck, Cell + 1, 0, 1, 1, 1, Indexes.I_index, Indexes.J_index+1);
                             vm.TwoDeckShip--;
                             break;
 
 
                         case 3:
-                            ShipsOptions(PathToShipContent.ThrieDeckShip_FirstDeck, Cell, 1, 1, 0, 1);
-                            ShipsOptions(PathToShipContent.ThrieDeckShip_SecondDeck, Cell + 1, 0, 1, 0, 1);
-                            ShipsOptions(PathToShipContent.ThrieDeckShip_ThirdDeck, Cell + 2, 0, 1, 1, 1);
+                            ShipsOptions(PathToShipContent.ThrieDeckShip_FirstDeck, Cell, 1, 1, 0, 1, Indexes.I_index, Indexes.J_index);
+                            ShipsOptions(PathToShipContent.ThrieDeckShip_SecondDeck, Cell + 1, 0, 1, 0, 1, Indexes.I_index, Indexes.J_index+1);
+                            ShipsOptions(PathToShipContent.ThrieDeckShip_ThirdDeck, Cell + 2, 0, 1, 1, 1, Indexes.I_index, Indexes.J_index+2);
                             vm.ThrieDeckShip--;
                             break;
                         case 4:
-                            ShipsOptions(PathToShipContent.FourDeckShip_FirstDeck, Cell, 1, 1, 0, 1);
-                            ShipsOptions(PathToShipContent.FourDeckShip_SecondDeck, Cell + 1, 0, 1, 0, 1);
-                            ShipsOptions(PathToShipContent.FourDeckShip_ThirdDeck, Cell + 2, 0, 1, 0, 1);
-                            ShipsOptions(PathToShipContent.FourDeckShip_FourDeck, Cell + 3, 0, 1, 1, 1);
+                            ShipsOptions(PathToShipContent.FourDeckShip_FirstDeck, Cell, 1, 1, 0, 1, Indexes.I_index, Indexes.J_index);
+                            ShipsOptions(PathToShipContent.FourDeckShip_SecondDeck, Cell + 1, 0, 1, 0, 1, Indexes.I_index, Indexes.J_index+1);
+                            ShipsOptions(PathToShipContent.FourDeckShip_ThirdDeck, Cell + 2, 0, 1, 0, 1, Indexes.I_index, Indexes.J_index+2);
+                            ShipsOptions(PathToShipContent.FourDeckShip_FourDeck, Cell + 3, 0, 1, 1, 1, Indexes.I_index, Indexes.J_index+3);
                             vm.FourDeckShip--;
                             break;
                     }
 
-                    tempArr[Indexes.I_index, Indexes.J_index] = ShipMark;
                 }
             }
         }
         #endregion
     }
 }
+ 
