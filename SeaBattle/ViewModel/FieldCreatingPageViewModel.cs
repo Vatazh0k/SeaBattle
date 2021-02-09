@@ -21,7 +21,6 @@ namespace SeaBattle.ViewModel
         private MainWindowViewModel vm;
         private Page ComputerFieldPage;
         private readonly string ShipMark = "O";
-        private readonly string EmptyCellMark = " ";
         private string[,] tempArr = new string[11, 11];
 
         public ICommand ShipsAutoGeneration { get; set; }
@@ -123,7 +122,7 @@ namespace SeaBattle.ViewModel
         {
             var Random = new Random();
 
-            for (int i = 0; i < ShipCount; i++)
+            for (int i = 1; i <= ShipCount; i++)
             {
                 int Cell = Random.Next(11, 121);
                 CellIndex Indexes = SearchCellIndexes(Cell);
