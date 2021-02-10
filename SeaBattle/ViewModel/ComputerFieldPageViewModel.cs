@@ -4,6 +4,7 @@ using SeaBattle.Resource;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Media;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -74,7 +75,11 @@ namespace SeaBattle.ViewModel
             var ships = Enumerable.Range(0, 121)
             .Select(i => new Ship
             {
-                Content = new Image(),
+                Content = new Image
+                {
+                    Source = new BitmapImage(new Uri(PathToShipContent.EmptyCell, UriKind.Relative)),
+                    Stretch = Stretch.Fill
+                },
                 Border = new Thickness(0.5),
                 isOnField = false,
                 isDead = false
