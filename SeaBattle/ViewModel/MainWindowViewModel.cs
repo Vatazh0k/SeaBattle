@@ -74,6 +74,7 @@ namespace SeaBattle.ViewModel
         public ICommand ExitCommand { get; set; }
         public ICommand RulesCommand { get; set; }
         public ICommand CreatingShipsCommand { get; set; }
+        public ICommand NewGameCommand { get; set; }
         #endregion
         #endregion
 
@@ -84,6 +85,7 @@ namespace SeaBattle.ViewModel
             ExitCommand = new Command(ExitCommandAction, CanUseExitCommand);
             RulesCommand = new Command(RulesCommandAction, CanUseRulesCommand);
             NewShipAssignmentCommand = new Command(NewShipAssignmentCommandAction, CanUseNewShipAssignmentCommand);
+            NewGameCommand = new Command(NewGameCommandAction, CanUseNewGameCommand);
             #endregion
             LoginPage = new LoginPage(this);
             CurrentPage = LoginPage;
@@ -101,7 +103,7 @@ namespace SeaBattle.ViewModel
         }
 
         #region CanUseCommands
-
+        private bool CanUseNewGameCommand(object p) => true;
         private bool CanUseNewShipAssignmentCommand(object p) => true;
         private bool CanUseExitCommand(object p) => true;
         private bool CanUseRulesCommand(object p) => true;
@@ -115,7 +117,24 @@ namespace SeaBattle.ViewModel
         #endregion
 
         #region Commands Actions
+        private void NewGameCommandAction(object p)
+        {
+            OneDeckShip = 4;
+            TwoDeckShip = 3;
+            ThrieDeckShip = 2;
+            FourDeckShip = 1;
 
+            for (int i = 0; i < 121; i++)
+            {
+                Ships[i] = new Ship
+                {
+                    Content = new Image(),
+                    isOnField = false,
+                    Border = new Thickness(0.5)
+                };
+            }
+            CurrentPage = new FieldCreatingPage(this);
+        }
         private void ExitCommandAction(object p)
         {
             Environment.Exit(0);

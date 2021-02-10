@@ -60,8 +60,9 @@
 
             <Menu Height="25" VerticalAlignment="Top" >
                 <MenuItem Header="Menu" Height="25" Width="47" HorizontalContentAlignment="Left">
-                    <MenuItem Header="Exit" Command="{Binding ExitCommand}"/>
-                </MenuItem>
+                  <MenuItem Header="New game" Command="{Binding NewGameCommand}"/>
+                  <MenuItem Header="Exit" Command="{Binding ExitCommand}"/>
+               </MenuItem>
                 <MenuItem Header="Help" Width="47"/>
                 <MenuItem Header="Settigns"/>
             </Menu>
