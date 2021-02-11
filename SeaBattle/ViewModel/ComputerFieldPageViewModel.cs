@@ -359,7 +359,7 @@ namespace SeaBattle.ViewModel
                 int Cell = Random.Next(11, 121);
                 CellIndex Indexes = SearchCellIndexes(Cell);
 
-                if (!ShipPositionValidation.PositionValidationLogic(Indexes.I_index, Indexes.J_index, TempArr, DeksCount))
+             /*   if (!ShipPositionValidation.PositionValidationLogic(Indexes.I_index, Indexes.J_index, TempArr, DeksCount))
                 {
                     i--;
                     continue;
@@ -393,7 +393,7 @@ namespace SeaBattle.ViewModel
                             ShipsOptions(Cell + 3, Indexes.I_index, Indexes.J_index + 3);
                             break;
                     }
-                }
+                }*/
             }
         }
         private void ShipsOptions(int Cell, int i, int j)

@@ -54,8 +54,8 @@ namespace SeaBattle.BuisnessLogic
             }
             return Field;
         }
-        public static int CountingDecksCount(string[,] Field, int i, int j, ref int firtShipDeck)
-        {
+        public static int CountingDecksCount(string[,] Field, int i, int j, ref int firtShipDeck, bool isHorizontal = true)
+        {//if ishor is true i = i, else i = j...
             int decksCount = 1;
             try
             {

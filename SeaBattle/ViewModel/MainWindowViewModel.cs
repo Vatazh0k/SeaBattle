@@ -102,12 +102,7 @@ namespace SeaBattle.ViewModel
             CurrentPage = LoginPage;
 
             colors = Enumerable.Range(0, 121).Select(i => new SolidColorBrush(Colors.White));
-
-            ships = Enumerable.Range(0, 121).Select(i => new Ship
-            {
-                isOnField = false,
-                Border = new Thickness(0.5)
-            });
+            ships = Enumerable.Range(0, 121).Select(i => new Ship{Border = new Thickness(0.5)});
 
             _color = new ObservableCollection<Brush>(colors);
             _ships = new ObservableCollection<Ship>(ships);
@@ -172,8 +167,8 @@ namespace SeaBattle.ViewModel
             for (int i = 1; i < p.ToString().Length; i++)
                 cellNumber += p.ToString()[i];
 
-            //if (Ships[Convert.ToInt32(cellNumber)].isOnField is true)
-                //ChangeShipsDirection();
+            if (Ships[Convert.ToInt32(cellNumber)].isOnField is true)
+                ChangeShipsDirection(Convert.ToInt32(cellNumber));
 
             selectionWindow = new ShipSelectionWindow(this);
             selectionWindow.ShowDialog();
@@ -190,6 +185,17 @@ namespace SeaBattle.ViewModel
         #endregion
 
         #region Private Methods
+        private void ChangeShipsDirection(int CellNumber)
+        {
+            CellIndex indexes = SearchCellIndexes(CellNumber);
+
+            int FirstShpsDeck = 0;
+            string[,] tempArr = new string[11, 11];
+            tempArr = CellsAssignment(tempArr, Ships);
+
+            int DeksInShipCount = GameProcess.CountingDecksCount
+            (tempArr, indexes.I_index, indexes.J_index, ref FirstShpsDeck, Ships[CellNumber].isHorizontal);
+        }
         private void SearchShipsType(int cell, string ComparableString)
         {
 
@@ -269,7 +275,7 @@ namespace SeaBattle.ViewModel
             tempArr = CellsAssignment(tempArr, Ships);
             CellIndex Indexes = SearchCellIndexes(Cell);
 
-            if (!ShipPositionValidation.PositionValidationLogic(Indexes.I_index, Indexes.J_index, tempArr, DeckCount))
+            if (!ShipPositionValidation.PositionValidationLogic(Indexes.I_index, Indexes.J_index, tempArr, DeckCount, Ships[Cell].isHorizontal))
             {
                 try
                 {

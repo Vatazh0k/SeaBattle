@@ -11,10 +11,23 @@ namespace SeaBattle.BuisnessLogic
 {
     static class ShipPositionValidation
     {
-        public static bool PositionValidationLogic(int CellIndex_I, int CellIndex_J, string[,] ships, int decksCount)//преедать дирекшн и менять первый или второ цикл
+        public static bool PositionValidationLogic(int Fixed_I, int Fixed_J, string[,] ships, int decksCount, bool isHorizontal)//преедать дирекшн и менять первый или второ цикл
         {
             int J_Iteration_Count = 0;
             int I_teration_Count = 0;
+            int CellIndex_I = 0;
+            int CellIndex_J = 0;
+
+            if (isHorizontal is true)
+            {
+                CellIndex_I = Fixed_I;
+                CellIndex_J = Fixed_J;
+            }
+            if (isHorizontal is false)
+            {
+                CellIndex_I = Fixed_J;
+                CellIndex_J = Fixed_I;
+            }
 
             try
             {
