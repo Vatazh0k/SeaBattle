@@ -70,6 +70,7 @@ namespace SeaBattle.ViewModel
         public Page LoginPage { get; set; }
 
 
+        public ICommand DragCommand { get; set; }
         public ICommand NewShipAssignmentCommand { get; set; }
         public ICommand ExitCommand { get; set; }
         public ICommand RulesCommand { get; set; }
@@ -81,6 +82,7 @@ namespace SeaBattle.ViewModel
         public MainWindowViewModel()
         {
             #region Commands
+            DragCommand = new Command(DragCommandAction, CanUseDragCommand);
             CreatingShipsCommand = new Command(CreatingShipsCommandAction, CanUseCreatingShipsCommand);
             ExitCommand = new Command(ExitCommandAction, CanUseExitCommand);
             RulesCommand = new Command(RulesCommandAction, CanUseRulesCommand);
@@ -103,6 +105,7 @@ namespace SeaBattle.ViewModel
         }
 
         #region CanUseCommands
+        private bool CanUseDragCommand(object p) => true;//TODO currentPage only
         private bool CanUseNewGameCommand(object p) => true;
         private bool CanUseNewShipAssignmentCommand(object p) => true;
         private bool CanUseExitCommand(object p) => true;
@@ -117,6 +120,31 @@ namespace SeaBattle.ViewModel
         #endregion
 
         #region Commands Actions
+        private void DragCommandAction(object p)
+        {
+            Label lb = p as Label;
+            DragDrop.DoDragDrop(lb, lb.Content, DragDropEffects.Copy);
+        }
+        public void DropAction(object sender, DragEventArgs e)
+        {
+            FrameworkElement feSource = e.Source as FrameworkElement;
+            string s = feSource.Name;
+            int cell;
+            string r = "";
+            for (int i = 1; i < s.Length; i++)
+            {
+                r += s[i];
+            }
+            cell = Convert.ToInt32(r);
+
+            Ships[cell] = new Ship
+            {
+                Content = new Image 
+                {
+                    Source = new BitmapImage(new Uri(PathToShipContent.OneDeckShip, UriKind.Relative))
+                },
+            };
+        }
         private void NewGameCommandAction(object p)
         {
             OneDeckShip = 4;

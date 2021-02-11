@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         xmlns:local="clr-namespace:SeaBattle"
         xmlns:vm="clr-namespace:SeaBattle.ViewModel"
         mc:Ignorable="d"
@@ -91,21 +92,49 @@
 
 
 
-                <Label Margin="32,50,317,48">
+                <Label Margin="32,50,317,48"
+                       Name="OneDeckShip">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="MouseDown" >
+                            <i:InvokeCommandAction Command="{Binding DragCommand}" CommandParameter="1"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
                     <Image Source="/Resource/Images/ForPages/OneDeckShipForPage.png"/>
                 </Label>
 
-                <Label Margin="83,48,234,48">
+                <Label Margin="83,48,234,48"
+                       Name="DoubleDeckShip">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="MouseDown" >
+                            <i:InvokeCommandAction Command="{Binding DragCommand}" CommandParameter="2"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
                     <Image Source="/Resource/Images/ForPages/DoubleDeckShipForPage.png"/>
                 </Label>
 
-                <Label Margin="276,45,0,45" >
-                    <Image Source="/Resource/Images/ForPages/FourDeckShipForPage.png"/>
+
+                <Label Margin="177,52,137,51"
+                       Name="ThrieDeckShip">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="MouseDown" >
+                            <i:InvokeCommandAction Command="{Binding DragCommand}" CommandParameter="3"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                    <Image Source="/Resource/Images/ForPages/ThrieDeckShipForPage.png"/>
                 </Label>
 
-                <Image Source="/Resource/Images/ForPages/ThrieDeckShipForPage.png" 
-                       Margin="177,52,137,51"/>
 
+                <Label Margin="276,45,0,45"
+                       Name="FourDeckShip" >
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="MouseDown" >
+                            <i:InvokeCommandAction Command="{Binding DragCommand}" CommandParameter="4"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                    <Image Source="/Resource/Images/ForPages/FourDeckShipForPage.png"/>
+                </Label>
+                
+                
                 <Label VerticalAlignment="Bottom"
                        HorizontalAlignment="Left"
                        Margin="50,0,0,21"

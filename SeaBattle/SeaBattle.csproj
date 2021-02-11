@@ -31,6 +31,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Reference Include="System.Windows.Interactivity">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\MySQL\MySQL Connector Net 8.0.21\Assemblies\v4.5.2\System.Windows.Interactivity.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
     <Resource Include="Resource\Images\DoubleDeckShip.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
