@@ -92,6 +92,13 @@ namespace SeaBattle.BuisnessLogic
             BorderBinding.Mode = BindingMode.OneWay;
             button[i, j].SetBinding(Button.BorderThicknessProperty, BorderBinding);
 
+            Binding BackGroundBinding = new Binding();
+            BackGroundBinding.Source = vm;
+            BackGroundBinding.Path = new PropertyPath($"Color[{i * 11 + j}]");
+            BackGroundBinding.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
+            BackGroundBinding.Mode = BindingMode.OneWay;
+            button[i, j].SetBinding(Button.BackgroundProperty, BackGroundBinding);
+
 
             Binding ContentBinding = new Binding();
             ContentBinding.Source = vm;
@@ -103,7 +110,6 @@ namespace SeaBattle.BuisnessLogic
             button[i, j].Name = $"C{i * 11 + j}";
             button[i, j].Width = 35;
             button[i, j].Height = 35;
-            button[i, j].Background = Brushes.White;
             button[i, j].Command = (ICommand)command;
             button[i, j].CommandParameter = button[i, j].Name;
             button[i, j].AllowDrop = true;
