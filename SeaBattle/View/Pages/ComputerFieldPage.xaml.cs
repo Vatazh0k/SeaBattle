@@ -26,7 +26,7 @@ namespace SeaBattle.View.Pages
             var vm = new ComputerFieldPageViewModel(mainWindowViewModel);
             DataContext = vm;
 
-            FieldCreating<ComputerFieldPageViewModel>.CreateField(vm, Field, vm.MakeDamageCommand, mainWindowViewModel);
+            FieldCreating<ComputerFieldPageViewModel>.CreateField(vm, Field, vm.MakeDamageCommand);
         }
     }
 }

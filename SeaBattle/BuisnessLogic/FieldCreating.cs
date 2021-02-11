@@ -10,9 +10,9 @@ using System.Windows.Media;
 
 namespace SeaBattle.BuisnessLogic
 {
-    public static class FieldCreating<T>                                
+    public static class FieldCreating<T>                          
     {                                                                   
-        public static void CreateField(T ViewModel, Grid Field, object command, MainWindowViewModel mainWindowVM )
+        public static void CreateField(T ViewModel, Grid Field, object command, MainWindowViewModel mainWindowVM  = null)
         {                                   
             #region Data
             Button[,] button = new Button[11, 11];
@@ -107,6 +107,7 @@ namespace SeaBattle.BuisnessLogic
             button[i, j].Command = (ICommand)command;
             button[i, j].CommandParameter = button[i, j].Name;
             button[i, j].AllowDrop = true;
+            if(mainWindowVM != null)
             button[i, j].Drop += mainWindowVM.DropAction;
         }
         private static void ButtonAdd(int i, int j, Button[,] button, Grid Field)

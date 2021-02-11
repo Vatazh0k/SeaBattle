@@ -96,7 +96,7 @@
                        Name="OneDeckShip">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="MouseDown" >
-                            <i:InvokeCommandAction Command="{Binding DragCommand}" CommandParameter="1"/>
+                            <i:InvokeCommandAction Command="{Binding DragCommand}" CommandParameter="{x:Reference OneDeckShip}"/>
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                     <Image Source="/Resource/Images/ForPages/OneDeckShipForPage.png"/>
@@ -106,7 +106,7 @@
                        Name="DoubleDeckShip">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="MouseDown" >
-                            <i:InvokeCommandAction Command="{Binding DragCommand}" CommandParameter="2"/>
+                            <i:InvokeCommandAction Command="{Binding DragCommand}" CommandParameter="{x:Reference DoubleDeckShip}"/>
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                     <Image Source="/Resource/Images/ForPages/DoubleDeckShipForPage.png"/>
@@ -117,7 +117,7 @@
                        Name="ThrieDeckShip">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="MouseDown" >
-                            <i:InvokeCommandAction Command="{Binding DragCommand}" CommandParameter="3"/>
+                            <i:InvokeCommandAction Command="{Binding DragCommand}" CommandParameter="{x:Reference ThrieDeckShip}"/>
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                     <Image Source="/Resource/Images/ForPages/ThrieDeckShipForPage.png"/>
@@ -128,7 +128,7 @@
                        Name="FourDeckShip" >
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="MouseDown" >
-                            <i:InvokeCommandAction Command="{Binding DragCommand}" CommandParameter="4"/>
+                            <i:InvokeCommandAction Command="{Binding DragCommand}" CommandParameter="{x:Reference FourDeckShip}"/>
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                     <Image Source="/Resource/Images/ForPages/FourDeckShipForPage.png"/>

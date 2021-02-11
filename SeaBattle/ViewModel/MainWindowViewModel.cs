@@ -27,6 +27,7 @@ namespace SeaBattle.ViewModel
         private ObservableCollection<Ship> _ships;
         private Page _CurrentPage;
         private string cellNumber;
+        private string shipsDecksCount;
 
         private int _oneDeckShip;
         private int _twoDeckShip;
@@ -123,7 +124,10 @@ namespace SeaBattle.ViewModel
         private void DragCommandAction(object p)
         {
             Label lb = p as Label;
+            shipsDecksCount = lb.Name.ToString();
             DragDrop.DoDragDrop(lb, lb.Content, DragDropEffects.Copy);
+     
+
         }
         public void DropAction(object sender, DragEventArgs e)
         {
@@ -137,13 +141,32 @@ namespace SeaBattle.ViewModel
             }
             cell = Convert.ToInt32(r);
 
-            Ships[cell] = new Ship
+            switch (shipsDecksCount)
             {
-                Content = new Image 
-                {
-                    Source = new BitmapImage(new Uri(PathToShipContent.OneDeckShip, UriKind.Relative))
-                },
-            };
+                default:
+                    break;
+
+                case "OneDeckShip":
+                    if (OneDeckShip is 0) break;
+                    ShipsCountValidation(cell, 1);
+                    break;
+
+                case "DoubleDeckShip":
+                    if (TwoDeckShip is 0) break;
+                    ShipsCountValidation(cell, 2);
+                    break;
+
+                case "ThrieDeckShip":
+                    if (ThrieDeckShip is 0) break;
+                    ShipsCountValidation(cell, 3);
+                    break;
+
+                case "FourDeckShip":
+                    if (FourDeckShip is 0) break;
+                    ShipsCountValidation(cell, 4);
+                    break;
+
+            }
         }
         private void NewGameCommandAction(object p)
         {
