@@ -28,6 +28,16 @@
     <None Remove="Resource\Images\ShipsForField\ThirdDeck_ThrieDeckShip.png" />
     <None Remove="Resource\Images\ShipsForField\ThrieDeck_FourDeckShip.png" />
     <None Remove="Resource\Images\ThrieDeckShip.png" />
+    <None Remove="Resource\Images\VerticalShipsForField\FirstDeck_DoubleDeckShip.png" />
+    <None Remove="Resource\Images\VerticalShipsForField\FirstDeck_FourDeckShip.png" />
+    <None Remove="Resource\Images\VerticalShipsForField\FirstDeck_ThrieDeckShip.png" />
+    <None Remove="Resource\Images\VerticalShipsForField\FourDeck_FourDeckShip.png" />
+    <None Remove="Resource\Images\VerticalShipsForField\OneDeckShip.png" />
+    <None Remove="Resource\Images\VerticalShipsForField\SecondDeck_DoubleDeckShip.png" />
+    <None Remove="Resource\Images\VerticalShipsForField\SecondDeck_FourDeckShip.png" />
+    <None Remove="Resource\Images\VerticalShipsForField\SecondDeck_ThrieDeckShip.png" />
+    <None Remove="Resource\Images\VerticalShipsForField\ThirdDeck_ThrieDeckShip.png" />
+    <None Remove="Resource\Images\VerticalShipsForField\ThrieDeck_FourDeckShip.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -98,6 +108,36 @@
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Resource\Images\ThrieDeckShip.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resource\Images\VerticalShipsForField\FirstDeck_DoubleDeckShip.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resource\Images\VerticalShipsForField\FirstDeck_FourDeckShip.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resource\Images\VerticalShipsForField\FirstDeck_ThrieDeckShip.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resource\Images\VerticalShipsForField\FourDeck_FourDeckShip.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resource\Images\VerticalShipsForField\OneDeckShip.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resource\Images\VerticalShipsForField\SecondDeck_DoubleDeckShip.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resource\Images\VerticalShipsForField\SecondDeck_FourDeckShip.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resource\Images\VerticalShipsForField\SecondDeck_ThrieDeckShip.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resource\Images\VerticalShipsForField\ThirdDeck_ThrieDeckShip.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resource\Images\VerticalShipsForField\ThrieDeck_FourDeckShip.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>

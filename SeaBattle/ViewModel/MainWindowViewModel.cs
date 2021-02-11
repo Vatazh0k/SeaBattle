@@ -92,10 +92,10 @@ namespace SeaBattle.ViewModel
         {
             #region Commands
             DragCommand = new Command(DragCommandAction, CanUseDragCommand);
-            CreatingShipsCommand = new Command(CreatingShipsCommandAction, CanUseCreatingShipsCommand);
+            CreatingShipsCommand = new Command(ShipsWindowOpeningAction, CanUseCreatingShipsCommand);
             ExitCommand = new Command(ExitCommandAction, CanUseExitCommand);
             RulesCommand = new Command(RulesCommandAction, CanUseRulesCommand);
-            NewShipAssignmentCommand = new Command(NewShipAssignmentCommandAction, CanUseNewShipAssignmentCommand);
+            NewShipAssignmentCommand = new Command(ShipAssignmentCommandAction, CanUseNewShipAssignmentCommand);
             NewGameCommand = new Command(NewGameCommandAction, CanUseNewGameCommand);
             #endregion
             LoginPage = new LoginPage(this);
@@ -138,20 +138,6 @@ namespace SeaBattle.ViewModel
             DragDrop.DoDragDrop(lb, lb.Content, DragDropEffects.Copy);
 
         }
-        public void DropAction(object sender, DragEventArgs e)
-        {
-            FrameworkElement feSource = e.Source as FrameworkElement;
-            string CellsNumber = "";
-            int cell = 0;
-
-            for (int i = 1; i <  feSource.Name.Length; i++)
-                CellsNumber += feSource.Name[i];
-
-            bool isParsed = int.TryParse(CellsNumber, out cell);
-            if (isParsed is false) return;
-
-            SearchShipsType(cell, shipsDecksCount);
-        }//
         private void NewGameCommandAction(object p)
         {
             OneDeckShip = 4;
@@ -178,52 +164,25 @@ namespace SeaBattle.ViewModel
         {
             RulesWindow.ShowDialog();
         }
-        private void CreatingShipsCommandAction(object p)
+        private void ShipsWindowOpeningAction(object p)
         {
             Color = new ObservableCollection<Brush>(colors);
             cellNumber = null;
+
             for (int i = 1; i < p.ToString().Length; i++)
-            {
                 cellNumber += p.ToString()[i];
-            }
+
+            //if (Ships[Convert.ToInt32(cellNumber)].isOnField is true)
+                //ChangeShipsDirection();
 
             selectionWindow = new ShipSelectionWindow(this);
             selectionWindow.ShowDialog();
         }
-        private void NewShipAssignmentCommandAction(object p)
+        private void ShipAssignmentCommandAction(object p)
         {
             int Cell = Convert.ToInt32(cellNumber);
 
             SearchShipsType(Cell, p.ToString());
-
-
-            switch (p.ToString())
-            {
-                default:
-                    break;
-
-                case "s1":
-                    if (OneDeckShip is 0) break;
-                    PositionValidation(Cell, 1);
-                    break;
-
-                case "s2":
-                    if (TwoDeckShip is 0) break;
-                    PositionValidation(Cell, 2);
-                    break;
-
-                case "s3":
-                    if (ThrieDeckShip is 0) break;
-                    PositionValidation(Cell, 3);
-                    break;
-
-                case "s4":
-                    if (FourDeckShip is 0) break;
-                    PositionValidation(Cell, 4);
-                    break;
-
-            }
-
 
             selectionWindow.Close();
         }
@@ -233,31 +192,26 @@ namespace SeaBattle.ViewModel
         #region Private Methods
         private void SearchShipsType(int cell, string ComparableString)
         {
-            switch (ComparableString)
+
+            if (ComparableString is "s1" || ComparableString is "OneDeckShip")
             {
-                default:
-                    break;
-
-                case "OneDeckShip":
-                    if (OneDeckShip is 0) break;
-                    PositionValidation(cell, 1);
-                    break;
-
-                case "DoubleDeckShip":
-                    if (TwoDeckShip is 0) break;
-                    PositionValidation(cell, 2);
-                    break;
-
-                case "ThrieDeckShip":
-                    if (ThrieDeckShip is 0) break;
-                    PositionValidation(cell, 3);
-                    break;
-
-                case "FourDeckShip":
-                    if (FourDeckShip is 0) break;
-                    PositionValidation(cell, 4);
-                    break;
-
+                if (OneDeckShip is 0) return;
+                PositionValidation(cell, 1);
+            }
+            else if (ComparableString is "s2" || ComparableString is "DoubleDeckShip")
+            {
+                if (TwoDeckShip is 0) return;
+                PositionValidation(cell, 2);
+            }
+            else if (ComparableString is "s3" || ComparableString is "ThrieDeckShip")
+            {
+                if (ThrieDeckShip is 0) return;
+                PositionValidation(cell, 3);
+            }
+            else if (ComparableString is "s4" || ComparableString is "FourDeckShip")
+            {
+                if (FourDeckShip is 0) return;
+                PositionValidation(cell, 4);
             }
 
         }
@@ -368,6 +322,20 @@ namespace SeaBattle.ViewModel
                         #endregion
                 }
             }
+        }
+        public void DropAction(object sender, DragEventArgs e)
+        {
+            FrameworkElement feSource = e.Source as FrameworkElement;
+            string CellsNumber = "";
+            int cell = 0;
+
+            for (int i = 1; i < feSource.Name.Length; i++)
+                CellsNumber += feSource.Name[i];
+
+            bool isParsed = int.TryParse(CellsNumber, out cell);
+            if (isParsed is false) return;
+
+            SearchShipsType(cell, shipsDecksCount);
         }
         #endregion
 
