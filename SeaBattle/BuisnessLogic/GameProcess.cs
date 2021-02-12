@@ -55,13 +55,20 @@ namespace SeaBattle.BuisnessLogic
             return Field;
         }
         public static int CountingDecksCount(string[,] Field, int i, int j, ref int firtShipDeck, bool isHorizontal = true)
-        {//if ishor is true i = i, else i = j...
+        {
+            int fixed_I = i;
+            int fixed_J = j;
             int decksCount = 1;
+            if(isHorizontal is false)
+            {
+                fixed_I = j;
+                fixed_J = i;
+            }
             try
             {
                 for (int k = 1; k <= 4; k++)
                 {
-                    if (String.IsNullOrEmpty(Field[i, j + k]) || (Field[i, j + k] == MissedMark))
+                    if (String.IsNullOrEmpty(Field[fixed_I, fixed_J + k]) || (Field[fixed_I, fixed_J + k] == MissedMark))
                     {
                         break;
                     }
@@ -73,7 +80,7 @@ namespace SeaBattle.BuisnessLogic
             {
                 for (int k = -1; k >= -4; k--)
                 {
-                    if (String.IsNullOrEmpty(Field[i, j + k]) || (Field[i, j + k] == MissedMark))
+                    if (String.IsNullOrEmpty(Field[fixed_I, fixed_J + k]) || (Field[fixed_I, fixed_J + k] == MissedMark))
                     {
                         break;
                     }

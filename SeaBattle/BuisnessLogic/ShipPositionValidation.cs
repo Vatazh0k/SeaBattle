@@ -11,45 +11,18 @@ namespace SeaBattle.BuisnessLogic
 {
     static class ShipPositionValidation
     {
-        public static bool PositionValidationLogic(int Fixed_I, int Fixed_J, string[,] ships, int decksCount, bool isHorizontal)//преедать дирекшн и менять первый или второ цикл
+        public static bool PositionValidationLogic(int Fixed_I, int Fixed_J, string[,] ships, int decksCount, bool isHorizontal = true)
         {
-            int J_Iteration_Count = 0;
-            int I_teration_Count = 0;
-            int CellIndex_I = 0;
-            int CellIndex_J = 0;
 
-            if (isHorizontal is true)
-            {
-                CellIndex_I = Fixed_I;
-                CellIndex_J = Fixed_J;
-            }
             if (isHorizontal is false)
             {
-                CellIndex_I = Fixed_J;
-                CellIndex_J = Fixed_I;
+                if (!ValidationAlgorith(Fixed_I, Fixed_J, ships, 2, decksCount+1))
+                    return false;
             }
-
-            try
+            if (isHorizontal is true)
             {
-                for (int i = CellIndex_I - 1; i < CellIndex_I + 2; i++)
-                {
-                    J_Iteration_Count = 0;
-                    for (int j = CellIndex_J - 1; j < CellIndex_J + decksCount + 1; j++)
-                    {
-                        if (!string.IsNullOrEmpty(ships[i, j])) return false;
-
-                        J_Iteration_Count++;
-                        if (J_Iteration_Count == decksCount + 1 && j == 10)
-                            j = (j + 1) + decksCount - 1;
-                    }
-                    I_teration_Count++;
-                    if (I_teration_Count == 2 && i == 10)
-                        i = (i + 1) + decksCount - 1;
-                }
-            }
-            catch (Exception)
-            {
-                return false;
+                if (!ValidationAlgorith(Fixed_I, Fixed_J, ships, decksCount+1, 2))
+                    return false;
             }
 
             return true;
@@ -57,7 +30,34 @@ namespace SeaBattle.BuisnessLogic
 
      
         }
-       
+        private static bool ValidationAlgorith(int CellIndex_I, int CellIndex_J, string[,]ships, int X_Pos_ShipsDeks, int Y_Pos_ShipsDeks)
+        {
+            int J_Iteration_Count = 0;
+            int I_teration_Count = 0;
+            try
+            {
+                for (int i = CellIndex_I - 1; i < CellIndex_I + Y_Pos_ShipsDeks; i++)
+                {
+                    J_Iteration_Count = 0;
+                    for (int j = CellIndex_J - 1; j < CellIndex_J + X_Pos_ShipsDeks; j++)
+                    {
+                        if (!string.IsNullOrEmpty(ships[i, j])) return false;
+
+                        J_Iteration_Count++;
+                        if (J_Iteration_Count == X_Pos_ShipsDeks && j == 10)
+                            break;
+                    }
+                    I_teration_Count++;
+                    if (I_teration_Count == Y_Pos_ShipsDeks && i == 10)
+                        break;
+                }
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+            return true;
+        }
     } 
 }
   

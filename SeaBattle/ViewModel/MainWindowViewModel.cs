@@ -167,8 +167,11 @@ namespace SeaBattle.ViewModel
             for (int i = 1; i < p.ToString().Length; i++)
                 cellNumber += p.ToString()[i];
 
-            if (Ships[Convert.ToInt32(cellNumber)].isOnField is true)
+            if (Ships[Convert.ToInt32(cellNumber)].isOnField is true)// или красное поле чтоб тож можон бліоо перевенурть
+            {
                 ChangeShipsDirection(Convert.ToInt32(cellNumber));
+                return;
+            }
 
             selectionWindow = new ShipSelectionWindow(this);
             selectionWindow.ShowDialog();
@@ -193,8 +196,16 @@ namespace SeaBattle.ViewModel
             string[,] tempArr = new string[11, 11];
             tempArr = CellsAssignment(tempArr, Ships);
 
-            int DeksInShipCount = GameProcess.CountingDecksCount
+            int DecksInShipCount = GameProcess.CountingDecksCount
             (tempArr, indexes.I_index, indexes.J_index, ref FirstShpsDeck, Ships[CellNumber].isHorizontal);
+
+            FirstShpsDeck = indexes.J_index - FirstShpsDeck;
+
+            for (int i = 0; i < DecksInShipCount; i++)
+                tempArr[indexes.I_index, FirstShpsDeck + i] = null;
+            
+            bool canPutShip = ShipPositionValidation.PositionValidationLogic
+            (indexes.I_index, indexes.J_index, tempArr, DecksInShipCount, !Ships[CellNumber].isHorizontal);
         }
         private void SearchShipsType(int cell, string ComparableString)
         {
