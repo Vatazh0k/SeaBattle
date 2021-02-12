@@ -13,7 +13,7 @@ namespace SeaBattle.Model
         public bool isDead { get; set; } = false;
         public bool isOnField { get; set; } = false;
         public Image Content { get; set; }
-        public Thickness Border { get; set; }
+        public Thickness Border { get; set; } = new Thickness(0.5);
         public bool isHorizontal { get; set; } = true;
     }
 }

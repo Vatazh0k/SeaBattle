@@ -16,21 +16,20 @@ namespace SeaBattle.BuisnessLogic
 
             if (isHorizontal is false)
             {
-                if (!ValidationAlgorith(Fixed_I, Fixed_J, ships, 2, decksCount+1))
+                if (!ValidationAlgorithm(Fixed_I, Fixed_J, ships, 2, decksCount + 1))
                     return false;
             }
             if (isHorizontal is true)
             {
-                if (!ValidationAlgorith(Fixed_I, Fixed_J, ships, decksCount+1, 2))
+                if (!ValidationAlgorithm(Fixed_I, Fixed_J, ships, decksCount + 1, 2))
                     return false;
             }
 
             return true;
-
-
      
         }
-        private static bool ValidationAlgorith(int CellIndex_I, int CellIndex_J, string[,]ships, int X_Pos_ShipsDeks, int Y_Pos_ShipsDeks)
+        #region PrivateMethods
+        private static bool ValidationAlgorithm(int CellIndex_I, int CellIndex_J, string[,]ships, int X_Pos_ShipsDeks, int Y_Pos_ShipsDeks)
         {
             int J_Iteration_Count = 0;
             int I_teration_Count = 0;
@@ -58,6 +57,7 @@ namespace SeaBattle.BuisnessLogic
             }
             return true;
         }
-    } 
+        #endregion
+    }
 }
   

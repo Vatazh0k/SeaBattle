@@ -56,19 +56,25 @@ namespace SeaBattle.BuisnessLogic
         }
         public static int CountingDecksCount(string[,] Field, int i, int j, ref int firtShipDeck, bool isHorizontal = true)
         {
-            int fixed_I = i;
-            int fixed_J = j;
+
             int decksCount = 1;
-            if(isHorizontal is false)
-            {
-                fixed_I = j;
-                fixed_J = i;
-            }
+            int firstIndex = 0;
+            int secondIndex = 0;
             try
             {
                 for (int k = 1; k <= 4; k++)
                 {
-                    if (String.IsNullOrEmpty(Field[fixed_I, fixed_J + k]) || (Field[fixed_I, fixed_J + k] == MissedMark))
+                    if (isHorizontal is true)
+                    {
+                        firstIndex = i;
+                        secondIndex = j + k;                        
+                    }
+                    if (isHorizontal is false)
+                    {
+                        firstIndex = i + k;
+                        secondIndex = j;
+                    }
+                    if (String.IsNullOrEmpty(Field[firstIndex, secondIndex]) || (Field[firstIndex, secondIndex] == MissedMark))
                     {
                         break;
                     }
@@ -80,7 +86,17 @@ namespace SeaBattle.BuisnessLogic
             {
                 for (int k = -1; k >= -4; k--)
                 {
-                    if (String.IsNullOrEmpty(Field[fixed_I, fixed_J + k]) || (Field[fixed_I, fixed_J + k] == MissedMark))
+                    if (isHorizontal is true)
+                    {
+                        firstIndex = i;
+                        secondIndex = j + k;
+                    }
+                    if (isHorizontal is false)
+                    {
+                        firstIndex = i + k;
+                        secondIndex = j;
+                    }
+                    if (String.IsNullOrEmpty(Field[firstIndex, secondIndex]) || (Field[firstIndex, secondIndex] == MissedMark))
                     {
                         break;
                     }
