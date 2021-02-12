@@ -3,6 +3,7 @@ using SeaBattle.View.Pages;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -52,6 +53,7 @@ namespace SeaBattle.ViewModel
             mainWindowViewModel.ThrieDeckShip = 2;
             mainWindowViewModel.FourDeckShip = 1;
             mainWindowViewModel.CurrentPage = FieldCreatingPage;
+            MessageBox.Show("Press on the ship to change direction", "Attention", MessageBoxButton.OK, MessageBoxImage.Information);
         }
         #endregion
     }

@@ -47,20 +47,9 @@ namespace SeaBattle.ViewModel
         private void CelanTheFieldAction(object p)
         {
             ShipsReplenishment();
-
             tempArr = new string[11, 11];
             vm.Color = new ObservableCollection<Brush>(vm.colors);
-
-            for (int i = 0; i < 121; i++)
-            {
-                vm.Ships[i] = new Ship
-                {
-                    Content = new Image(),
-                    Border = new Thickness(0.5),
-                    isDead = false,
-                    isOnField = false
-                };
-            }
+            vm.Ships = new ObservableCollection<Ship>(vm.ships);
         }
         private void ShipsAutoGenerationAction(object p)
         {
@@ -145,7 +134,7 @@ namespace SeaBattle.ViewModel
                 int Cell = Random.Next(11, 121);
                 CellIndex Indexes = SearchCellIndexes(Cell);
 
-              /*  if (!ShipPositionValidation.PositionValidationLogic(Indexes.I_index, Indexes.J_index, tempArr, DeksCount))
+                if (!ShipPositionValidation.PositionValidationLogic(Indexes.I_index, Indexes.J_index, tempArr, DeksCount))
                 {
                     i--;
                     continue;
@@ -184,7 +173,7 @@ namespace SeaBattle.ViewModel
                             break;
                     }
 
-                }*/
+                }
             }
         }
         #endregion
