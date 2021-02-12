@@ -111,7 +111,7 @@ namespace SeaBattle.ViewModel
         }
 
         #region CanUseCommands
-        private bool CanUseDragCommand(object p) => true;//TODO currentPage only
+        private bool CanUseDragCommand(object p) => true;
         private bool CanUseNewGameCommand(object p) => true;
         private bool CanUseNewShipAssignmentCommand(object p) => true;
         private bool CanUseExitCommand(object p) => true;

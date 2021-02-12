@@ -53,6 +53,7 @@ namespace SeaBattle.ViewModel
         }
         private void ShipsAutoGenerationAction(object p)
         {
+            vm.Color = new ObservableCollection<Brush>(vm.colors);
             tempArr = CellAssigning();
             ShipsGeneration(vm.FourDeckShip, 4);
             ShipsGeneration(vm.ThrieDeckShip, 3);
@@ -61,6 +62,7 @@ namespace SeaBattle.ViewModel
         }
         private void ReadyCommandAction(object p)
         {
+            vm.Color = new ObservableCollection<Brush>(vm.colors);
             if (vm.OneDeckShip is 0 && vm.TwoDeckShip is 0 &&
               vm.ThrieDeckShip is 0 && vm.FourDeckShip is 0)
             {
