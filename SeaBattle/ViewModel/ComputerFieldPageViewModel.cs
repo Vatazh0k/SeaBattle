@@ -350,7 +350,7 @@ namespace SeaBattle.ViewModel
             { 
                 Content = new Image
                 {
-                    Source = new BitmapImage(new Uri(PathToShipContent.OneDeckShip, UriKind.Relative)),
+                    Source = new BitmapImage(new Uri(PathToShipContent.EmptyCell, UriKind.Relative)),
                     Stretch = Stretch.Fill
                 },
                 isOnField = true,

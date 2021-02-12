@@ -60,7 +60,7 @@
             <Underline>Start</Underline>
         </Button>
 
-        <Button HorizontalAlignment="Right"
+        <!--<Button HorizontalAlignment="Right"
                 VerticalAlignment="Top" 
                 Margin="0,258,133,0" 
                 Height="50" Width="100"
@@ -80,7 +80,7 @@
                  FontFamily="MV Boli"
                  Command="{Binding SettingsCommand}">
             <Underline>Settings</Underline>
-        </Button>
+        </Button>-->
 
 
 

@@ -77,7 +77,7 @@ namespace SeaBattle.ViewModel
             get { return _fourDeckShip; }
             set => Set(ref _fourDeckShip, value);
         }
-        public Page LoginPage { get; set; }
+        public Page StartMenue { get; set; }
 
 
         public ICommand DragCommand { get; set; }
@@ -99,8 +99,8 @@ namespace SeaBattle.ViewModel
             NewShipAssignmentCommand = new Command(ShipAssignmentCommandAction, CanUseNewShipAssignmentCommand);
             NewGameCommand = new Command(NewGameCommandAction, CanUseNewGameCommand);
             #endregion
-            LoginPage = new LoginPage(this);
-            CurrentPage = LoginPage;
+            StartMenue = new StartMenuePage(this);
+            CurrentPage = StartMenue;
 
             colors = Enumerable.Range(0, 121).Select(i => new SolidColorBrush(Colors.White));
             ships = Enumerable.Range(0, 121).Select(i => new Ship());
