@@ -20,22 +20,26 @@ namespace SeaBattle.ViewModel
         #region Data
         private MainWindowViewModel vm;
         private Page ComputerFieldPage;
-        private readonly string ShipMark = "O";
-        private string[,] tempArr = new string[11, 11];
 
+        private string[,] tempArr = new string[11, 11];
+        private const string ShipMark = "O";
+
+        #region Command
         public ICommand ShipsAutoGeneration { get; set; }
         public ICommand ReadyCommand { get; set; }
         public ICommand CleanField { get; set; }
+        #endregion
         #endregion
 
         public FieldCreatingPageViewModel(MainWindowViewModel vm)
         {
             this.vm = vm;
 
+            #region Commands
             ShipsAutoGeneration = new Command(ShipsAutoGenerationAction, CanUseCommands);
             ReadyCommand = new Command(ReadyCommandAction, CanUseCommands);
             CleanField = new Command(CelanTheFieldAction, CanUseCommands);
-
+            #endregion
         }
 
         #region Commands
@@ -45,6 +49,7 @@ namespace SeaBattle.ViewModel
             ShipsReplenishment();
 
             tempArr = new string[11, 11];
+            vm.Color = new ObservableCollection<Brush>(vm.colors);
 
             for (int i = 0; i < 121; i++)
             {

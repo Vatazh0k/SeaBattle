@@ -26,8 +26,6 @@ namespace SeaBattle.ViewModel
         private RulesWindow RulesWindow = new RulesWindow();
         private ObservableCollection<Brush> _color;
         private ObservableCollection<Ship> _ships;
-        private IEnumerable<SolidColorBrush> colors;
-        private IEnumerable<Ship> ships;
         private Page _CurrentPage;
         private string cellNumber;
         private string shipsDecksCount;
@@ -40,6 +38,9 @@ namespace SeaBattle.ViewModel
         #endregion
 
         #region PUblic Data
+        public IEnumerable<SolidColorBrush> colors { get; }
+        public IEnumerable<Ship> ships { get; }
+
         public ObservableCollection<Brush> Color
         {
             get => _color;
