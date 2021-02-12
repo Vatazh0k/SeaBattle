@@ -38,12 +38,20 @@ namespace SeaBattle.BuisnessLogic
             }
             return false;
         }
-        public static string[,] ShipsFuneral(string[,] Field, int i, int j, int DecksCount)
+        public static string[,] ShipsFuneral(string[,] Field, int i, int j, int DecksCount, bool isHorizontal = true)
         {
+            int x_Axis_Ships = i + 1;
+            int y_Axis_Ships = DecksCount;
 
-            for (int n = i - 1; n <= i + 1; n++)
+            if (isHorizontal is false)
             {
-                for (int m = j - 1; m <= j + DecksCount; m++)
+                x_Axis_Ships = DecksCount;
+                y_Axis_Ships = i + 1;
+            }            
+
+            for (int n = i - 1; n <= x_Axis_Ships; n++)
+            {
+                for (int m = j - 1; m <= j + y_Axis_Ships; m++)
                 {
 
                     if (n == 11) continue;
@@ -109,14 +117,24 @@ namespace SeaBattle.BuisnessLogic
             return decksCount;
 
         }
-        public static bool ShipState(string[,] field, int i, int j, int decksCount)
+        public static bool ShipState(string[,] field, int i, int j, int decksCount, bool isHorizontal = true)
         {
 
             for (int k = 0; k < decksCount; k++)
             {
-                if (field[i, j + k] == KilledMark)
+                if (isHorizontal is false)
                 {
-                    continue;
+                    if (field[i + k, j] == KilledMark)
+                    {
+                        continue;
+                    }
+                }
+                if (isHorizontal is true)
+                {
+                    if (field[i, j + k] == KilledMark)
+                    {
+                        continue;
+                    }
                 }
                 return false;
             }

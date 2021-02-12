@@ -122,7 +122,7 @@ namespace SeaBattle.ViewModel
         #region PrivateMethods
         private void ComputerTurn(string[,] userField)
         {
-            
+           
         }
         private bool UserTurn(Field fields, CellIndex Indexes, int Cell)
         {
@@ -297,42 +297,51 @@ namespace SeaBattle.ViewModel
             {
                 int Cell = Random.Next(11, 121);
                 CellIndex Indexes = SearchCellIndexes(Cell);
-
-                if (!ShipPositionValidation.PositionValidationLogic(Indexes.I_index, Indexes.J_index, TempArr, DeksCount))
+                if (DeksCount == 3)
                 {
-                    i--;
-                    continue;
+                    if (!ShipPositionValidation.PositionValidationLogic(Indexes.I_index, Indexes.J_index, TempArr, DeksCount, false))
+                    {
+                        i--;
+                        continue;
+                    }
                 }
                 else
                 {
-                    switch (DeksCount)
+                    if (!ShipPositionValidation.PositionValidationLogic(Indexes.I_index, Indexes.J_index, TempArr, DeksCount))
                     {
-                        default:
-                            break;
-
-                        case 1:
-                            ShipsOptions(Cell, Indexes.I_index, Indexes.J_index);
-                            break;
-
-                        case 2:
-                            ShipsOptions(Cell, Indexes.I_index, Indexes.J_index);
-                            ShipsOptions(Cell + 1, Indexes.I_index, Indexes.J_index + 1);
-                            break;
-
-                        case 3:
-                            ShipsOptions(Cell, Indexes.I_index, Indexes.J_index);
-                            ShipsOptions(Cell + 1, Indexes.I_index, Indexes.J_index + 1);
-                            ShipsOptions(Cell + 2, Indexes.I_index, Indexes.J_index + 2);
-                            break;
-
-                        case 4:
-                            ShipsOptions(Cell, Indexes.I_index, Indexes.J_index);
-                            ShipsOptions(Cell + 1, Indexes.I_index, Indexes.J_index + 1);
-                            ShipsOptions(Cell + 2, Indexes.I_index, Indexes.J_index + 2);
-                            ShipsOptions(Cell + 3, Indexes.I_index, Indexes.J_index + 3);
-                            break;
+                        i--;
+                        continue;
                     }
                 }
+
+                switch (DeksCount)
+                {
+                    default:
+                        break;
+
+                    case 1:
+                        ShipsOptions(Cell, Indexes.I_index, Indexes.J_index);
+                        break;
+
+                    case 2:
+                        ShipsOptions(Cell, Indexes.I_index, Indexes.J_index);
+                        ShipsOptions(Cell + 1, Indexes.I_index, Indexes.J_index + 1);
+                        break;
+
+                    case 3:
+                        ShipsOptions(Cell, Indexes.I_index, Indexes.J_index);
+                        ShipsOptions(Cell + 11, Indexes.I_index + 1, Indexes.J_index);
+                        ShipsOptions(Cell + 22, Indexes.I_index + 2, Indexes.J_index);
+                        break;
+
+                    case 4:
+                        ShipsOptions(Cell, Indexes.I_index, Indexes.J_index);
+                        ShipsOptions(Cell + 1, Indexes.I_index, Indexes.J_index + 1);
+                        ShipsOptions(Cell + 2, Indexes.I_index, Indexes.J_index + 2);
+                        ShipsOptions(Cell + 3, Indexes.I_index, Indexes.J_index + 3);
+                        break;
+                }
+
             }
         }
         private void ShipsOptions(int Cell, int i, int j)
@@ -341,7 +350,7 @@ namespace SeaBattle.ViewModel
             { 
                 Content = new Image
                 {
-                    Source = new BitmapImage(new Uri(PathToShipContent.EmptyCell, UriKind.Relative)),
+                    Source = new BitmapImage(new Uri(PathToShipContent.OneDeckShip, UriKind.Relative)),
                     Stretch = Stretch.Fill
                 },
                 isOnField = true,
