@@ -20,7 +20,7 @@
               Height="390"
               VerticalAlignment="Top"
               HorizontalAlignment="Left"
-              Margin="57,20,0,0" Grid.ColumnSpan="2">
+              Margin="57,25,0,0" Grid.ColumnSpan="2">
 
         </Grid>
 

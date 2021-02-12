@@ -85,20 +85,23 @@ namespace SeaBattle.BuisnessLogic
         {
             button[i, j] = new Button();
             button[i, j].BorderBrush = Brushes.Gray;
+            button[i, j].Background = Brushes.White;
 
             Binding BorderBinding = new Binding();
             BorderBinding.Source = vm;
-            BorderBinding.Path = new PropertyPath($"Ships[{i*11+j}].Border");
+            BorderBinding.Path = new PropertyPath($"Ships[{i * 11 + j}].Border");
             BorderBinding.Mode = BindingMode.OneWay;
             button[i, j].SetBinding(Button.BorderThicknessProperty, BorderBinding);
 
-            Binding BackGroundBinding = new Binding();
-            BackGroundBinding.Source = vm;
-            BackGroundBinding.Path = new PropertyPath($"Color[{i * 11 + j}]");
-            BackGroundBinding.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
-            BackGroundBinding.Mode = BindingMode.OneWay;
-            button[i, j].SetBinding(Button.BackgroundProperty, BackGroundBinding);
-
+            if (mainWindowVM != null)
+            {
+                Binding BackGroundBinding = new Binding();
+                BackGroundBinding.Source = vm;
+                BackGroundBinding.Path = new PropertyPath($"Color[{i * 11 + j}]");
+                BackGroundBinding.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
+                BackGroundBinding.Mode = BindingMode.OneWay;
+                button[i, j].SetBinding(Button.BackgroundProperty, BackGroundBinding);
+            }
 
             Binding ContentBinding = new Binding();
             ContentBinding.Source = vm;
@@ -112,9 +115,11 @@ namespace SeaBattle.BuisnessLogic
             button[i, j].Height = 35;
             button[i, j].Command = (ICommand)command;
             button[i, j].CommandParameter = button[i, j].Name;
-            button[i, j].AllowDrop = true;
-            if(mainWindowVM != null)
-            button[i, j].Drop += mainWindowVM.DropAction;
+            if (mainWindowVM != null)
+            {
+                button[i, j].AllowDrop = true;
+                button[i, j].Drop += mainWindowVM.DropAction;
+            }
         }
         private static void ButtonAdd(int i, int j, Button[,] button, Grid Field)
         {

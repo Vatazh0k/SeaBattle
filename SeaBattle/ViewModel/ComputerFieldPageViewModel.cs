@@ -76,22 +76,21 @@ namespace SeaBattle.ViewModel
             .Select(i => new Ship
             {
                 Content = new Image
-                {
+                { 
                     Source = new BitmapImage(new Uri(PathToShipContent.EmptyCell, UriKind.Relative)),
                     Stretch = Stretch.Fill
                 },
-                Border = new Thickness(0.5),
-                isOnField = false,
-                isDead = false
+                Border = new Thickness(0.5)
+
             });
 
             _ships = new ObservableCollection<Ship>(ships);
 
-           #region ShipsGenerating
-            ShipsGeneration(FourDeckShipCount, FourDeckShipDeksCount);
-            ShipsGeneration(thrieDeckShipCount, ThrieDeckShipDeksCount);
-            ShipsGeneration(OneDeckShipCount, OneDeckShipDecksCount);
-            ShipsGeneration(TwoDeckShipCount, TwoDeckShipDeksCount);
+            #region ShipsGenerating
+            ShipsGenerating(FourDeckShipCount, FourDeckShipDeksCount);
+            ShipsGenerating(thrieDeckShipCount, ThrieDeckShipDeksCount);
+            ShipsGenerating(OneDeckShipCount, OneDeckShipDecksCount);
+            ShipsGenerating(TwoDeckShipCount, TwoDeckShipDeksCount);
             #endregion
 
             fields = CellsAssignment();
@@ -123,67 +122,7 @@ namespace SeaBattle.ViewModel
         #region PrivateMethods
         private void ComputerTurn(string[,] userField)
         {
-            while (isComputerMove != false)
-            {
-                CellIndex indexes = SearchRandomCell(userField);
-
-                int Cell = ConvertIndexesToCell(indexes);
-
-                bool isMissed = GameProcess.DamageCreating(userField, indexes.I_index, indexes.J_index);
-
-                if (isMissed is true)
-                {
-                    MissCounter++;
-                    isComputerMove = false;
-                    MissedAction(Cell, vm.Ships, PathToShipContent.MissedMark, 0.5);
-                }
-                if (isMissed is false)
-                {
-                    int IndexOfTheFirstShpsDeck = 0;
-
-                    int DecksCount = GameProcess.CountingDecksCount(userField, indexes.I_index, indexes.J_index, ref IndexOfTheFirstShpsDeck);
-
-                    switch (DecksCount)
-                    {
-                        default:
-                            break;
-
-                        case 1:
-                            vm.OneDeckShip--;
-                            break;
-                        case 2:
-                            vm.TwoDeckShip--;
-                            break;
-                        case 3:
-                            vm.ThrieDeckShip--;
-                            break;
-                        case 4:
-                            vm.FourDeckShip--;
-                            break;
-
-                    }
-
-                    IndexOfTheFirstShpsDeck = indexes.J_index - IndexOfTheFirstShpsDeck;
-
-                    for (int i = IndexOfTheFirstShpsDeck; i < DecksCount + IndexOfTheFirstShpsDeck; i++)
-                    {
-                        userField[indexes.I_index,i] = ShipMark;
-                    }
-
-                    userField = GameProcess.ShipsFuneral(userField, indexes.I_index, IndexOfTheFirstShpsDeck, DecksCount);
-
-                    NumberOfRemainingUserShips--;
-                    vm.Ships = ConsequencesOfAttack(userField, vm.Ships);
-                    if (NumberOfRemainingUserShips is 0)
-                    {
-                        MessageBox.Show("You loose!", "", MessageBoxButton.OK, MessageBoxImage.Information);
-                        isComputerMove = true;
-                        return;
-                    }
-
-
-                }
-            }
+            
         }
         private bool UserTurn(Field fields, CellIndex Indexes, int Cell)
         {
@@ -350,7 +289,7 @@ namespace SeaBattle.ViewModel
 
             return indexes;
         }
-        private void ShipsGeneration(int ShipCount, int DeksCount)
+        private void ShipsGenerating(int ShipCount, int DeksCount)
         {
             var Random = new Random();
 
@@ -359,7 +298,7 @@ namespace SeaBattle.ViewModel
                 int Cell = Random.Next(11, 121);
                 CellIndex Indexes = SearchCellIndexes(Cell);
 
-             /*   if (!ShipPositionValidation.PositionValidationLogic(Indexes.I_index, Indexes.J_index, TempArr, DeksCount))
+                if (!ShipPositionValidation.PositionValidationLogic(Indexes.I_index, Indexes.J_index, TempArr, DeksCount))
                 {
                     i--;
                     continue;
@@ -393,7 +332,7 @@ namespace SeaBattle.ViewModel
                             ShipsOptions(Cell + 3, Indexes.I_index, Indexes.J_index + 3);
                             break;
                     }
-                }*/
+                }
             }
         }
         private void ShipsOptions(int Cell, int i, int j)
