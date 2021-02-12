@@ -161,12 +161,13 @@ namespace SeaBattle.ViewModel
         }
         private void ShipsWindowOpeningAction(object p)
         {
+            Color = new ObservableCollection<Brush>(colors);
             cellNumber = null;
 
             for (int i = 1; i < p.ToString().Length; i++)
                 cellNumber += p.ToString()[i];
 
-            if (Ships[Convert.ToInt32(cellNumber)].isOnField is true || Color[Convert.ToInt32(cellNumber)] == Brushes.Red)
+            if (Ships[Convert.ToInt32(cellNumber)].isOnField is true)
             {
                 ChangeShipsDirection(Convert.ToInt32(cellNumber));
                 return;
