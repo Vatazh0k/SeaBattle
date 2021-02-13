@@ -4,9 +4,7 @@ using SeaBattle.Resource;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Media;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -21,7 +19,18 @@ namespace SeaBattle.ViewModel
         private MainWindowViewModel vm;
         private ObservableCollection<Ship> _ships;
         private Field fields;
-        bool isComputerMove = false;
+        private CellIndex _indexes;
+        private bool isComputerMove = false;
+
+        int CountOfAttaksInOneDirection = 0;
+        private bool isHitButNotKilled = false;
+        private bool isHorizontal = false;
+        private bool isRightDirection = true;
+        private bool isUpwardDirection = false;
+        private int Fixed_i = 0;
+        private int Fixed_j = 0;
+        private int Fixed_cell = 0;
+
         private string[,] TempArr = new string[11, 11];
         private const string MissedMark = "X";
         private const string ShipMark = "O";
@@ -37,7 +46,6 @@ namespace SeaBattle.ViewModel
         private int thrieDeckShipCount = 2;
         private int FourDeckShipCount = 1;
 
-        private int NumberOfRemainingUserShips = 10;
         private int _NumberOfRemainingComputerShips = 10;
         private int _missedCounter = 0;
         #endregion
@@ -120,51 +128,151 @@ namespace SeaBattle.ViewModel
         #endregion
 
         #region PrivateMethods
-        private void ComputerTurn(string[,] userField)
+        private void RefreshData(ref int Cell, ref int CountOfAttaksInOneDirection)
         {
-            CellIndex indexes = SearchRandomCell(userField);
-            int Cell = ConvertIndexesToCell(indexes);
+            _indexes.I_index = Fixed_i;
+            _indexes.J_index = Fixed_j;
+            Cell = Fixed_cell;
+            if (isHitButNotKilled is true && CountOfAttaksInOneDirection <= 1)
+            {
+                isHorizontal = !isHorizontal;
+                return;
+            }
+            if (isHitButNotKilled is true)
+            {
+                if (isHorizontal is true)
+                {
+                    isRightDirection = !isRightDirection;
+                }
+                if (isHorizontal is false)
+                {
+                    isUpwardDirection = !isUpwardDirection;
+                }
+                CountOfAttaksInOneDirection = 0;
+            }
+        }
+        private bool IndexsesValidation(string[,] userField, ref int Cell)
+        {
+            try
+            {
+                if (userField[_indexes.I_index, _indexes.J_index] is MissedMark)
+                {
+                    RefreshData(ref Cell, ref CountOfAttaksInOneDirection);
+                    return true;
+                }
+            }
+            catch (Exception)
+            {
 
+                RefreshData(ref Cell, ref CountOfAttaksInOneDirection);
+                return true;
+            }
+            return false;
+        }
+        private void ComputerTurn(string[,] userField)// buisnesslogic 
+        {
+            CountOfAttaksInOneDirection = 0;
             while (isComputerMove != false)
             {
-                bool isMissed = GameProcess.DamageCreating(userField, indexes.I_index, indexes.J_index);
+                Thread.Sleep(200);
+                if (isHitButNotKilled is false)
+                {
+                    _indexes = SearchRandomCell(userField);
+                    Fixed_i = _indexes.I_index;
+                    Fixed_j = _indexes.J_index;
+                    Fixed_cell = ConvertIndexesToCell(_indexes);
+                }
+
+                int Cell = ConvertIndexesToCell(_indexes);
+
+                if (isHitButNotKilled is true)
+                {
+                    CountOfAttaksInOneDirection++;
+                    if (isHorizontal is true)
+                    {
+                        if (isRightDirection is true)
+                        {
+                            _indexes.J_index += 1;
+                            Cell += 1;
+
+                            if (IndexsesValidation(userField, ref Cell))
+                                continue;
+                           
+                        }
+                        if (isRightDirection is false)
+                        {
+                            _indexes.J_index -= 1;
+                            Cell -= 1;
+
+
+                            if (IndexsesValidation(userField, ref Cell))
+                                continue;
+                        }
+                    }
+                    if(isHorizontal is false)
+                    {
+                        if (isUpwardDirection is true)
+                        {
+                            _indexes.I_index -= 1;
+                            Cell -= 11;
+
+
+                            if (IndexsesValidation(userField, ref Cell))
+                                continue;
+                        }
+                        if (isUpwardDirection is false)
+                        {
+                            _indexes.I_index += 1;
+                            Cell += 11;
+
+
+                            if (IndexsesValidation(userField, ref Cell))
+                                continue;
+                        }
+                    }
+                }
+                bool isMissed = GameProcess.DamageCreating(userField, _indexes.I_index, _indexes.J_index);
 
                 if (isMissed is true)
                 {
                     isComputerMove = false;
                     MissedAction(Cell, vm.Ships, PathToShipContent.MissedMark, 0.5);
+
+                    if (isHitButNotKilled is false) CountOfAttaksInOneDirection = 0;
+
+                    RefreshData(ref Cell, ref CountOfAttaksInOneDirection);
+                   
                     break;
                 }
                 if (isMissed is false)
                 {
                     isComputerMove = true;
                     int IndexOfTheFirstShipsDeck = 0;
-                    int FirstIndex = indexes.I_index;
-                    int SecondIndex = indexes.J_index;
-              
+                    int FirstIndex = _indexes.I_index;
+                    int SecondIndex = _indexes.J_index;
+
                     int DecksCount = GameProcess.CountingDecksCount
-                    (userField, indexes.I_index, indexes.J_index, ref IndexOfTheFirstShipsDeck, vm.Ships[Cell].isHorizontal);
+                    (userField, _indexes.I_index, _indexes.J_index, ref IndexOfTheFirstShipsDeck, vm.Ships[Cell].isHorizontal);
 
                     _ = vm.Ships[Cell].isHorizontal is false ?
-                       FirstIndex = indexes.I_index - IndexOfTheFirstShipsDeck :
-                       SecondIndex = indexes.J_index - IndexOfTheFirstShipsDeck;
+                       FirstIndex = _indexes.I_index - IndexOfTheFirstShipsDeck :
+                       SecondIndex = _indexes.J_index - IndexOfTheFirstShipsDeck;
 
                     bool isKilled = GameProcess.ShipState
                     (userField, FirstIndex, SecondIndex, DecksCount, vm.Ships[Cell].isHorizontal);
 
                     if (isKilled is false)
                     {
-                        if(vm.Ships[Cell].isHorizontal is true)
                         MissedAction(Cell, vm.Ships, PathToShipContent.KilledShip, 0.5);
-                        else
-                        MissedAction(Cell, vm.Ships, PathToShipContent.KilledShip, 0.5);
+                        isComputerMove = true;
+                        isHitButNotKilled = true;
 
-                        isComputerMove = false;
-                       
-                     
+                        continue;
                     }
                     if (isKilled is true)
                     {
+                        CountOfAttaksInOneDirection = 0;
+                        isHitButNotKilled = false;
                         switch (DecksCount)
                         {
                             default:
@@ -195,12 +303,12 @@ namespace SeaBattle.ViewModel
 
                         }
 
-                        ComputerTurn(userField);
+                        continue;
                     }
                 }
             }
-        
-    
+
+
         }
          private bool UserTurn(Field fields, CellIndex Indexes, int Cell)
         {

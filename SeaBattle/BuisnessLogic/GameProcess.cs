@@ -60,8 +60,8 @@ namespace SeaBattle.BuisnessLogic
                 for (int m = j - 1; m <= j + x_Axis_Ships; m++)
                 {
 
-                    if (n == 11) continue;
-                    if (m == 11) break;
+                    if (n == 11 || n == -1) continue;
+                    if (m == 11 || n == -1) break;
                     if (Field[n, m] == KilledMark) continue;
                     Field[n, m] = MissedMark;
                 }
