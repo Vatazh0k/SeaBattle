@@ -128,53 +128,12 @@ namespace SeaBattle.ViewModel
         #endregion
 
         #region PrivateMethods
-        private void RefreshData(ref int Cell, ref int CountOfAttaksInOneDirection)
-        {
-            _indexes.I_index = Fixed_i;
-            _indexes.J_index = Fixed_j;
-            Cell = Fixed_cell;
-            if (isHitButNotKilled is true && CountOfAttaksInOneDirection <= 1)
-            {
-                isHorizontal = !isHorizontal;
-                return;
-            }
-            if (isHitButNotKilled is true)
-            {
-                if (isHorizontal is true)
-                {
-                    isRightDirection = !isRightDirection;
-                }
-                if (isHorizontal is false)
-                {
-                    isUpwardDirection = !isUpwardDirection;
-                }
-                CountOfAttaksInOneDirection = 0;
-            }
-        }
-        private bool IndexsesValidation(string[,] userField, ref int Cell)
-        {
-            try
-            {
-                if (userField[_indexes.I_index, _indexes.J_index] is MissedMark)
-                {
-                    RefreshData(ref Cell, ref CountOfAttaksInOneDirection);
-                    return true;
-                }
-            }
-            catch (Exception)
-            {
-
-                RefreshData(ref Cell, ref CountOfAttaksInOneDirection);
-                return true;
-            }
-            return false;
-        }
         private void ComputerTurn(string[,] userField)// buisnesslogic 
         {
             CountOfAttaksInOneDirection = 0;
             while (isComputerMove != false)
             {
-                Thread.Sleep(200);
+                Thread.Sleep(150);
                 if (isHitButNotKilled is false)
                 {
                     _indexes = SearchRandomCell(userField);
@@ -483,6 +442,47 @@ namespace SeaBattle.ViewModel
 
             return indexes;
         }
+        private void RefreshData(ref int Cell, ref int CountOfAttaksInOneDirection)
+        {
+            _indexes.I_index = Fixed_i;
+            _indexes.J_index = Fixed_j;
+            Cell = Fixed_cell;
+            if (isHitButNotKilled is true && CountOfAttaksInOneDirection <= 1)
+            {
+                isHorizontal = !isHorizontal;
+                return;
+            }
+            if (isHitButNotKilled is true)
+            {
+                if (isHorizontal is true)
+                {
+                    isRightDirection = !isRightDirection;
+                }
+                if (isHorizontal is false)
+                {
+                    isUpwardDirection = !isUpwardDirection;
+                }
+                CountOfAttaksInOneDirection = 0;
+            }
+        }
+        private bool IndexsesValidation(string[,] userField, ref int Cell)
+        {
+            try
+            {
+                if (userField[_indexes.I_index, _indexes.J_index] is MissedMark)
+                {
+                    RefreshData(ref Cell, ref CountOfAttaksInOneDirection);
+                    return true;
+                }
+            }
+            catch (Exception)
+            {
+
+                RefreshData(ref Cell, ref CountOfAttaksInOneDirection);
+                return true;
+            }
+            return false;
+        }
         private void ShipsGenerating(int ShipCount, int DeksCount)
         {
             var Random = new Random();
@@ -582,7 +582,7 @@ namespace SeaBattle.ViewModel
                     Stretch = Stretch.Fill
                 },
                 isOnField = true,
-                Border = new Thickness(1),//0.5
+                Border = new Thickness(0.5),
                 isHorizontal = direction
             };
             TempArr[i, j] = ShipMark;
