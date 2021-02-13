@@ -7,7 +7,8 @@ namespace SeaBattle.Resource
     public static class PathToShipContent
     {
         public static string EmptyCell { get; } = "/SeaBattle;component/Resource/Images/ShipsForField/EmptyCell.png";
-        public static string KilledShip { get; } = "/SeaBattle;component/Resource/Images/ShipsForField/DethShip.png";
+        public static string KilledShip { get; } = "/SeaBattle;component/Resource/Images/ShipsForField/Vertical_KilledShip.png";
+        public static string _KilledShip { get; } = "/SeaBattle;component/Resource/Images/ShipsForField/DethShip.png";
         public static string MissedMark { get; } = "/SeaBattle;component/Resource/Images/ShipsForField/MissedMark.png";
         public static string OneDeckShip { get; } = "/SeaBattle;component/Resource/Images/ShipsForField/OneDeckShip.png";
         public static string TwoDeckShip_FirstDeck { get; } = "/SeaBattle;component/Resource/Images/ShipsForField/FirstDeck_DoubleDeckShip.png";

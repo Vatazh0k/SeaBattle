@@ -27,6 +27,7 @@
     <None Remove="Resource\Images\ShipsForField\SecondDeck_ThrieDeckShip.png" />
     <None Remove="Resource\Images\ShipsForField\ThirdDeck_ThrieDeckShip.png" />
     <None Remove="Resource\Images\ShipsForField\ThrieDeck_FourDeckShip.png" />
+    <None Remove="Resource\Images\ShipsForField\Vertical_KilledShip.png" />
     <None Remove="Resource\Images\ThrieDeckShip.png" />
     <None Remove="Resource\Images\VerticalShipsForField\FirstDeck_DoubleDeckShip.png" />
     <None Remove="Resource\Images\VerticalShipsForField\FirstDeck_FourDeckShip.png" />
@@ -105,6 +106,9 @@
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Resource\Images\ShipsForField\ThrieDeck_FourDeckShip.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resource\Images\ShipsForField\Vertical_KilledShip.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Resource\Images\ThrieDeckShip.png">

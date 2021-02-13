@@ -21,37 +21,43 @@ namespace SeaBattle.BuisnessLogic
                 return false;
             }
         }
-        public static bool ChekedTheShipState(string[,] Field, int i, int j)
+        public static bool ChekedTheShipState(string[,] Field, int i, int j, bool Direction)
         {
             int IndexOfTheFirstShpsDeck = 0;
+            int FirstIndex = i;
+            int SecondIndex = j;
 
-            int DecksCount = CountingDecksCount(Field, i, j, ref IndexOfTheFirstShpsDeck);
 
-            IndexOfTheFirstShpsDeck = j - IndexOfTheFirstShpsDeck;
+            int DecksCount = CountingDecksCount(Field, i, j, ref IndexOfTheFirstShpsDeck, Direction);
 
-            bool isTheShipKilled = ShipState(Field, i, IndexOfTheFirstShpsDeck, DecksCount);
+            _ = Direction is false?
+            FirstIndex = i - IndexOfTheFirstShpsDeck:
+            SecondIndex = j - IndexOfTheFirstShpsDeck;
+
+
+            bool isTheShipKilled = ShipState(Field, FirstIndex, SecondIndex, DecksCount, Direction);
 
             if(isTheShipKilled)
             {
-                Field = ShipsFuneral(Field, i, IndexOfTheFirstShpsDeck, DecksCount);
+                Field = ShipsFuneral(Field, FirstIndex, SecondIndex, DecksCount, Direction);
                 return true;
             }
             return false;
         }
         public static string[,] ShipsFuneral(string[,] Field, int i, int j, int DecksCount, bool isHorizontal = true)
         {
-            int x_Axis_Ships = i + 1;
-            int y_Axis_Ships = DecksCount;
+            int y_Axis_Ships = i + 1;
+            int x_Axis_Ships = DecksCount;
 
             if (isHorizontal is false)
             {
-                x_Axis_Ships = DecksCount;
-                y_Axis_Ships = i + 1;
+                y_Axis_Ships = i + DecksCount;
+                x_Axis_Ships = 1;
             }            
 
-            for (int n = i - 1; n <= x_Axis_Ships; n++)
+            for (int n = i - 1; n <= y_Axis_Ships; n++)
             {
-                for (int m = j - 1; m <= j + y_Axis_Ships; m++)
+                for (int m = j - 1; m <= j + x_Axis_Ships; m++)
                 {
 
                     if (n == 11) continue;
