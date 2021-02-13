@@ -22,7 +22,7 @@ namespace SeaBattle.ViewModel
         private ObservableCollection<Ship> _ships;
         private Field fields;
         bool isComputerMove = false;
-        private string[,] TempArr = new string[11,11];
+        private string[,] TempArr = new string[11, 11];
         private const string MissedMark = "X";
         private const string ShipMark = "O";
         private const string EmptyCellMark = " ";
@@ -76,7 +76,7 @@ namespace SeaBattle.ViewModel
             .Select(i => new Ship
             {
                 Content = new Image
-                { 
+                {
                     Source = new BitmapImage(new Uri(PathToShipContent.EmptyCell, UriKind.Relative)),
                     Stretch = Stretch.Fill
                 },
@@ -94,7 +94,7 @@ namespace SeaBattle.ViewModel
             #endregion
 
             fields = CellsAssignment();
-        } 
+        }
 
         #region Commands
         private bool CanUseMakeDamageCommand(object p) => !isComputerMove;
@@ -118,11 +118,11 @@ namespace SeaBattle.ViewModel
 
         }
         #endregion
-          
+
         #region PrivateMethods
         private void ComputerTurn(string[,] userField)
         {
-           
+
         }
         private bool UserTurn(Field fields, CellIndex Indexes, int Cell)
         {
@@ -162,7 +162,7 @@ namespace SeaBattle.ViewModel
             }
             return false;
         }
-         
+
         private int ConvertIndexesToCell(CellIndex indexes)
         {
             int cell = 0;
@@ -194,7 +194,7 @@ namespace SeaBattle.ViewModel
                 IsCellEmpty = CellPositionValidation(userField, index.I_index, index.J_index);
 
             }
-            
+
 
             return index;
         }
@@ -262,11 +262,11 @@ namespace SeaBattle.ViewModel
             {
                 for (int j = 0; j < 11; j++)
                 {
-                    if(Ships[i * 11 + j].isOnField)
-                    field.ComputerField[i, j] = EmptyCellMark;
+                    if (Ships[i * 11 + j].isOnField)
+                        field.ComputerField[i, j] = EmptyCellMark;
                     if (vm.Ships[i * 11 + j].isOnField)
-                    field.UserField[i, j] = EmptyCellMark;
-        
+                        field.UserField[i, j] = EmptyCellMark;
+
                 }
             }
             return field;
@@ -292,59 +292,93 @@ namespace SeaBattle.ViewModel
         private void ShipsGenerating(int ShipCount, int DeksCount)
         {
             var Random = new Random();
-
-            for (int i = 0; i < ShipCount; i++)
+            for (int i = 1; i <= ShipCount; i++)
             {
                 int Cell = Random.Next(11, 121);
                 CellIndex Indexes = SearchCellIndexes(Cell);
-                if (DeksCount == 3)
+
+                int direction = Random.Next(1, 3);
+
+                bool isHorizontal = direction is 1 ? true : false;
+
+                bool canPutShip = ShipPositionValidation.PositionValidationLogic(Indexes.I_index, Indexes.J_index, TempArr, DeksCount, isHorizontal);
+
+                if (canPutShip is false)
                 {
-                    if (!ShipPositionValidation.PositionValidationLogic(Indexes.I_index, Indexes.J_index, TempArr, DeksCount, false))
-                    {
-                        i--;
-                        continue;
-                    }
+                    i--;
+                    continue;
                 }
-                else
+                if (canPutShip is true)
                 {
-                    if (!ShipPositionValidation.PositionValidationLogic(Indexes.I_index, Indexes.J_index, TempArr, DeksCount))
-                    {
-                        i--;
-                        continue;
-                    }
+                    if (isHorizontal is true)
+                        ShipsCreatingForHorizontalAxis(DeksCount, Cell, Indexes);
+
+                    if (isHorizontal is false)
+                        ShipsCreatingForVerticalAxis(DeksCount, Cell, Indexes);
                 }
-
-                switch (DeksCount)
-                {
-                    default:
-                        break;
-
-                    case 1:
-                        ShipsOptions(Cell, Indexes.I_index, Indexes.J_index);
-                        break;
-
-                    case 2:
-                        ShipsOptions(Cell, Indexes.I_index, Indexes.J_index);
-                        ShipsOptions(Cell + 1, Indexes.I_index, Indexes.J_index + 1);
-                        break;
-
-                    case 3:
-                        ShipsOptions(Cell, Indexes.I_index, Indexes.J_index);
-                        ShipsOptions(Cell + 11, Indexes.I_index + 1, Indexes.J_index);
-                        ShipsOptions(Cell + 22, Indexes.I_index + 2, Indexes.J_index);
-                        break;
-
-                    case 4:
-                        ShipsOptions(Cell, Indexes.I_index, Indexes.J_index);
-                        ShipsOptions(Cell + 1, Indexes.I_index, Indexes.J_index + 1);
-                        ShipsOptions(Cell + 2, Indexes.I_index, Indexes.J_index + 2);
-                        ShipsOptions(Cell + 3, Indexes.I_index, Indexes.J_index + 3);
-                        break;
-                }
-
             }
         }
-        private void ShipsOptions(int Cell, int i, int j)
+        private void ShipsCreatingForVerticalAxis(int DeksCount, int Cell, CellIndex Indexes)
+        {
+            switch (DeksCount)
+            {
+                default:
+                    break;
+
+                case 1:
+                    ShipsOptions(Cell, Indexes.I_index, Indexes.J_index, false);
+                    break;
+
+                case 2:
+                    ShipsOptions(Cell, Indexes.I_index, Indexes.J_index, false);
+                    ShipsOptions(Cell + 11, Indexes.I_index +1, Indexes.J_index, false);
+                    break;
+
+                case 3:
+                    ShipsOptions(Cell, Indexes.I_index, Indexes.J_index, false);
+                    ShipsOptions(Cell + 11, Indexes.I_index + 1, Indexes.J_index, false);
+                    ShipsOptions(Cell + 22, Indexes.I_index + 2, Indexes.J_index, false);
+                    break;
+
+                case 4:
+                    ShipsOptions(Cell, Indexes.I_index, Indexes.J_index, false);
+                    ShipsOptions(Cell + 11, Indexes.I_index+1, Indexes.J_index, false);
+                    ShipsOptions(Cell + 22, Indexes.I_index+2, Indexes.J_index, false);
+                    ShipsOptions(Cell + 33, Indexes.I_index+3, Indexes.J_index, false);
+                    break;
+            }
+        }
+        private void ShipsCreatingForHorizontalAxis(int DeksCount, int Cell, CellIndex Indexes)
+        {
+            switch (DeksCount)
+            {
+                default:
+                    break;
+
+                case 1:
+                    ShipsOptions(Cell, Indexes.I_index, Indexes.J_index);
+                    break;
+
+                case 2:
+                    ShipsOptions(Cell, Indexes.I_index, Indexes.J_index);
+                    ShipsOptions(Cell + 1, Indexes.I_index, Indexes.J_index + 1);
+                    break;
+
+                case 3:
+                    ShipsOptions(Cell, Indexes.I_index, Indexes.J_index);
+                    ShipsOptions(Cell + 1, Indexes.I_index, Indexes.J_index+1);
+                    ShipsOptions(Cell + 2, Indexes.I_index, Indexes.J_index+2);
+                    break;
+
+                case 4:
+                    ShipsOptions(Cell, Indexes.I_index, Indexes.J_index);
+                    ShipsOptions(Cell + 1, Indexes.I_index, Indexes.J_index + 1);
+                    ShipsOptions(Cell + 2, Indexes.I_index, Indexes.J_index + 2);
+                    ShipsOptions(Cell + 3, Indexes.I_index, Indexes.J_index + 3);
+                    break;
+            }
+        }
+        private void ShipsOptions(int Cell, int i, int j, bool direction = true)
         {
             Ships[Cell] = new Ship
             { 
@@ -354,7 +388,8 @@ namespace SeaBattle.ViewModel
                     Stretch = Stretch.Fill
                 },
                 isOnField = true,
-                Border = new Thickness(0.5)
+                Border = new Thickness(0.5),
+                isHorizontal = direction
             };
             TempArr[i, j] = ShipMark;
         }

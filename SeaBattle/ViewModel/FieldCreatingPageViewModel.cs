@@ -113,7 +113,7 @@ namespace SeaBattle.ViewModel
 
             return indexes;
         }
-        private void ShipsOptions(string Path, int Cell, double left, double top, double right, double botom, int i, int j)
+        private void ShipsOptions(string Path, int Cell, double left, double top, double right, double botom, int i, int j, bool Direction = true)
         {
             vm.Ships[Cell] = new Ship
             {
@@ -123,7 +123,8 @@ namespace SeaBattle.ViewModel
                     Stretch = Stretch.Fill
                 },
                 isOnField = true,
-                Border = new Thickness(left, top, right, botom)
+                Border = new Thickness(left, top, right, botom),
+                isHorizontal = Direction
             };
             tempArr[i, j] = ShipMark;
         }
@@ -136,46 +137,93 @@ namespace SeaBattle.ViewModel
                 int Cell = Random.Next(11, 121);
                 CellIndex Indexes = SearchCellIndexes(Cell);
 
-                if (!ShipPositionValidation.PositionValidationLogic(Indexes.I_index, Indexes.J_index, tempArr, DeksCount))
+                int direction = Random.Next(1, 3);
+
+                bool isHorizontal = direction is 1 ? true : false;
+
+                bool canPutShip = ShipPositionValidation.PositionValidationLogic(Indexes.I_index, Indexes.J_index, tempArr, DeksCount,isHorizontal);
+
+                if (canPutShip is false)
                 {
                     i--;
                     continue;
                 }
-                else
+                if(canPutShip is true)
                 {
-                    switch (DeksCount)
-                    {
-                        default:
-                            break;
+                    if (isHorizontal is true)
+                        ShipsCreatingForHorizontalAxis(DeksCount, Cell, Indexes);
 
-                        case 1:
-                            ShipsOptions(PathToShipContent.OneDeckShip, Cell, 1, 1, 1, 1, Indexes.I_index, Indexes.J_index);
-                            vm.OneDeckShip--;
-                            break;
-
-                        case 2:
-                            ShipsOptions(PathToShipContent.TwoDeckShip_FirstDeck, Cell, 1, 1, 0, 1, Indexes.I_index, Indexes.J_index);
-                            ShipsOptions(PathToShipContent.TwoDeckShip_SecondDeck, Cell + 1, 0, 1, 1, 1, Indexes.I_index, Indexes.J_index+1);
-                            vm.TwoDeckShip--;
-                            break;
-
-
-                        case 3:
-                            ShipsOptions(PathToShipContent.ThrieDeckShip_FirstDeck, Cell, 1, 1, 0, 1, Indexes.I_index, Indexes.J_index);
-                            ShipsOptions(PathToShipContent.ThrieDeckShip_SecondDeck, Cell + 1, 0, 1, 0, 1, Indexes.I_index, Indexes.J_index+1);
-                            ShipsOptions(PathToShipContent.ThrieDeckShip_ThirdDeck, Cell + 2, 0, 1, 1, 1, Indexes.I_index, Indexes.J_index+2);
-                            vm.ThrieDeckShip--;
-                            break;
-                        case 4:
-                            ShipsOptions(PathToShipContent.FourDeckShip_FirstDeck, Cell, 1, 1, 0, 1, Indexes.I_index, Indexes.J_index);
-                            ShipsOptions(PathToShipContent.FourDeckShip_SecondDeck, Cell + 1, 0, 1, 0, 1, Indexes.I_index, Indexes.J_index+1);
-                            ShipsOptions(PathToShipContent.FourDeckShip_ThirdDeck, Cell + 2, 0, 1, 0, 1, Indexes.I_index, Indexes.J_index+2);
-                            ShipsOptions(PathToShipContent.FourDeckShip_FourDeck, Cell + 3, 0, 1, 1, 1, Indexes.I_index, Indexes.J_index+3);
-                            vm.FourDeckShip--;
-                            break;
-                    }
-
+                    if (isHorizontal is false)
+                        ShipsCreatingForVerticalAxis(DeksCount, Cell, Indexes);
                 }
+            }
+        }
+        private void ShipsCreatingForVerticalAxis(int DeksCount, int Cell, CellIndex Indexes)
+        {
+            switch (DeksCount)
+            {
+                default:
+                    break;
+
+                case 1:
+                    ShipsOptions(PathToShipContent.Vertical_OneDeckShip, Cell, 1, 1, 1, 1, Indexes.I_index, Indexes.J_index, false);
+                    vm.OneDeckShip--;
+                    break;
+
+                case 2:
+                    ShipsOptions(PathToShipContent.Vertical_TwoDeckShip_FirstDeck, Cell, 1, 1, 1, 0, Indexes.I_index, Indexes.J_index, false);
+                    ShipsOptions(PathToShipContent.Vertical_TwoDeckShip_SecondDeck, Cell + 11, 1, 0, 1, 1, Indexes.I_index+1, Indexes.J_index, false);
+                    vm.TwoDeckShip--;
+                    break;
+
+
+                case 3:
+                    ShipsOptions(PathToShipContent.Vertical_ThrieDeckShip_FirstDeck, Cell, 1, 1, 1, 0, Indexes.I_index, Indexes.J_index, false);
+                    ShipsOptions(PathToShipContent.Vertical_ThrieDeckShip_SecondDeck, Cell + 11, 1, 0, 1, 0, Indexes.I_index+1, Indexes.J_index, false);
+                    ShipsOptions(PathToShipContent.Vertical_ThrieDeckShip_ThirdDeck, Cell + 22, 1, 0, 1, 1, Indexes.I_index+2, Indexes.J_index, false);
+                    vm.ThrieDeckShip--;
+                    break;
+                case 4:
+                    ShipsOptions(PathToShipContent.Vertical_FourDeckShip_FirstDeck, Cell, 1, 1, 1, 0, Indexes.I_index, Indexes.J_index, false);
+                    ShipsOptions(PathToShipContent.Vertical_FourDeckShip_SecondDeck, Cell + 11, 1, 0, 1, 0, Indexes.I_index+1, Indexes.J_index, false);
+                    ShipsOptions(PathToShipContent.Vertical_FourDeckShip_ThirdDeck, Cell + 22, 1, 0, 1, 0, Indexes.I_index+2, Indexes.J_index, false);
+                    ShipsOptions(PathToShipContent.Vertical_FourDeckShip_FourDeck, Cell + 33, 1, 0, 1, 1, Indexes.I_index+3, Indexes.J_index, false);
+                    vm.FourDeckShip--;
+                    break;
+            }
+        }
+        private void ShipsCreatingForHorizontalAxis(int DeksCount, int Cell, CellIndex Indexes)
+        {
+            switch (DeksCount)
+            {
+                default:
+                    break;
+
+                case 1:
+                    ShipsOptions(PathToShipContent.OneDeckShip, Cell, 1, 1, 1, 1, Indexes.I_index, Indexes.J_index);
+                    vm.OneDeckShip--;
+                    break;
+
+                case 2:
+                    ShipsOptions(PathToShipContent.TwoDeckShip_FirstDeck, Cell, 1, 1, 0, 1, Indexes.I_index, Indexes.J_index);
+                    ShipsOptions(PathToShipContent.TwoDeckShip_SecondDeck, Cell + 1, 0, 1, 1, 1, Indexes.I_index, Indexes.J_index + 1);
+                    vm.TwoDeckShip--;
+                    break;
+
+
+                case 3:
+                    ShipsOptions(PathToShipContent.ThrieDeckShip_FirstDeck, Cell, 1, 1, 0, 1, Indexes.I_index, Indexes.J_index);
+                    ShipsOptions(PathToShipContent.ThrieDeckShip_SecondDeck, Cell + 1, 0, 1, 0, 1, Indexes.I_index, Indexes.J_index + 1);
+                    ShipsOptions(PathToShipContent.ThrieDeckShip_ThirdDeck, Cell + 2, 0, 1, 1, 1, Indexes.I_index, Indexes.J_index + 2);
+                    vm.ThrieDeckShip--;
+                    break;
+                case 4:
+                    ShipsOptions(PathToShipContent.FourDeckShip_FirstDeck, Cell, 1, 1, 0, 1, Indexes.I_index, Indexes.J_index);
+                    ShipsOptions(PathToShipContent.FourDeckShip_SecondDeck, Cell + 1, 0, 1, 0, 1, Indexes.I_index, Indexes.J_index + 1);
+                    ShipsOptions(PathToShipContent.FourDeckShip_ThirdDeck, Cell + 2, 0, 1, 0, 1, Indexes.I_index, Indexes.J_index + 2);
+                    ShipsOptions(PathToShipContent.FourDeckShip_FourDeck, Cell + 3, 0, 1, 1, 1, Indexes.I_index, Indexes.J_index + 3);
+                    vm.FourDeckShip--;
+                    break;
             }
         }
         #endregion
