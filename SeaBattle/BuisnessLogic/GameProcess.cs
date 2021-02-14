@@ -8,20 +8,20 @@ namespace SeaBattle.BuisnessLogic
     {
         private const string MissedMark = "X";
         private const string KilledMark = "O";
-        public static bool DamageCreating(string[,] Field, int i, int j)
+        public static bool Damaging(string[,] Field, int i, int j)
         {
             if (Field[i, j] is null)
             {
-                Field = MissedAttack(Field, i, j);
+                Field = Missed(Field, i, j);
                 return true;
             }
             else
             {
-                Field = SucsessfullAttack(Field, i, j);
+                Field = Hit(Field, i, j);
                 return false;
             }
         }
-        public static bool ChekedTheShipState(string[,] Field, int i, int j, bool Direction)
+        public static bool ShipsIntegityChecked(string[,] Field, int i, int j, bool Direction)
         {
             int IndexOfTheFirstDeck = 0;
             int FirstIndex = i;
@@ -35,7 +35,7 @@ namespace SeaBattle.BuisnessLogic
             SecondIndex = j - IndexOfTheFirstDeck;
 
 
-            bool isTheShipKilled = ShipState(Field, FirstIndex, SecondIndex, DecksCount, Direction);
+            bool isTheShipKilled = CheckedShipState(Field, FirstIndex, SecondIndex, DecksCount, Direction);
 
             if(isTheShipKilled)
             {
@@ -110,7 +110,7 @@ namespace SeaBattle.BuisnessLogic
             return GeneralDeksCountInShip;
 
         }
-        public static bool ShipState(string[,] field, int i, int j, int decksCount, bool isHorizontal = true)
+        public static bool CheckedShipState(string[,] field, int i, int j, int decksCount, bool isHorizontal = true)
         {
 
             for (int k = 0; k < decksCount; k++)
@@ -126,12 +126,12 @@ namespace SeaBattle.BuisnessLogic
             return true;
         }
         #region PrivateMethods
-        private static string[,] MissedAttack(string[,] Field, int i, int j)
+        private static string[,] Missed(string[,] Field, int i, int j)
         {
             Field[i, j] = MissedMark;
             return Field;
         }
-        private static string[,] SucsessfullAttack(string[,] Field, int i, int j)
+        private static string[,] Hit(string[,] Field, int i, int j)
         {
             Field[i, j] = KilledMark;
             return Field;

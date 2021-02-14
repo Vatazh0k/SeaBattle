@@ -146,7 +146,7 @@ namespace SeaBattle.ViewModel
 
                 if (CanChangingTheAttckDirection(ref Cell, userField)) continue;
 
-                bool isMissed = GameProcess.DamageCreating(userField, _indexes.I_index, _indexes.J_index);
+                bool isMissed = GameProcess.Damaging(userField, _indexes.I_index, _indexes.J_index);
 
                 if (isMissed is true)
                 {
@@ -173,7 +173,7 @@ namespace SeaBattle.ViewModel
                        FirstIndex = _indexes.I_index - IndexOfTheFirstShipsDeck :
                        SecondIndex = _indexes.J_index - IndexOfTheFirstShipsDeck;
 
-                    bool isKilled = GameProcess.ShipState
+                    bool isKilled = GameProcess.CheckedShipState
                     (userField, FirstIndex, SecondIndex, DecksCount, vm.Ships[Cell].isHorizontal);
 
                     if (isKilled is false)
@@ -232,7 +232,7 @@ namespace SeaBattle.ViewModel
 
             isComputerMove = true;
 
-            bool isMissed = GameProcess.DamageCreating(fields.ComputerField, Indexes.I_index, Indexes.J_index);
+            bool isMissed = GameProcess.Damaging(fields.ComputerField, Indexes.I_index, Indexes.J_index);
 
             if (isMissed is true)
             {
@@ -244,7 +244,7 @@ namespace SeaBattle.ViewModel
             {
                 isComputerMove = false;
 
-                bool isShipKilled = GameProcess.ChekedTheShipState
+                bool isShipKilled = GameProcess.ShipsIntegityChecked
                 (fields.ComputerField, Indexes.I_index, Indexes.J_index, Ships[Cell].isHorizontal);
 
                 if (isShipKilled is false)

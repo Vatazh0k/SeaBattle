@@ -13,20 +13,18 @@ namespace SeaBattle.BuisnessLogic
     {
         public static bool PositionValidationLogic(int Fixed_I, int Fixed_J, string[,] ships, int decksCount, bool isHorizontal = true)
         {
+            int CellsToCheckIn_X_Axis = 2;
+            int CellsToCheckIn_Y_Axis = decksCount + 1;
 
-            if (isHorizontal is false)
-            {
-                if (!ValidationAlgorithm(Fixed_I, Fixed_J, ships, 2, decksCount + 1))
-                    return false;
-            }
-            if (isHorizontal is true)
-            {
-                if (!ValidationAlgorithm(Fixed_I, Fixed_J, ships, decksCount + 1, 2))
-                    return false;
-            }
+            bool CanPutShipInCurrentCell = isHorizontal is true ?
+            ValidationAlgorithm(Fixed_I, Fixed_J, ships, CellsToCheckIn_Y_Axis, CellsToCheckIn_X_Axis) :
+            ValidationAlgorithm(Fixed_I, Fixed_J, ships, CellsToCheckIn_X_Axis, CellsToCheckIn_Y_Axis);
 
+            if (CanPutShipInCurrentCell is false)
+                return false;
             return true;
-     
+           
+
         }
         #region PrivateMethods
         private static bool ValidationAlgorithm(int CellIndex_I, int CellIndex_J, string[,]ships, int X_Pos_ShipsDeks, int Y_Pos_ShipsDeks)
