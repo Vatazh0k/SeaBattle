@@ -20,31 +20,23 @@ namespace SeaBattle.ViewModel
         private ObservableCollection<Ship> _ships;
         private Field fields;
         private CellIndex _indexes;
-        private bool isComputerMove = false;
 
-        int CountOfAttaksInOneDirection = 0;
+        int CountOfAttaksInOneDirection = 0;   
         private bool isHitButNotKilled = false;
-        private bool isHorizontal = false;
-        private bool isRightDirection = true;
+        private bool isHorizontal = false;     
+        private bool isRightDirection = true;  
         private bool isUpwardDirection = false;
-        private int Fixed_i = 0;
-        private int Fixed_j = 0;
+        private int Fixed_i = 0;               
+        private int Fixed_j = 0;               
         private int Fixed_cell = 0;
 
+        private bool isComputerMove = false;
         private string[,] TempArr = new string[11, 11];
         private const string MissedMark = "X";
         private const string ShipMark = "O";
         private const string EmptyCellMark = " ";
 
-        private int OneDeckShipDecksCount = 1;
-        private int TwoDeckShipDeksCount = 2;
-        private int ThrieDeckShipDeksCount = 3;
-        private int FourDeckShipDeksCount = 4;
 
-        private int OneDeckShipCount = 4;
-        private int TwoDeckShipCount = 3;
-        private int thrieDeckShipCount = 2;
-        private int FourDeckShipCount = 1;
 
         private int _NumberOfRemainingComputerShips = 10;
         private int _missedCounter = 0;
@@ -95,10 +87,20 @@ namespace SeaBattle.ViewModel
             _ships = new ObservableCollection<Ship>(ships);
 
             #region ShipsGenerating
-            ShipsGenerating(FourDeckShipCount, FourDeckShipDeksCount);
-            ShipsGenerating(thrieDeckShipCount, ThrieDeckShipDeksCount);
-            ShipsGenerating(OneDeckShipCount, OneDeckShipDecksCount);
-            ShipsGenerating(TwoDeckShipCount, TwoDeckShipDeksCount);
+            int OneDeckShip_DecksCount = 1;
+            int TwoDeckShip_DeksCount = 2;
+            int ThrieDeckShip_DeksCount = 3;
+            int FourDeckShip_DeksCount = 4;
+
+            int OneDeckShipCount = 4;
+            int TwoDeckShipCount = 3;
+            int thrieDeckShipCount = 2;
+            int FourDeckShipCount = 1;
+
+            ShipsGenerating(FourDeckShipCount, FourDeckShip_DeksCount);
+            ShipsGenerating(thrieDeckShipCount, ThrieDeckShip_DeksCount);
+            ShipsGenerating(OneDeckShipCount, OneDeckShip_DecksCount);
+            ShipsGenerating(TwoDeckShipCount, TwoDeckShip_DeksCount);
             #endregion
 
             fields = CellsAssignment();
@@ -128,7 +130,7 @@ namespace SeaBattle.ViewModel
         #endregion
 
         #region PrivateMethods
-        private void ComputerTurn(string[,] userField)// buisnesslogic 
+        private void ComputerTurn(string[,] userField) 
         {
             CountOfAttaksInOneDirection = 0;
             while (isComputerMove != false)
@@ -151,7 +153,7 @@ namespace SeaBattle.ViewModel
                 if (isMissed is true)
                 {
                     isComputerMove = false;
-                    MissedAction(Cell, vm.Ships, PathToShipContent.MissedMark, 0.5);
+                    AssignTheAppropiateMark(Cell, vm.Ships, PathToShipContent.MissedMark, 0.5);
 
                     if (isHitButNotKilled is false) CountOfAttaksInOneDirection = 0;
 
@@ -178,7 +180,7 @@ namespace SeaBattle.ViewModel
 
                     if (isKilled is false)
                     {
-                        MissedAction(Cell, vm.Ships, PathToShipContent.KilledShip, 0.5);
+                        AssignTheAppropiateMark(Cell, vm.Ships, PathToShipContent.KilledShip, 0.5);
                         isComputerMove = true;
                         isHitButNotKilled = true;
 
@@ -188,6 +190,7 @@ namespace SeaBattle.ViewModel
                     {
                         CountOfAttaksInOneDirection = 0;
                         isHitButNotKilled = false;
+                        userField = GameProcess.ShipsFuneral(userField, FirstIndex, SecondIndex, DecksCount, vm.Ships[Cell].isHorizontal);
                         switch (DecksCount)
                         {
                             default:
@@ -206,8 +209,7 @@ namespace SeaBattle.ViewModel
                                 vm.FourDeckShip--;
                                 break;
                         }
-                        userField = GameProcess.ShipsFuneral
-                        (userField, FirstIndex, SecondIndex, DecksCount, vm.Ships[Cell].isHorizontal);
+                       
                         vm.Ships = ConsequencesOfAttack(userField, vm.Ships);
 
                         if (vm.OneDeckShip is 0 && vm.TwoDeckShip is 0 &&
@@ -225,7 +227,7 @@ namespace SeaBattle.ViewModel
 
 
         }
-         private bool UserTurn(Field fields, CellIndex Indexes, int Cell)
+        private bool UserTurn(Field fields, CellIndex Indexes, int Cell)
         {
             if (fields.ComputerField[Indexes.I_index, Indexes.J_index] == ShipMark ||
                fields.ComputerField[Indexes.I_index, Indexes.J_index] == MissedMark) return false;
@@ -238,7 +240,7 @@ namespace SeaBattle.ViewModel
             {
 
                 MissCounter++;
-                MissedAction(Cell, Ships, PathToShipContent.MissedMark, 0.5);
+                AssignTheAppropiateMark(Cell, Ships, PathToShipContent.MissedMark, 0.5);
             }
             if (isMissed is false)
             {
@@ -250,10 +252,10 @@ namespace SeaBattle.ViewModel
                 if (isShipKilled is false)
                 {
                     if(Ships[Cell].isHorizontal is true)
-                    MissedAction(Cell, Ships, PathToShipContent.KilledShip, 0.5);
+                    AssignTheAppropiateMark(Cell, Ships, PathToShipContent.KilledShip, 0.5);
 
                     if (Ships[Cell].isHorizontal is false)
-                    MissedAction(Cell, Ships, PathToShipContent.KilledShip, 0.5);
+                    AssignTheAppropiateMark(Cell, Ships, PathToShipContent.KilledShip, 0.5);
                 }
                 if (isShipKilled is true)
                 {
@@ -399,7 +401,7 @@ namespace SeaBattle.ViewModel
             }
             return Ship;
         }
-        private void MissedAction(int cell, ObservableCollection<Ship> ships, string Mark, double BorderSize)
+        private void AssignTheAppropiateMark(int cell, ObservableCollection<Ship> ships, string Mark, double BorderSize)
         {
             ships[cell] = new Ship
             {

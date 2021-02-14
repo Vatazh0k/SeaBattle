@@ -87,7 +87,7 @@ namespace SeaBattle.ViewModel
                 }
             }
             return tempArr;
-        }
+        } 
         private void ShipsReplenishment()
         {
             vm.FourDeckShip = 1;
