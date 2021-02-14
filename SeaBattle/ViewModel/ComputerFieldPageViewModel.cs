@@ -590,6 +590,6 @@ namespace SeaBattle.ViewModel
             TempArr[i, j] = ShipMark;
         }
         #endregion 
-    } 
+    }  
 }
       
