@@ -28,7 +28,7 @@ namespace SeaBattle.BuisnessLogic
             int SecondIndex = j;
 
 
-            int DecksCount = CountingDecksCount(Field, i, j, ref IndexOfTheFirstDeck, Direction);
+            int DecksCount = CountingDecks(Field, i, j, ref IndexOfTheFirstDeck, Direction);
 
             _ = Direction is false?
             FirstIndex = i - IndexOfTheFirstDeck:
@@ -68,7 +68,7 @@ namespace SeaBattle.BuisnessLogic
             }
             return Field;
         }
-        public static int CountingDecksCount(string[,] Field, int i, int j, ref int firtShipDeck, bool isHorizontal = true)
+        public static int CountingDecks(string[,] Field, int i, int j, ref int firtShipDeck, bool isHorizontal = true)
         {
 
             int GeneralDeksCountInShip = 1;

@@ -198,7 +198,7 @@ namespace SeaBattle.ViewModel
             string[,] tempArr = new string[11, 11];
             tempArr = CellsAssignment(tempArr, Ships);
 
-            int DecksInShipCount = GameProcess.CountingDecksCount
+            int DecksInShipCount = GameProcess.CountingDecks
             (tempArr, indexes.I_index, indexes.J_index, ref CurrentDeck, Ships[CellNumber].isHorizontal);
 
             int FirstDeckOfHorizontalShip = indexes.J_index - CurrentDeck;
