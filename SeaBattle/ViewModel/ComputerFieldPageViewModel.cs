@@ -238,7 +238,6 @@ namespace SeaBattle.ViewModel
 
             if (isMissed is true)
             {
-
                 MissCounter++;
                 AssignTheAppropiateMark(Cell, Ships, PathToShipContent.MissedMark, 0.5);
             }
@@ -251,10 +250,6 @@ namespace SeaBattle.ViewModel
 
                 if (isShipKilled is false)
                 {
-                    if(Ships[Cell].isHorizontal is true)
-                    AssignTheAppropiateMark(Cell, Ships, PathToShipContent.KilledShip, 0.5);
-
-                    if (Ships[Cell].isHorizontal is false)
                     AssignTheAppropiateMark(Cell, Ships, PathToShipContent.KilledShip, 0.5);
                 }
                 if (isShipKilled is true)
@@ -594,7 +589,7 @@ namespace SeaBattle.ViewModel
             };
             TempArr[i, j] = ShipMark;
         }
-        #endregion
-    }
+        #endregion 
+    } 
 }
       
