@@ -215,7 +215,7 @@ namespace SeaBattle.ViewModel
                         if (vm.OneDeckShip is 0 && vm.TwoDeckShip is 0 &&
                            vm.ThrieDeckShip is 0 && vm.FourDeckShip is 0)
                         {
-                            MessageBox.Show("You lose!", "ry Again!", MessageBoxButton.OK, MessageBoxImage.Information);
+                            MessageBox.Show("You lose!", "Try Again!", MessageBoxButton.OK, MessageBoxImage.Information);
                             return;
 
                         }
