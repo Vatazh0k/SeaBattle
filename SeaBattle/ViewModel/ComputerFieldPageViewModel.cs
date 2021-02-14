@@ -144,52 +144,8 @@ namespace SeaBattle.ViewModel
 
                 int Cell = ConvertIndexesToCell(_indexes);
 
-                if (isHitButNotKilled is true)
-                {
-                    CountOfAttaksInOneDirection++;
-                    if (isHorizontal is true)
-                    {
-                        if (isRightDirection is true)
-                        {
-                            _indexes.J_index += 1;
-                            Cell += 1;
+                if (CanChangingTheAttckDirection(ref Cell, userField)) continue;
 
-                            if (IndexsesValidation(userField, ref Cell))
-                                continue;
-                           
-                        }
-                        if (isRightDirection is false)
-                        {
-                            _indexes.J_index -= 1;
-                            Cell -= 1;
-
-
-                            if (IndexsesValidation(userField, ref Cell))
-                                continue;
-                        }
-                    }
-                    if(isHorizontal is false)
-                    {
-                        if (isUpwardDirection is true)
-                        {
-                            _indexes.I_index -= 1;
-                            Cell -= 11;
-
-
-                            if (IndexsesValidation(userField, ref Cell))
-                                continue;
-                        }
-                        if (isUpwardDirection is false)
-                        {
-                            _indexes.I_index += 1;
-                            Cell += 11;
-
-
-                            if (IndexsesValidation(userField, ref Cell))
-                                continue;
-                        }
-                    }
-                }
                 bool isMissed = GameProcess.DamageCreating(userField, _indexes.I_index, _indexes.J_index);
 
                 if (isMissed is true)
@@ -314,7 +270,56 @@ namespace SeaBattle.ViewModel
             }
             return false;
         }
+        private bool CanChangingTheAttckDirection(ref int Cell, string[,] userField)
+        {
+            if (isHitButNotKilled is true)
+            {
+                CountOfAttaksInOneDirection++;
+                if (isHorizontal is true)
+                {
+                    if (isRightDirection is true)
+                    {
+                        _indexes.J_index += 1;
+                        Cell += 1;
 
+                        if (IndexsesValidation(userField, ref Cell))
+                            return true;
+
+                    }
+                    if (isRightDirection is false)
+                    {
+                        _indexes.J_index -= 1;
+                        Cell -= 1;
+
+
+                        if (IndexsesValidation(userField, ref Cell))
+                            return true;
+                    }
+                }
+                if (isHorizontal is false)
+                {
+                    if (isUpwardDirection is true)
+                    {
+                        _indexes.I_index -= 1;
+                        Cell -= 11;
+
+
+                        if (IndexsesValidation(userField, ref Cell))
+                            return true;
+                    }
+                    if (isUpwardDirection is false)
+                    {
+                        _indexes.I_index += 1;
+                        Cell += 11;
+
+
+                        if (IndexsesValidation(userField, ref Cell))
+                            return true;
+                    }
+                }
+            }
+            return false;
+        }
         private int ConvertIndexesToCell(CellIndex indexes)
         {
             int cell = 0;
@@ -590,4 +595,4 @@ namespace SeaBattle.ViewModel
         #endregion
     }
 }
-   
+      

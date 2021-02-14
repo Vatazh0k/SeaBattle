@@ -23,16 +23,16 @@ namespace SeaBattle.BuisnessLogic
         }
         public static bool ChekedTheShipState(string[,] Field, int i, int j, bool Direction)
         {
-            int IndexOfTheFirstShpsDeck = 0;
+            int IndexOfTheFirstDeck = 0;
             int FirstIndex = i;
             int SecondIndex = j;
 
 
-            int DecksCount = CountingDecksCount(Field, i, j, ref IndexOfTheFirstShpsDeck, Direction);
+            int DecksCount = CountingDecksCount(Field, i, j, ref IndexOfTheFirstDeck, Direction);
 
             _ = Direction is false?
-            FirstIndex = i - IndexOfTheFirstShpsDeck:
-            SecondIndex = j - IndexOfTheFirstShpsDeck;
+            FirstIndex = i - IndexOfTheFirstDeck:
+            SecondIndex = j - IndexOfTheFirstDeck;
 
 
             bool isTheShipKilled = ShipState(Field, FirstIndex, SecondIndex, DecksCount, Direction);
@@ -47,17 +47,17 @@ namespace SeaBattle.BuisnessLogic
         public static string[,] ShipsFuneral(string[,] Field, int i, int j, int DecksCount, bool isHorizontal = true)
         {
             int y_Axis_Ships = i + 1;
-            int x_Axis_Ships = DecksCount;
+            int x_Axis_Ships = j + DecksCount;
 
             if (isHorizontal is false)
             {
                 y_Axis_Ships = i + DecksCount;
-                x_Axis_Ships = 1;
+                x_Axis_Ships = j + 1;
             }            
 
             for (int n = i - 1; n <= y_Axis_Ships; n++)
             {
-                for (int m = j - 1; m <= j + x_Axis_Ships; m++)
+                for (int m = j - 1; m <= x_Axis_Ships; m++)
                 {
 
                     if (n == 11 || n == -1) continue;
@@ -71,28 +71,21 @@ namespace SeaBattle.BuisnessLogic
         public static int CountingDecksCount(string[,] Field, int i, int j, ref int firtShipDeck, bool isHorizontal = true)
         {
 
-            int decksCount = 1;
-            int firstIndex = 0;
-            int secondIndex = 0;
+            int GeneralDeksCountInShip = 1;
+
             try
             {
                 for (int k = 1; k <= 4; k++)
                 {
-                    if (isHorizontal is true)
-                    {
-                        firstIndex = i;
-                        secondIndex = j + k;                        
-                    }
-                    if (isHorizontal is false)
-                    {
-                        firstIndex = i + k;
-                        secondIndex = j;
-                    }
+                    int firstIndex = i;
+                    int secondIndex = j;
+
+                    _ = isHorizontal is true ? secondIndex = j + k : firstIndex = i + k;
+                   
                     if (String.IsNullOrEmpty(Field[firstIndex, secondIndex]) || (Field[firstIndex, secondIndex] == MissedMark))
-                    {
                         break;
-                    }
-                    decksCount++;
+
+                    GeneralDeksCountInShip++;
                 }
             }
             catch (Exception) { }
@@ -100,27 +93,21 @@ namespace SeaBattle.BuisnessLogic
             {
                 for (int k = -1; k >= -4; k--)
                 {
-                    if (isHorizontal is true)
-                    {
-                        firstIndex = i;
-                        secondIndex = j + k;
-                    }
-                    if (isHorizontal is false)
-                    {
-                        firstIndex = i + k;
-                        secondIndex = j;
-                    }
+                    int firstIndex = i;
+                    int secondIndex = j;
+
+                    _ = isHorizontal is true ? secondIndex = j + k : firstIndex = i + k;
+
                     if (String.IsNullOrEmpty(Field[firstIndex, secondIndex]) || (Field[firstIndex, secondIndex] == MissedMark))
-                    {
                         break;
-                    }
+                    
                     firtShipDeck++;
-                    decksCount++;
+                    GeneralDeksCountInShip++;
                 }
             }
             catch (Exception) { }
 
-            return decksCount;
+            return GeneralDeksCountInShip;
 
         }
         public static bool ShipState(string[,] field, int i, int j, int decksCount, bool isHorizontal = true)
@@ -128,20 +115,12 @@ namespace SeaBattle.BuisnessLogic
 
             for (int k = 0; k < decksCount; k++)
             {
-                if (isHorizontal is false)
-                {
-                    if (field[i + k, j] == KilledMark)
-                    {
-                        continue;
-                    }
-                }
-                if (isHorizontal is true)
-                {
-                    if (field[i, j + k] == KilledMark)
-                    {
-                        continue;
-                    }
-                }
+                int I = i, J = j;
+                _ = isHorizontal is true ? J = j + k : I = i + k;
+
+                if (field[I, J] == KilledMark)
+                    continue;
+
                 return false;
             }
             return true;
@@ -159,4 +138,4 @@ namespace SeaBattle.BuisnessLogic
         }
         #endregion 
     } 
-} 
+}  

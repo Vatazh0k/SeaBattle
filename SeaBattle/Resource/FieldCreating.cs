@@ -10,10 +10,10 @@ using System.Windows.Media;
 
 namespace SeaBattle.BuisnessLogic
 {
-    public static class FieldCreating<T>                          
-    {                                                                   
-        public static void CreateField(T ViewModel, Grid Field, object command, MainWindowViewModel mainWindowVM  = null)
-        {                                   
+    public static class FieldCreating<T>
+    {
+        public static void CreateField(T ViewModel, Grid Field, object command, MainWindowViewModel mainWindowVM = null)
+        {
             #region Data
             Button[,] button = new Button[11, 11];
             char[] Alphabet = new char[] { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J' };
@@ -67,7 +67,7 @@ namespace SeaBattle.BuisnessLogic
                 }
             }
             #endregion
-
+             
         }
 
         #region PrivateMethods
@@ -130,4 +130,4 @@ namespace SeaBattle.BuisnessLogic
 
         #endregion 
     }
-}     
+}
