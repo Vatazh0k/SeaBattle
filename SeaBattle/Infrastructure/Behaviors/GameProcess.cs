@@ -6,19 +6,6 @@ namespace SeaBattle.BuisnessLogic
 {
     public static class GameProcess
     {
-        public static bool Damaging(string[,] Field, int i, int j)
-        {
-            if (Field[i, j] is null)
-            {
-                Field = Missed(Field, i, j);
-                return true;
-            }
-            else
-            {
-                Field = Hit(Field, i, j);
-                return false;
-            }
-        }
         public static bool ShipsIntegityChecked(string[,] Field, int i, int j, bool Direction)
         {
             int IndexOfTheFirstDeck = 0;
@@ -41,6 +28,20 @@ namespace SeaBattle.BuisnessLogic
                 return true;
             }
             return false;
+        }
+
+        public static bool Damaging(string[,] Field, int i, int j)
+        {
+            if (Field[i, j] is null)
+            {
+                Field = Missed(Field, i, j);
+                return true;
+            }
+            else
+            {
+                Field = Hit(Field, i, j);
+                return false;
+            }
         }
         public static string[,] ShipsFuneral(string[,] Field, int i, int j, int DecksCount, bool isHorizontal = true)
         {

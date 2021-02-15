@@ -1,4 +1,5 @@
 ﻿using SeaBattle.BuisnessLogic;
+using SeaBattle.Infrastructure.Converters;
 using SeaBattle.Model;
 using SeaBattle.Resource;
 using SeaBattle.View.Pages;
@@ -192,7 +193,7 @@ namespace SeaBattle.ViewModel
         private void ChangeShipsDirection(int CellNumber)
         {
             Color = new ObservableCollection<Brush>(colors);
-            CellIndex indexes = SearchCellIndexes(CellNumber);
+            CellIndex indexes = CellsConverter.ConverCellsToIndexes(CellNumber);
 
             int CurrentDeck = 0;
             string[,] tempArr = new string[11, 11];
@@ -329,24 +330,6 @@ namespace SeaBattle.ViewModel
             }
             return tempArr;
         }
-        private CellIndex SearchCellIndexes(int cell)
-        {
-            CellIndex indexes = new CellIndex();
-
-            for (int i = 0; i < 11; i++)
-            {
-                for (int j = 0; j < 11; j++)
-                {
-                    if (i * 11 + j == cell)
-                    {
-                        indexes.I_index = i;
-                        indexes.J_index = j;
-                    }
-                }
-            }
-            
-            return indexes;
-        }
         private void ShipOptions(string Path, int Cell, int left, int top, int right, int bottom, bool Direction = true)
         {
             Ships[Cell] = new Ship
@@ -367,7 +350,7 @@ namespace SeaBattle.ViewModel
             string[,] tempArr = new string[11, 11];
 
             tempArr = CellsAssignment(tempArr, Ships);
-            CellIndex Indexes = SearchCellIndexes(Cell);
+            CellIndex Indexes = CellsConverter.ConverCellsToIndexes(Cell);
 
             if (!ShipPositionValidation.PositionValidationLogic(Indexes.I_index, Indexes.J_index, tempArr, DeckCount, Ships[Cell].isHorizontal))
             {

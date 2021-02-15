@@ -10,9 +10,9 @@ using System.Windows.Media;
 
 namespace SeaBattle.BuisnessLogic
 {
-    public static class FieldCreating<T>
+    public static class FieldCreating
     {
-        public static void CreateField(T ViewModel, Grid Field, object command, MainWindowViewModel mainWindowVM = null)
+        public static void CreateComputersField(ComputerFieldPageViewModel ViewModel, Grid Field, object command)
         {
             #region Data
             Button[,] button = new Button[11, 11];
@@ -31,7 +31,7 @@ namespace SeaBattle.BuisnessLogic
 
                     if (i is 0)
                     {
-                        ButtonSettings(i, j, button, ViewModel, command, mainWindowVM);
+                        ButtonSettings_ForComputerField(i, j, button, ViewModel, command);
                         button[i, j].Content = Alphabet[j - 1];
                         button[i, j].Foreground = Brushes.Black;
                         button[i, j].FontFamily = new FontFamily("MV Boli");
@@ -45,7 +45,7 @@ namespace SeaBattle.BuisnessLogic
 
                     if (j is 0)
                     {
-                        ButtonSettings(i, j, button, ViewModel, command, mainWindowVM);
+                        ButtonSettings_ForComputerField(i, j, button, ViewModel, command);
                         button[i, j].Content = i;
                         button[i, j].Foreground = Brushes.Black;
                         button[i, j].FontFamily = new FontFamily("MV Boli");
@@ -58,7 +58,64 @@ namespace SeaBattle.BuisnessLogic
                     }
 
 
-                    ButtonSettings(i, j, button, ViewModel, command, mainWindowVM);
+                    ButtonSettings_ForComputerField(i, j, button, ViewModel, command);
+
+                    ButtonAdd(i, j, button, Field);
+
+
+
+                }
+            }
+            #endregion
+
+        }
+        public static void CreateUsersField(MainWindowViewModel ViewModel, Grid Field, object command)
+        {
+            #region Data
+            Button[,] button = new Button[11, 11];
+            char[] Alphabet = new char[] { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J' };
+
+            #endregion
+
+            #region FieldCreating
+            for (int i = 0; i < 11; i++)
+            {
+                for (int j = 0; j < 11; j++)
+                {
+                    if (i is 0 && j is 0) continue;
+
+                    GridCreating(Field);
+
+                    if (i is 0)
+                    {
+                        ButtonSettings_ForUserField(i, j, button, ViewModel, command);
+                        button[i, j].Content = Alphabet[j - 1];
+                        button[i, j].Foreground = Brushes.Black;
+                        button[i, j].FontFamily = new FontFamily("MV Boli");
+                        button[i, j].BorderThickness = new Thickness(0, 0, 1, 1);
+                        button[i, j].IsEnabled = false;
+
+                        ButtonAdd(i, j, button, Field);
+
+                        continue;
+                    }
+
+                    if (j is 0)
+                    {
+                        ButtonSettings_ForUserField(i, j, button, ViewModel, command);
+                        button[i, j].Content = i;
+                        button[i, j].Foreground = Brushes.Black;
+                        button[i, j].FontFamily = new FontFamily("MV Boli");
+                        button[i, j].BorderThickness = new Thickness(0, 0, 1, 1);
+                        button[i, j].IsEnabled = false;
+
+                        ButtonAdd(i, j, button, Field);
+
+                        continue;
+                    }
+
+
+                    ButtonSettings_ForUserField(i, j, button, ViewModel, command);
 
                     ButtonAdd(i, j, button, Field);
 
@@ -69,6 +126,7 @@ namespace SeaBattle.BuisnessLogic
             #endregion
              
         }
+
 
         #region PrivateMethods
 
@@ -81,7 +139,13 @@ namespace SeaBattle.BuisnessLogic
             Field.ColumnDefinitions.Add(column);
             Field.RowDefinitions.Add(row);
         }
-        private static void ButtonSettings(int i, int j, Button[,] button, T vm, object command, MainWindowViewModel mainWindowVM)
+        private static void ButtonAdd(int i, int j, Button[,] button, Grid Field)
+        {
+            Grid.SetRow(button[i, j], i);
+            Grid.SetColumn(button[i, j], j);
+            Field.Children.Add(button[i, j]);
+        }
+        private static void ButtonSettings_ForComputerField(int i, int j, Button[,] button, ComputerFieldPageViewModel vm, object command)
         {
             button[i, j] = new Button();
             button[i, j].BorderBrush = Brushes.Gray;
@@ -92,16 +156,6 @@ namespace SeaBattle.BuisnessLogic
             BorderBinding.Path = new PropertyPath($"Ships[{i * 11 + j}].Border");
             BorderBinding.Mode = BindingMode.OneWay;
             button[i, j].SetBinding(Button.BorderThicknessProperty, BorderBinding);
-
-            if (mainWindowVM != null)
-            {
-                Binding BackGroundBinding = new Binding();
-                BackGroundBinding.Source = vm;
-                BackGroundBinding.Path = new PropertyPath($"Color[{i * 11 + j}]");
-                BackGroundBinding.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
-                BackGroundBinding.Mode = BindingMode.OneWay;
-                button[i, j].SetBinding(Button.BackgroundProperty, BackGroundBinding);
-            }
 
             Binding ContentBinding = new Binding();
             ContentBinding.Source = vm;
@@ -115,19 +169,42 @@ namespace SeaBattle.BuisnessLogic
             button[i, j].Height = 35;
             button[i, j].Command = (ICommand)command;
             button[i, j].CommandParameter = button[i, j].Name;
-            if (mainWindowVM != null)
-            {
-                button[i, j].AllowDrop = true;
-                button[i, j].Drop += mainWindowVM.DropAction;
-            }
         }
-        private static void ButtonAdd(int i, int j, Button[,] button, Grid Field)
+        private static void ButtonSettings_ForUserField(int i, int j, Button[,] button, MainWindowViewModel vm, object command)
         {
-            Grid.SetRow(button[i, j], i);
-            Grid.SetColumn(button[i, j], j);
-            Field.Children.Add(button[i, j]);
-        }
+            button[i, j] = new Button();
+            button[i, j].BorderBrush = Brushes.Gray;
+            button[i, j].Background = Brushes.White;
 
+            Binding BorderBinding = new Binding();
+            BorderBinding.Source = vm;
+            BorderBinding.Path = new PropertyPath($"Ships[{i * 11 + j}].Border");
+            BorderBinding.Mode = BindingMode.OneWay;
+            button[i, j].SetBinding(Button.BorderThicknessProperty, BorderBinding);
+
+            Binding BackGroundBinding = new Binding();
+            BackGroundBinding.Source = vm;
+            BackGroundBinding.Path = new PropertyPath($"Color[{i * 11 + j}]");
+            BackGroundBinding.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
+            BackGroundBinding.Mode = BindingMode.OneWay;
+            button[i, j].SetBinding(Button.BackgroundProperty, BackGroundBinding);
+
+            Binding ContentBinding = new Binding();
+            ContentBinding.Source = vm;
+            ContentBinding.Path = new PropertyPath($"Ships[{i * 11 + j}].Content");
+            ContentBinding.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
+            ContentBinding.Mode = BindingMode.OneWay;
+            button[i, j].SetBinding(Button.ContentProperty, ContentBinding);
+
+            button[i, j].Name = $"C{i * 11 + j}";
+            button[i, j].Width = 35;
+            button[i, j].Height = 35;
+            button[i, j].Command = (ICommand)command;
+            button[i, j].CommandParameter = button[i, j].Name;
+            button[i, j].AllowDrop = true;
+            button[i, j].Drop += vm.DropAction;
+        }
+ 
         #endregion 
     }
 }

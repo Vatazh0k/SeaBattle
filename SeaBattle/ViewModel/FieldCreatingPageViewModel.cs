@@ -1,4 +1,5 @@
 ﻿using SeaBattle.BuisnessLogic;
+using SeaBattle.Infrastructure.Converters;
 using SeaBattle.Model;
 using SeaBattle.Resource;
 using SeaBattle.View.Pages;
@@ -95,24 +96,6 @@ namespace SeaBattle.ViewModel
             vm.TwoDeckShip = 3;
             vm.OneDeckShip = 4;
         }
-        private CellIndex SearchCellIndexes(int cell)
-        {
-            CellIndex indexes = new CellIndex();
-
-            for (int i = 0; i < 11; i++)
-            {
-                for (int j = 0; j < 11; j++)
-                {
-                    if (i * 11 + j == cell)
-                    {
-                        indexes.I_index = i;
-                        indexes.J_index = j;
-                    }
-                }
-            }
-
-            return indexes;
-        }
         private void ShipsOptions(string Path, int Cell, double left, double top, double right, double botom, int i, int j, bool Direction = true)
         {
             vm.Ships[Cell] = new Ship
@@ -135,7 +118,7 @@ namespace SeaBattle.ViewModel
             for (int i = 1; i <= ShipCount; i++)
             {
                 int Cell = Random.Next(11, 121);
-                CellIndex Indexes = SearchCellIndexes(Cell);
+                CellIndex Indexes = CellsConverter.ConverCellsToIndexes(Cell);
 
                 int direction = Random.Next(1, 3);
 

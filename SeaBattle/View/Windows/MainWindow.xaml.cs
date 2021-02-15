@@ -26,8 +26,7 @@ namespace SeaBattle
             DataContext = vm;
             InitializeComponent();
 
-            FieldCreating<MainWindowViewModel>
-            .CreateField(vm, Field, vm.CreatingShipsCommand, vm);
+            FieldCreating.CreateUsersField(vm, Field, vm.CreatingShipsCommand);
         }
     }
 }

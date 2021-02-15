@@ -1,4 +1,5 @@
 ﻿using SeaBattle.BuisnessLogic;
+using SeaBattle.Infrastructure.Converters;
 using SeaBattle.Model;
 using SeaBattle.Resource;
 using System;
@@ -13,7 +14,7 @@ using System.Windows.Media.Imaging;
 
 namespace SeaBattle.ViewModel
 {
-    class ComputerFieldPageViewModel : ViewModelBase
+    public class ComputerFieldPageViewModel : ViewModelBase
     {
         #region PrivateData
         private MainWindowViewModel vm;
@@ -141,10 +142,10 @@ namespace SeaBattle.ViewModel
                     _indexes = SearchRandomCell(userField);
                     Fixed_i = _indexes.I_index;
                     Fixed_j = _indexes.J_index;
-                    Fixed_cell = ConvertIndexesToCell(_indexes);
+                    Fixed_cell = CellsConverter.ConvertIndexesToCell(_indexes);
                 }
 
-                int Cell = ConvertIndexesToCell(_indexes);
+                int Cell = CellsConverter.ConvertIndexesToCell(_indexes);
 
                 if (CanChangingTheAttckDirection(ref Cell, userField)) continue;
 
@@ -317,22 +318,7 @@ namespace SeaBattle.ViewModel
             }
             return false;
         }
-        private int ConvertIndexesToCell(CellIndex indexes)
-        {
-            int cell = 0;
-            for (int i = 0; i < 11; i++)
-            {
-                for (int j = 0; j < 11; j++)
-                {
-                    if (i == indexes.I_index && j == indexes.J_index)
-                    {
-                        cell = i * 11 + j;
-                        return cell;
-                    }
-                }
-            }
-            return cell;
-        }
+    
         private CellIndex SearchRandomCell(string[,] userField)
         {
             var index = new CellIndex();

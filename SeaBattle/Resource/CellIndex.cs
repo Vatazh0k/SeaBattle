@@ -4,7 +4,7 @@ using System.Text;
 
 namespace SeaBattle.Resource
 {
-    class CellIndex
+    public class CellIndex
     {
         public int I_index { get; set; }
         public int J_index { get; set; }

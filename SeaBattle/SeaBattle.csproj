@@ -146,8 +146,4 @@
     </Resource>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Infrastructure\Converters\" />
-  </ItemGroup>
-
 </Project>
