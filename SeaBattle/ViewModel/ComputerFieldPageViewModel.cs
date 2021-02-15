@@ -120,7 +120,7 @@ namespace SeaBattle.ViewModel
                 Cell = Convert.ToInt32(cellString);
             }
 
-            CellIndex Indexes = SearchCellIndexes(Cell);
+            CellIndex Indexes = CellsConverter.ConverCellsToIndexes(Cell);
 
             bool isGameover = UserTurn(fields, Indexes, Cell);
             if (isGameover is true) return;
@@ -318,7 +318,6 @@ namespace SeaBattle.ViewModel
             }
             return false;
         }
-    
         private CellIndex SearchRandomCell(string[,] userField)
         {
             var index = new CellIndex();
@@ -412,24 +411,6 @@ namespace SeaBattle.ViewModel
             }
             return field;
         }
-        private CellIndex SearchCellIndexes(int cell)
-        {
-            CellIndex indexes = new CellIndex();
-
-            for (int i = 0; i < 11; i++)
-            {
-                for (int j = 0; j < 11; j++)
-                {
-                    if (i * 11 + j == cell)
-                    {
-                        indexes.I_index = i;
-                        indexes.J_index = j;
-                    }
-                }
-            }
-
-            return indexes;
-        }
         private void RefreshData(ref int Cell, ref int CountOfAttaksInOneDirection)
         {
             _indexes.I_index = Fixed_i;
@@ -477,7 +458,7 @@ namespace SeaBattle.ViewModel
             for (int i = 1; i <= ShipCount; i++)
             {
                 int Cell = Random.Next(11, 121);
-                CellIndex Indexes = SearchCellIndexes(Cell);
+                CellIndex Indexes = CellsConverter.ConverCellsToIndexes(Cell);
 
                 int direction = Random.Next(1, 3);
 

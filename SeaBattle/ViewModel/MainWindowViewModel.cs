@@ -296,22 +296,22 @@ namespace SeaBattle.ViewModel
             if (ComparableString is "s1" || ComparableString is "OneDeckShip")
             {
                 if (OneDeckShip is 0) return;
-                PositionValidation(cell, 1);
+                DirectionValidation(cell, 1);
             }
             else if (ComparableString is "s2" || ComparableString is "DoubleDeckShip")
             {
                 if (TwoDeckShip is 0) return;
-                PositionValidation(cell, 2);
+                DirectionValidation(cell, 2);
             }
             else if (ComparableString is "s3" || ComparableString is "ThrieDeckShip")
             {
                 if (ThrieDeckShip is 0) return;
-                PositionValidation(cell, 3);
+                DirectionValidation(cell, 3);
             }
             else if (ComparableString is "s4" || ComparableString is "FourDeckShip")
             {
                 if (FourDeckShip is 0) return;
-                PositionValidation(cell, 4);
+                DirectionValidation(cell, 4);
             }
 
         }
@@ -344,7 +344,7 @@ namespace SeaBattle.ViewModel
                 Border = new Thickness(left,top,right,bottom),
             };
         }
-        private void PositionValidation(int Cell, int DeckCount)
+        private void DirectionValidation(int Cell, int DeckCount)
         {
 
             string[,] tempArr = new string[11, 11];
@@ -480,6 +480,6 @@ namespace SeaBattle.ViewModel
         }
         #endregion
 
-    }  
+    }   
 }   
    
