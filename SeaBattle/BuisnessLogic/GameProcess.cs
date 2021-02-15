@@ -6,8 +6,6 @@ namespace SeaBattle.BuisnessLogic
 {
     public static class GameProcess
     {
-        private const string MissedMark = "X";
-        private const string KilledMark = "O";
         public static bool Damaging(string[,] Field, int i, int j)
         {
             if (Field[i, j] is null)
@@ -30,14 +28,14 @@ namespace SeaBattle.BuisnessLogic
 
             int DecksCount = CountingDecks(Field, i, j, ref IndexOfTheFirstDeck, Direction);
 
-            _ = Direction is false?
-            FirstIndex = i - IndexOfTheFirstDeck:
+            _ = Direction is false ?
+            FirstIndex = i - IndexOfTheFirstDeck :
             SecondIndex = j - IndexOfTheFirstDeck;
 
 
             bool isTheShipKilled = CheckedShipState(Field, FirstIndex, SecondIndex, DecksCount, Direction);
 
-            if(isTheShipKilled)
+            if (isTheShipKilled)
             {
                 Field = ShipsFuneral(Field, FirstIndex, SecondIndex, DecksCount, Direction);
                 return true;
@@ -46,6 +44,8 @@ namespace SeaBattle.BuisnessLogic
         }
         public static string[,] ShipsFuneral(string[,] Field, int i, int j, int DecksCount, bool isHorizontal = true)
         {
+            const string KilledMark = "O";
+            const string MissedMark = "X";
             int y_Axis_Ships = i + 1;
             int x_Axis_Ships = j + DecksCount;
 
@@ -53,7 +53,7 @@ namespace SeaBattle.BuisnessLogic
             {
                 y_Axis_Ships = i + DecksCount;
                 x_Axis_Ships = j + 1;
-            }            
+            }
 
             for (int n = i - 1; n <= y_Axis_Ships; n++)
             {
@@ -70,7 +70,7 @@ namespace SeaBattle.BuisnessLogic
         }
         public static int CountingDecks(string[,] Field, int i, int j, ref int firtShipDeck, bool isHorizontal = true)
         {
-
+            const string MissedMark = "X";
             int GeneralDeksCountInShip = 1;
 
             try
@@ -81,7 +81,7 @@ namespace SeaBattle.BuisnessLogic
                     int secondIndex = j;
 
                     _ = isHorizontal is true ? secondIndex = j + k : firstIndex = i + k;
-                   
+
                     if (String.IsNullOrEmpty(Field[firstIndex, secondIndex]) || (Field[firstIndex, secondIndex] == MissedMark))
                         break;
 
@@ -100,7 +100,7 @@ namespace SeaBattle.BuisnessLogic
 
                     if (String.IsNullOrEmpty(Field[firstIndex, secondIndex]) || (Field[firstIndex, secondIndex] == MissedMark))
                         break;
-                    
+
                     firtShipDeck++;
                     GeneralDeksCountInShip++;
                 }
@@ -112,6 +112,7 @@ namespace SeaBattle.BuisnessLogic
         }
         public static bool CheckedShipState(string[,] field, int i, int j, int decksCount, bool isHorizontal = true)
         {
+            const string KilledMark = "O";
 
             for (int k = 0; k < decksCount; k++)
             {
@@ -128,14 +129,18 @@ namespace SeaBattle.BuisnessLogic
         #region PrivateMethods
         private static string[,] Missed(string[,] Field, int i, int j)
         {
+            const string MissedMark = "X";
+
             Field[i, j] = MissedMark;
             return Field;
         }
         private static string[,] Hit(string[,] Field, int i, int j)
         {
+            const string KilledMark = "O";
+
             Field[i, j] = KilledMark;
             return Field;
         }
         #endregion 
-    } 
+    }
 }  

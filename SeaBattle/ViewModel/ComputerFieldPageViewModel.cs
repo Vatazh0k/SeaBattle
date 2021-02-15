@@ -135,7 +135,7 @@ namespace SeaBattle.ViewModel
             CountOfAttaksInOneDirection = 0;
             while (isComputerMove != false)
             {
-                Thread.Sleep(150);
+                //Thread.Sleep(150);
                 if (isHitButNotKilled is false)
                 {
                     _indexes = SearchRandomCell(userField);
