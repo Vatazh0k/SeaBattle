@@ -11,7 +11,7 @@ namespace SeaBattle.BuisnessLogic
 {
     static class ShipPositionValidation
     {
-        public static bool PositionValidationLogic(int Fixed_I, int Fixed_J, string[,] ships, int decksCount, bool isHorizontal = true)
+        public static bool PositionValidationLogic(int Current_I, int Current_J, string[,] ships, int decksCount, bool isHorizontal = true)
         {
             int CellsToCheckIn_X_Axis = 2;
             int CellsToCheckIn_Y_Axis = 2;
@@ -25,10 +25,10 @@ namespace SeaBattle.BuisnessLogic
 
             try
             {
-                for (int i = Fixed_I - 1; i < Fixed_I + CellsToCheckIn_Y_Axis; i++)
+                for (int i = Current_I - 1; i < Current_I + CellsToCheckIn_Y_Axis; i++)
                 {
                     J_Iteration_Count = 0;
-                    for (int j = Fixed_J - 1; j < Fixed_J + CellsToCheckIn_X_Axis; j++)
+                    for (int j = Current_J - 1; j < Current_J + CellsToCheckIn_X_Axis; j++)
                     {
                         if (!string.IsNullOrEmpty(ships[i, j])) return false;
 
