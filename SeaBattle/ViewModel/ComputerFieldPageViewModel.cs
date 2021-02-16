@@ -6,11 +6,13 @@ using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Threading;
 
 namespace SeaBattle.ViewModel
 {
@@ -131,101 +133,104 @@ namespace SeaBattle.ViewModel
         #endregion
 
         #region PrivateMethods
-        private void ComputerTurn(string[,] userField) 
+        private void ComputerTurn(string[,] userField)
         {
-            CountOfAttaksInOneDirection = 0;
-            while (isComputerMove != false)
+            Task.Run(() =>
             {
-                //Thread.Sleep(150);
-                if (isHitButNotKilled is false)
+                CountOfAttaksInOneDirection = 0;
+                while (isComputerMove != false)
                 {
-                    _indexes = SearchRandomCell(userField);
-                    Fixed_i = _indexes.I_index;
-                    Fixed_j = _indexes.J_index;
-                    Fixed_cell = CellsConverter.ConvertIndexesToCell(_indexes);
-                }
-
-                int Cell = CellsConverter.ConvertIndexesToCell(_indexes);
-
-                if (CanChangingTheAttckDirection(ref Cell, userField)) continue;
-
-                bool isMissed = GameProcess.Damaging(userField, _indexes.I_index, _indexes.J_index);
-
-                if (isMissed is true)
-                {
-                    isComputerMove = false;
-                    AssignTheAppropiateMark(Cell, vm.Ships, PathToShipContent.MissedMark, 0.5);
-
-                    if (isHitButNotKilled is false) CountOfAttaksInOneDirection = 0;
-
-                    RefreshData(ref Cell, ref CountOfAttaksInOneDirection);
-                   
-                    break;
-                }
-                if (isMissed is false)
-                {
-                    isComputerMove = true;
-                    int IndexOfTheFirstShipsDeck = 0;
-                    int FirstIndex = _indexes.I_index;
-                    int SecondIndex = _indexes.J_index;
-
-                    int DecksCount = GameProcess.CountingDecks
-                    (userField, _indexes.I_index, _indexes.J_index, ref IndexOfTheFirstShipsDeck, vm.Ships[Cell].isHorizontal);
-
-                    _ = vm.Ships[Cell].isHorizontal is false ?
-                       FirstIndex = _indexes.I_index - IndexOfTheFirstShipsDeck :
-                       SecondIndex = _indexes.J_index - IndexOfTheFirstShipsDeck;
-
-                    bool isKilled = GameProcess.CheckedShipState
-                    (userField, FirstIndex, SecondIndex, DecksCount, vm.Ships[Cell].isHorizontal);
-
-                    if (isKilled is false)
+                    if (isHitButNotKilled is false)
                     {
-                        AssignTheAppropiateMark(Cell, vm.Ships, PathToShipContent.KilledShip, 0.5);
-                        isComputerMove = true;
-                        isHitButNotKilled = true;
-
-                        continue;
+                        _indexes = SearchRandomCell(userField);
+                        Fixed_i = _indexes.I_index;
+                        Fixed_j = _indexes.J_index;
+                        Fixed_cell = CellsConverter.ConvertIndexesToCell(_indexes);
                     }
-                    if (isKilled is true)
+
+                    int Cell = CellsConverter.ConvertIndexesToCell(_indexes);
+
+                    if (CanChangingTheAttckDirection(ref Cell, userField)) continue;
+
+                    bool isMissed = GameProcess.Damaging(userField, _indexes.I_index, _indexes.J_index);
+
+                    Application.Current.Dispatcher.BeginInvoke(new Action(() =>
                     {
-                        CountOfAttaksInOneDirection = 0;
-                        isHitButNotKilled = false;
-                        userField = GameProcess.ShipsFuneral(userField, FirstIndex, SecondIndex, DecksCount, vm.Ships[Cell].isHorizontal);
-                        switch (DecksCount)
+                        if (isMissed is true)
                         {
-                            default:
-                                break;
+                            isComputerMove = false;
+                            AssignTheAppropiateMark(Cell, vm.Ships, PathToShipContent.MissedMark, 0.5);
 
-                            case 1:
-                                vm.OneDeckShip--;
-                                break;
-                            case 2:
-                                vm.TwoDeckShip--;
-                                break;
-                            case 3:
-                                vm.ThrieDeckShip--;
-                                break;
-                            case 4:
-                                vm.FourDeckShip--;
-                                break;
-                        }
-                       
-                        vm.Ships = ConsequencesOfAttack(userField, vm.Ships);
+                            if (isHitButNotKilled is false) CountOfAttaksInOneDirection = 0;
 
-                        if (vm.OneDeckShip is 0 && vm.TwoDeckShip is 0 &&
-                           vm.ThrieDeckShip is 0 && vm.FourDeckShip is 0)
-                        {
-                            MessageBox.Show("You lose!", "Try Again!", MessageBoxButton.OK, MessageBoxImage.Information);
-                            return;
+                            RefreshData(ref Cell, ref CountOfAttaksInOneDirection);
 
                         }
 
-                        continue;
-                    }
-                }
-            }
+                        if (isMissed is false)
+                        {
+                            isComputerMove = true;
+                            int IndexOfTheFirstShipsDeck = 0;
+                            int FirstIndex = _indexes.I_index;
+                            int SecondIndex = _indexes.J_index;
 
+                            int DecksCount = GameProcess.CountingDecks
+                        (userField, _indexes.I_index, _indexes.J_index, ref IndexOfTheFirstShipsDeck, vm.Ships[Cell].isHorizontal);
+
+                            _ = vm.Ships[Cell].isHorizontal is false ?
+                           FirstIndex = _indexes.I_index - IndexOfTheFirstShipsDeck :
+                           SecondIndex = _indexes.J_index - IndexOfTheFirstShipsDeck;
+
+                            bool isKilled = GameProcess.CheckedShipState
+                        (userField, FirstIndex, SecondIndex, DecksCount, vm.Ships[Cell].isHorizontal);
+
+                            if (isKilled is false)
+                            {
+                                AssignTheAppropiateMark(Cell, vm.Ships, PathToShipContent.KilledShip, 0.5);
+                                isComputerMove = true;
+                                isHitButNotKilled = true;
+
+                            }
+                            if (isKilled is true)
+                            {
+                                CountOfAttaksInOneDirection = 0;
+                                isHitButNotKilled = false;
+                                userField = GameProcess.ShipsFuneral(userField, FirstIndex, SecondIndex, DecksCount, vm.Ships[Cell].isHorizontal);
+                                switch (DecksCount)
+                                {
+                                    default:
+                                        break;
+
+                                    case 1:
+                                        vm.OneDeckShip--;
+                                        break;
+                                    case 2:
+                                        vm.TwoDeckShip--;
+                                        break;
+                                    case 3:
+                                        vm.ThrieDeckShip--;
+                                        break;
+                                    case 4:
+                                        vm.FourDeckShip--;
+                                        break;
+                                }
+
+                                vm.Ships = ConsequencesOfAttack(userField, vm.Ships);
+
+                                if (vm.OneDeckShip is 0 && vm.TwoDeckShip is 0 &&
+                               vm.ThrieDeckShip is 0 && vm.FourDeckShip is 0)
+                                {
+                                    MessageBox.Show("You lose!", "Try Again!", MessageBoxButton.OK, MessageBoxImage.Information);
+                                    isComputerMove = true;
+                                    return;
+                                }
+
+                            }
+                        }
+                    }), DispatcherPriority.Normal);
+                    Thread.Sleep(500);
+                }
+            });
 
         }
         private bool UserTurn(Field fields, CellIndex Indexes, int Cell)
@@ -438,7 +443,7 @@ namespace SeaBattle.ViewModel
         {
             try
             {
-                if (userField[_indexes.I_index, _indexes.J_index] is MissedMark)
+                if (userField[_indexes.I_index, _indexes.J_index] is MissedMark || _indexes.I_index is 0 || _indexes.J_index is 0)
                 {
                     RefreshData(ref Cell, ref CountOfAttaksInOneDirection);
                     return true;
