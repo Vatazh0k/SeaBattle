@@ -73,7 +73,7 @@ namespace SeaBattle.BuisnessLogic
         {
             const string MissedMark = "X";
             int GeneralDeksCountInShip = 1;
-
+            firtShipDeck = 0;
             try
             {
                 for (int k = 1; k <= 4; k++)
