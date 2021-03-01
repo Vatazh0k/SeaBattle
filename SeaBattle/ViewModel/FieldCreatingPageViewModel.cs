@@ -22,7 +22,7 @@ namespace SeaBattle.ViewModel
         private MainWindowViewModel vm;
         private Page ComputerFieldPage;
 
-        private string[,] tempArr = new string[11, 11];
+        private string[,] userField = new string[11, 11];
         private const string ShipMark = "O";
 
         #region Command
@@ -48,14 +48,14 @@ namespace SeaBattle.ViewModel
         private void CelanTheFieldAction(object p)
         {
             ShipsReplenishment();
-            tempArr = new string[11, 11];
+            userField = new string[11, 11];
             vm.Color = new ObservableCollection<Brush>(vm.colors);
             vm.Ships = new ObservableCollection<Ship>(vm.ships);
         }
         private void ShipsAutoGenerationAction(object p)
         {
             vm.Color = new ObservableCollection<Brush>(vm.colors);
-            tempArr = CellAssigning();
+            userField = CellAssigning();
             ShipsGeneration(vm.FourDeckShip, 4);
             ShipsGeneration(vm.ThrieDeckShip, 3);
             ShipsGeneration(vm.OneDeckShip, 1);
@@ -84,10 +84,10 @@ namespace SeaBattle.ViewModel
                 for (int j = 0; j < 11; j++)
                 {
                     if(vm.Ships[i * 11 + j].isOnField is true)
-                    tempArr[i, j] = ShipMark;
+                    userField[i, j] = ShipMark;
                 }
             }
-            return tempArr;
+            return userField;
         } 
         private void ShipsReplenishment()
         {
@@ -109,7 +109,7 @@ namespace SeaBattle.ViewModel
                 Border = new Thickness(left, top, right, botom),
                 isHorizontal = Direction
             };
-            tempArr[i, j] = ShipMark;
+            userField[i, j] = ShipMark;
         }
         private void ShipsGeneration(int ShipCount, int DeksCount)
         {
@@ -124,21 +124,21 @@ namespace SeaBattle.ViewModel
 
                 bool isHorizontal = direction is 1 ? true : false;
 
-                bool canPutShip = ShipPositionValidation.PositionValidationLogic(Indexes.I_index, Indexes.J_index, tempArr, DeksCount,isHorizontal);
+                //bool canPutShip = ShipPositionValidation.PositionValidationLogic(Indexes.I_index, Indexes.J_index, userField, DeksCount,isHorizontal);
 
-                if (canPutShip is false)
-                {
-                    i--;
-                    continue;
-                }
-                if(canPutShip is true)
-                {
-                    if (isHorizontal is true)
-                        ShipsCreatingForHorizontalAxis(DeksCount, Cell, Indexes);
+                //if (canPutShip is false)
+                //{
+                //    i--;
+                //    continue;
+                //}
+                //if(canPutShip is true)
+                //{
+                //    if (isHorizontal is true)
+                //        ShipsCreatingForHorizontalAxis(DeksCount, Cell, Indexes);
 
-                    if (isHorizontal is false)
-                        ShipsCreatingForVerticalAxis(DeksCount, Cell, Indexes);
-                }
+                //    if (isHorizontal is false)
+                //        ShipsCreatingForVerticalAxis(DeksCount, Cell, Indexes);
+                //}
             }
         }
         private void ShipsCreatingForVerticalAxis(int DeksCount, int Cell, CellIndex Indexes)

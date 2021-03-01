@@ -1,4 +1,6 @@
-﻿using SeaBattle.ViewModel;
+﻿using SeaBattle.Infrastructure.Converters;
+using SeaBattle.Resource;
+using SeaBattle.ViewModel;
 using System;
 using System.Windows;
 using System.Windows.Controls;
@@ -9,202 +11,121 @@ namespace SeaBattle.BuisnessLogic
 {
     class Field
     {
-        private string[,] ComputerField = new string[11, 11];
-        private string[,] UserField = new string[11, 11];
+        public string[,] field { get; set; } = new string[11, 11];
 
-        public Field(ComputerFieldPageViewModel vm, Grid Field)
+        private const string ShipsMark = "O";
+
+        public Field()
         {
 
-            ComputerFieldGenerate(vm, Field);
+
         }
-        public Field(MainWindowViewModel vm, Grid Field)
+
+        public string[,] ChangeShipsDirection(string[,] field, int cell)
         {
+            CellIndex indexes = CellsConverter.ConverCellsToIndexes(cell);
 
-            UsersFieldGenerate(vm, Field);
+            int DecksInCurrentShip = 0;
+
+            return field;
         }
-
         public string[,] FieldAutoGeneration(string[,] Field)
         {
+            var Random = new Random();
+            int ShipCount = 4;
+            int DeksCount = 1;
 
+            for (int i = ShipCount; i >= 1; i--)
+            {
+                for (int j = 1; j <= ShipCount; j++)
+                {
+                    int firstIndex = Random.Next(1, 11);
+                    int secondIndex = Random.Next(1, 11);
+
+                    int direction = Random.Next(1, 3);
+
+                    bool isHorizontal = direction is 1 ? true : false;
+
+                    bool canPutShip = CanPutShip(Field, firstIndex, DeksCount, DeksCount, isHorizontal);
+
+                    if (canPutShip is false)
+                    {
+                        j--;
+                        continue;
+                    }
+                    if (canPutShip is true)
+                    {
+
+                        for (int k = 0; k < DeksCount; k++)
+                        {
+                            //if (isHorizontal is true)
+                            //    ComputerField[firstIndex, secondIndex + k + 1] = ShipsMark;
+
+                            //if (isHorizontal is false)
+                            //    ComputerField[firstIndex + k + 1, secondIndex] = ShipsMark;
+                        }
+
+                    }
+                }
+
+                ShipCount--;
+                DeksCount++;
+            }
+            return Field;
+        }
+        public bool CanPutShip(string[,] filed, int Current_I, int Current_J, int DeksCount, bool isHorizontal = true)
+        {
+            int CellsToCheckIn_X_Axis = 2;
+            int CellsToCheckIn_Y_Axis = 2;
+
+            int J_Iteration_Count = 0;
+            int I_teration_Count = 0;
+
+            _ = isHorizontal is false ?
+              CellsToCheckIn_Y_Axis += DeksCount - 1 :
+              CellsToCheckIn_X_Axis += DeksCount - 1;
+
+
+            for (int i = Current_I - 1; i < Current_I + CellsToCheckIn_Y_Axis; i++)
+            {
+                J_Iteration_Count = 0;
+                for (int j = Current_J - 1; j < Current_J + CellsToCheckIn_X_Axis; j++)
+                {
+                    if (j < 0 || j > 10 || i < 0 || i > 10) return false;
+                    if (!string.IsNullOrEmpty(filed[i, j])) return false;
+
+                    J_Iteration_Count++;
+                    if (J_Iteration_Count == CellsToCheckIn_X_Axis && j == 10)
+                        break;
+                }
+                I_teration_Count++;
+                if (I_teration_Count == CellsToCheckIn_Y_Axis && i == 10)
+                    break;
+            }
+            return true;
+        }
+        public void CleanField(string[,] Field)
+        {
+            Field = new string[11, 11];
+        }
+        public string[,] Damaging(string[,] Field, CellIndex Indexes)
+        {
 
             return Field;
         }
-
-        private void ComputerFieldGenerate(ComputerFieldPageViewModel vm, Grid Field)
+        public string[,] PutShipInCurrentCell(string[,] field, int cell, int ShipsSize)
         {
-            Button[,] button = new Button[11, 11];
-            char[] Alphabet = new char[] { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J' };
+            CellIndex Indexes = CellsConverter.ConverCellsToIndexes(cell);
 
-            for (int i = 0; i < 11; i++)
-            {
-                for (int j = 0; j < 11; j++)
-                {
-                    if (i is 0 && j is 0) continue;
-
-                    CellsGenerate(Field);
-
-                    if (i is 0)
-                    {
-                        ButtonSettings_ForComputerField(i, j, button, vm);
-                        button[i, j].Content = Alphabet[j - 1];
-                        button[i, j].Foreground = Brushes.Black;
-                        button[i, j].FontFamily = new FontFamily("MV Boli");
-                        button[i, j].BorderThickness = new Thickness(0, 0, 1, 1);
-                        button[i, j].IsEnabled = false;
-
-                        ButtonAdd(i, j, button, Field);
-
-                        continue;
-                    }
-
-                    if (j is 0)
-                    {
-                        ButtonSettings_ForComputerField(i, j, button, vm);
-                        button[i, j].Content = i;
-                        button[i, j].Foreground = Brushes.Black;
-                        button[i, j].FontFamily = new FontFamily("MV Boli");
-                        button[i, j].BorderThickness = new Thickness(0, 0, 1, 1);
-                        button[i, j].IsEnabled = false;
-
-                        ButtonAdd(i, j, button, Field);
-
-                        continue;
-                    }
-
-
-                    ButtonSettings_ForComputerField(i, j, button, vm);
-
-                    ButtonAdd(i, j, button, Field);
-
-                }
-            }
-
-        }
-        private void UsersFieldGenerate(MainWindowViewModel vm, Grid Field)
-        {
-            Button[,] button = new Button[11, 11];
-            char[] Alphabet = new char[] { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J' };
-
-            for (int i = 0; i < 11; i++)
-            {
-                for (int j = 0; j < 11; j++)
-                {
-                    if (i is 0 && j is 0) continue;
-
-                    CellsGenerate(Field);
-
-                    if (i is 0)
-                    {
-                        ButtonSettings_ForUserField(i, j, button, vm);
-                        button[i, j].Content = Alphabet[j - 1];
-                        button[i, j].Foreground = Brushes.Black;
-                        button[i, j].FontFamily = new FontFamily("MV Boli");
-                        button[i, j].BorderThickness = new Thickness(0, 0, 1, 1);
-                        button[i, j].IsEnabled = false;
-
-                        ButtonAdd(i, j, button, Field);
-
-                        continue;
-                    }
-
-                    if (j is 0)
-                    {
-                        ButtonSettings_ForUserField(i, j, button, vm);
-                        button[i, j].Content = i;
-                        button[i, j].Foreground = Brushes.Black;
-                        button[i, j].FontFamily = new FontFamily("MV Boli");
-                        button[i, j].BorderThickness = new Thickness(0, 0, 1, 1);
-                        button[i, j].IsEnabled = false;
-
-                        ButtonAdd(i, j, button, Field);
-
-                        continue;
-                    }
-
-
-                    ButtonSettings_ForUserField(i, j, button, vm);
-
-                    ButtonAdd(i, j, button, Field);
-
-                }
-            }
-        }
-     
-
-        private static void CellsGenerate(Grid Field)
-        {
-            ColumnDefinition column = new ColumnDefinition();
-            RowDefinition row = new RowDefinition();
-            row.Height = new GridLength(35);
-            column.Width = new GridLength(35);
-            Field.ColumnDefinitions.Add(column);
-            Field.RowDefinitions.Add(row);
-        }
-        private static void ButtonAdd(int i, int j, Button[,] button, Grid Field)
-        {
-            Grid.SetRow(button[i, j], i);
-            Grid.SetColumn(button[i, j], j);
-            Field.Children.Add(button[i, j]);
-        }
-        private static void ButtonSettings_ForComputerField(int i, int j, Button[,] button, ComputerFieldPageViewModel vm)
-        {
-            button[i, j] = new Button();
-            button[i, j].BorderBrush = Brushes.Gray;
-            button[i, j].Background = Brushes.White;
-
-            Binding BorderBinding = new Binding();
-            BorderBinding.Source = vm;
-            BorderBinding.Path = new PropertyPath($"Ships[{i * 11 + j}].Border");
-            BorderBinding.Mode = BindingMode.OneWay;
-            button[i, j].SetBinding(Button.BorderThicknessProperty, BorderBinding);
-
-            Binding ContentBinding = new Binding();
-            ContentBinding.Source = vm;
-            ContentBinding.Path = new PropertyPath($"Ships[{i * 11 + j}].Content");
-            ContentBinding.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
-            ContentBinding.Mode = BindingMode.OneWay;
-            button[i, j].SetBinding(Button.ContentProperty, ContentBinding);
-
-            button[i, j].Name = $"C{i * 11 + j}";
-            button[i, j].Width = 35;
-            button[i, j].Height = 35;
-            button[i, j].Command = vm.MakeDamageCommand;
-            button[i, j].CommandParameter = button[i, j].Name;
-        }
-        private static void ButtonSettings_ForUserField(int i, int j, Button[,] button, MainWindowViewModel vm)
-        {
-            button[i, j] = new Button();
-            button[i, j].BorderBrush = Brushes.Gray;
-            button[i, j].Background = Brushes.White;
-
-            Binding BorderBinding = new Binding();
-            BorderBinding.Source = vm;
-            BorderBinding.Path = new PropertyPath($"Ships[{i * 11 + j}].Border");
-            BorderBinding.Mode = BindingMode.OneWay;
-            button[i, j].SetBinding(Button.BorderThicknessProperty, BorderBinding);
-
-            Binding BackGroundBinding = new Binding();
-            BackGroundBinding.Source = vm;
-            BackGroundBinding.Path = new PropertyPath($"Color[{i * 11 + j}]");
-            BackGroundBinding.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
-            BackGroundBinding.Mode = BindingMode.OneWay;
-            button[i, j].SetBinding(Button.BackgroundProperty, BackGroundBinding);
-
-            Binding ContentBinding = new Binding();
-            ContentBinding.Source = vm;
-            ContentBinding.Path = new PropertyPath($"Ships[{i * 11 + j}].Content");
-            ContentBinding.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
-            ContentBinding.Mode = BindingMode.OneWay;
-            button[i, j].SetBinding(Button.ContentProperty, ContentBinding);
-
-            button[i, j].Name = $"C{i * 11 + j}";
-            button[i, j].Width = 35;
-            button[i, j].Height = 35;
-            button[i, j].Command = vm.CreatingShipsCommand;
-            button[i, j].CommandParameter = button[i, j].Name;
-            button[i, j].AllowDrop = true;
-            button[i, j].Drop += vm.DropAction;
+            if (CanPutShip(field, Indexes.I_index, Indexes.J_index, ShipsSize))
+                for (int i = 0; i < ShipsSize; i++)
+                    field[Indexes.I_index, Indexes.J_index + i] = ShipsMark;
+                
+            return field;
         }
 
+        #region Private Methods
+      
+        #endregion
     }
 }

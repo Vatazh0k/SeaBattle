@@ -124,10 +124,10 @@ namespace SeaBattle.ViewModel
 
             CellIndex Indexes = CellsConverter.ConverCellsToIndexes(Cell);
 
-            bool isGameover = UserTurn(fields, Indexes, Cell);
-            if (isGameover is true) return;
+            //bool isGameover = UserTurn(fields, Indexes, Cell);
+            //if (isGameover is true) return;
 
-            ComputerTurn(fields.UserField);
+            //ComputerTurn(fields.UserField);
 
         }
         #endregion
@@ -233,46 +233,46 @@ namespace SeaBattle.ViewModel
             });
 
         }
-        private bool UserTurn(Field fields, CellIndex Indexes, int Cell)
-        {
-            if (fields.ComputerField[Indexes.I_index, Indexes.J_index] == ShipMark ||
-               fields.ComputerField[Indexes.I_index, Indexes.J_index] == MissedMark) return false;
+        //private bool UserTurn(Field fields, CellIndex Indexes, int Cell)
+        //{
+        //    if (fields.ComputerField[Indexes.I_index, Indexes.J_index] == ShipMark ||
+        //       fields.ComputerField[Indexes.I_index, Indexes.J_index] == MissedMark) return false;
 
-            isComputerMove = true;
+        //    isComputerMove = true;
 
-            bool isMissed = GameProcess.Damaging(fields.ComputerField, Indexes.I_index, Indexes.J_index);
+        //    bool isMissed = GameProcess.Damaging(fields.ComputerField, Indexes.I_index, Indexes.J_index);
 
-            if (isMissed is true)
-            {
-                MissCounter++;
-                AssignTheAppropiateMark(Cell, Ships, PathToShipContent.MissedMark, 0.5);
-            }
-            if (isMissed is false)
-            {
-                isComputerMove = false;
+        //    if (isMissed is true)
+        //    {
+        //        MissCounter++;
+        //        AssignTheAppropiateMark(Cell, Ships, PathToShipContent.MissedMark, 0.5);
+        //    }
+        //    if (isMissed is false)
+        //    {
+        //        isComputerMove = false;
 
-                bool isShipKilled = GameProcess.ShipsIntegityChecked
-                (fields.ComputerField, Indexes.I_index, Indexes.J_index, Ships[Cell].isHorizontal);
+        //        bool isShipKilled = GameProcess.ShipsIntegityChecked
+        //        (fields.ComputerField, Indexes.I_index, Indexes.J_index, Ships[Cell].isHorizontal);
 
-                if (isShipKilled is false)
-                {
-                    AssignTheAppropiateMark(Cell, Ships, PathToShipContent.KilledShip, 0.5);
-                }
-                if (isShipKilled is true)
-                {
-                    NumberOfRemainingComputerShips--;
-                    Ships = ConsequencesOfAttack(fields.ComputerField, Ships);
-                    if (NumberOfRemainingComputerShips is 0)
-                    {
-                        MessageBox.Show("You win!", "Congratulation", MessageBoxButton.OK, MessageBoxImage.Information);
-                        isComputerMove = true;
-                        return true;
-                    }
+        //        if (isShipKilled is false)
+        //        {
+        //            AssignTheAppropiateMark(Cell, Ships, PathToShipContent.KilledShip, 0.5);
+        //        }
+        //        if (isShipKilled is true)
+        //        {
+        //            NumberOfRemainingComputerShips--;
+        //            Ships = ConsequencesOfAttack(fields.ComputerField, Ships);
+        //            if (NumberOfRemainingComputerShips is 0)
+        //            {
+        //                MessageBox.Show("You win!", "Congratulation", MessageBoxButton.OK, MessageBoxImage.Information);
+        //                isComputerMove = true;
+        //                return true;
+        //            }
 
-                }
-            }
-            return false;
-        }
+        //        }
+        //    }
+        //    return false;
+        //}
         private bool CanChangingTheAttckDirection(ref int Cell, string[,] userField)
         {
             if (isHitButNotKilled is true)
@@ -407,10 +407,10 @@ namespace SeaBattle.ViewModel
             {
                 for (int j = 0; j < 11; j++)
                 {
-                    if (Ships[i * 11 + j].isOnField)
-                        field.ComputerField[i, j] = EmptyCellMark;
-                    if (vm.Ships[i * 11 + j].isOnField)
-                        field.UserField[i, j] = EmptyCellMark;
+                    //if (Ships[i * 11 + j].isOnField)
+                    //    field.ComputerField[i, j] = EmptyCellMark;
+                    //if (vm.Ships[i * 11 + j].isOnField)
+                    //    field.UserField[i, j] = EmptyCellMark;
 
                 }
             }
@@ -469,21 +469,21 @@ namespace SeaBattle.ViewModel
 
                 bool isHorizontal = direction is 1 ? true : false;
 
-                bool canPutShip = ShipPositionValidation.PositionValidationLogic(Indexes.I_index, Indexes.J_index, TempArr, DeksCount, isHorizontal);
+                //bool canPutShip = ShipPositionValidation.PositionValidationLogic(Indexes.I_index, Indexes.J_index, TempArr, DeksCount, isHorizontal);
 
-                if (canPutShip is false)
-                {
-                    i--;
-                    continue;
-                }
-                if (canPutShip is true)
-                {
-                    if (isHorizontal is true)
-                        ShipsCreatingForHorizontalAxis(DeksCount, Cell, Indexes);
+                //if (canPutShip is false)
+                //{
+                //    i--;
+                //    continue;
+                //}
+                //if (canPutShip is true)
+                //{
+                //    if (isHorizontal is true)
+                //        ShipsCreatingForHorizontalAxis(DeksCount, Cell, Indexes);
 
-                    if (isHorizontal is false)
-                        ShipsCreatingForVerticalAxis(DeksCount, Cell, Indexes);
-                }
+                //    if (isHorizontal is false)
+                //        ShipsCreatingForVerticalAxis(DeksCount, Cell, Indexes);
+                //}
             }
         }
         private void ShipsCreatingForVerticalAxis(int DeksCount, int Cell, CellIndex Indexes)
