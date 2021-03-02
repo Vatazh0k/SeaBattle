@@ -32,6 +32,7 @@ namespace SeaBattle.ViewModel
 
         private string cellNumber;
         private int shipsDecksCount;
+        private bool shipsDirection = true;
         private int FirstDecksIndex;
 
         Field UsersField;
@@ -217,6 +218,7 @@ namespace SeaBattle.ViewModel
                     if (OneDeckShip is 0) return;
                     break;
             }
+            shipsDirection = true;
             DragDrop.DoDragDrop(lb, lb.Content, DragDropEffects.Copy);
 
         }
@@ -380,14 +382,22 @@ namespace SeaBattle.ViewModel
                     break;
             }
         }
-        private void ReduceColor(int Cell)
+        private void ReduceColor(int Cell, bool direction = true)
         {
+            if(direction is true)
             for (int i = 0; i < shipsDecksCount; i++)
             {
                 Color[Cell + i] = new SolidColorBrush(Colors.White);
                 Color[Cell + i].Opacity = 1;
-
             }
+
+            if (direction is false)
+            for (int i = 0; i < shipsDecksCount; i++)
+            {
+                Color[Cell + i*11] = new SolidColorBrush(Colors.White);
+                Color[Cell + i*11].Opacity = 1;
+            }
+
         }
         private ObservableCollection<Ship> ShowVerticalShips(int DecksCount, int cell)
         {
@@ -450,20 +460,30 @@ namespace SeaBattle.ViewModel
 
             return Ships;
         } 
-        private bool CanPutShip(int Cell, int DecksCount, int FirstDeckIndex = 0)
+        private bool CanPutShip(int Cell, int DecksCount, int FirstDeckIndex = 0, bool Direction = true)
         {
             Cell -= FirstDeckIndex;
             CellIndex Indexes = CellsConverter.ConverCellsToIndexes(Cell);
-            bool CanPutShip = UsersField.CanPutShip(UsersField.field, Indexes.I_index, Indexes.J_index, DecksCount);
+            bool CanPutShip = UsersField.CanPutShip(UsersField.field, Indexes.I_index, Indexes.J_index, DecksCount, Direction);
 
             if (CanPutShip is true)
             {
-                for (int i = 0; i < DecksCount; i++)
-                    UsersField.field[Indexes.I_index, Indexes.J_index + i] = ShipsMark;
-                
-                ShowHorizontalShips(DecksCount, Cell);
+                if (Direction is true)
+                {
+                    for (int i = 0; i < DecksCount; i++)
+                        UsersField.field[Indexes.I_index, Indexes.J_index + i] = ShipsMark;
 
+                    ShowHorizontalShips(DecksCount, Cell);
+                }
+                if (Direction is false)
+                {
+                    for (int i = 0; i < DecksCount; i++)
+                        UsersField.field[Indexes.I_index + i, Indexes.J_index] = ShipsMark;
+
+                    ShowVerticalShips(DecksCount, Cell);
+                }
                 return true;
+
             }
             return false;
         }
@@ -516,6 +536,7 @@ namespace SeaBattle.ViewModel
             Button lb = sender as Button;
             shipsDecksCount = CountingDecks(lb.Name);
             if (lb.Content is null) return;
+            shipsDirection = Ships[Convert.ToInt32(cellNumber)].isHorizontal;
             DragDrop.DoDragDrop(lb, lb.Content, DragDropEffects.Copy);
 
         }
@@ -541,29 +562,29 @@ namespace SeaBattle.ViewModel
             int NewCell = SearchCell(feSource.Name);
             if (NewCell is -1)
             {
-                CanPutShip(PreviousCell, shipsDecksCount, FirstDecksIndex);
+                CanPutShip(PreviousCell, shipsDecksCount, FirstDecksIndex, shipsDirection);
                 return;
             }
 
             if (cellNumber != null)
             {
-                bool _canPutShip = CanPutShip(NewCell, shipsDecksCount);
+                bool _canPutShip = CanPutShip(NewCell, shipsDecksCount, 0, shipsDirection);
                
                 if (_canPutShip is false)
                 {
-                    CanPutShip(PreviousCell, shipsDecksCount, FirstDecksIndex);
+                    CanPutShip(PreviousCell, shipsDecksCount, FirstDecksIndex, shipsDirection);
                 }
 
-                ReduceColor(NewCell);
+                ReduceColor(NewCell, Ships[PreviousCell].isHorizontal);
                 cellNumber = null;
                 return;
             }
 
-            bool canPutShip = CanPutShip(NewCell, shipsDecksCount);
+            bool canPutShip = CanPutShip(NewCell, shipsDecksCount, 0, Ships[PreviousCell].isHorizontal);
             if (canPutShip is true)
             {
                 ReduceShipsCount(shipsDecksCount);
-                ReduceColor(NewCell);
+                ReduceColor(NewCell, shipsDirection);
             }
             if (canPutShip is false)
             {
@@ -589,14 +610,27 @@ namespace SeaBattle.ViewModel
             if (cell is -1) return;
 
             CellIndex cellIndexes = CellsConverter.ConverCellsToIndexes(cell);
-            for (int i = 0; i < shipsDecksCount; i++)
+
+            if (shipsDirection is true)
             {
-                if (cellIndexes.J_index + i == 11) break;
-                Color[cell + i] = new SolidColorBrush(Colors.White);
-                Color[cell + i].Opacity = 1;
+                for (int i = 0; i < shipsDecksCount; i++)
+                {
+                    if (cellIndexes.J_index + i == 11) break;
+                    Color[cell + i] = new SolidColorBrush(Colors.White);
+                    Color[cell + i].Opacity = 1;
 
+                }
             }
+            if (shipsDirection is false)
+            {
+                for (int i = 0; i < shipsDecksCount; i++)
+                {
+                    if (cellIndexes.I_index + i == 11) break;
+                    Color[cell + i*11] = new SolidColorBrush(Colors.White);
+                    Color[cell + i*11].Opacity = 1;
 
+                }
+            }
         }
         public void DragEnter(object sender, DragEventArgs e)
         {
@@ -608,21 +642,43 @@ namespace SeaBattle.ViewModel
             CellIndex cellIndexes = CellsConverter.ConverCellsToIndexes(cell);
 
 
-            for (int i = shipsDecksCount-1; i >= 0; i--)
+            if (shipsDirection is true)
             {
-                if(!UsersField.CanPutShip(UsersField.field, cellIndexes.I_index, cellIndexes.J_index, shipsDecksCount))
+                for (int i = shipsDecksCount - 1; i >= 0; i--)
                 {
-
-                    for (int j = 0; j < shipsDecksCount; j++)
+                    if (!UsersField.CanPutShip(UsersField.field, cellIndexes.I_index, cellIndexes.J_index, shipsDecksCount))
                     {
-                        if (cellIndexes.J_index + j == 11) break;
-                        Color[cell + j] = new SolidColorBrush(Colors.Red);
-                        Color[cell + j].Opacity = 0.4;
+
+                        for (int j = 0; j < shipsDecksCount; j++)
+                        {
+                            if (cellIndexes.J_index + j == 11) break;
+                            Color[cell + j] = new SolidColorBrush(Colors.Red);
+                            Color[cell + j].Opacity = 0.4;
+                        }
+                        return;
                     }
-                    return;
+                    Color[cell + i] = new SolidColorBrush(Colors.Green);
+                    Color[cell + i].Opacity = 0.4;
                 }
-                Color[cell + i] = new SolidColorBrush(Colors.Green);
-                Color[cell + i].Opacity = 0.4;
+            }
+            if (shipsDirection is false)
+            {
+                for (int i = shipsDecksCount - 1; i >= 0; i--)
+                {
+                    if (!UsersField.CanPutShip(UsersField.field, cellIndexes.I_index, cellIndexes.J_index, shipsDecksCount, false))
+                    {
+
+                        for (int j = 0; j < shipsDecksCount; j++)
+                        {
+                            if (cellIndexes.I_index + j == 11) break;
+                            Color[cell + j*11] = new SolidColorBrush(Colors.Red);
+                            Color[cell + j*11].Opacity = 0.4;
+                        }
+                        return;
+                    }
+                    Color[cell + i*11] = new SolidColorBrush(Colors.Green);
+                    Color[cell + i*11].Opacity = 0.4;
+                }
             }
         }
         #endregion
