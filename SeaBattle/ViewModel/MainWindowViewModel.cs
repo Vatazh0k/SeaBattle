@@ -47,12 +47,13 @@ namespace SeaBattle.ViewModel
 
         #region PUblic Data
         public Page StartMenue { get; set; }
+        public ComputerFieldPage ComputerFieldPage { get; set; }
         public IEnumerable<SolidColorBrush> colors { get; }
         public IEnumerable<Ship> ships { get; }
         #region Commands
         public ICommand ShipsAutoGeneration { get; set; }
         public ICommand ReadyCommand { get; set; }
-        public ICommand CleanField { get; set; }
+        public ICommand CleanFieldCommand { get; set; }
         public ICommand DragCommand { get; set; }
         public ICommand NewShipAssignmentCommand { get; set; }
         public ICommand ExitCommand { get; set; }
@@ -111,8 +112,9 @@ namespace SeaBattle.ViewModel
 
             ShipsAutoGeneration = new Command(ShipsAutoGenerationAction, CanUseCommands);
             ReadyCommand = new Command(ReadyCommandAction, CanUseCommands);
-            CleanField = new Command(CelanTheFieldAction, CanUseCommands);
+            CleanFieldCommand = new Command(CleanFieldCommandAction, CanUseCommands);
             #endregion
+
             StartMenue = new StartMenuePage(this);
             CurrentPage = StartMenue;
 
@@ -147,36 +149,26 @@ namespace SeaBattle.ViewModel
         {
 
         }
+        private void CleanFieldCommandAction(object p)
+        {
+            CleanField();
+        }
         private void ReadyCommandAction(object p)
         {
 
-        }
-        private void CelanTheFieldAction(object p)
-        {
-
+            if (OneDeckShip is 0 && TwoDeckShip is 0 &&
+              ThrieDeckShip is 0 && FourDeckShip is 0)
+            {
+                ShipsReplenishment();
+                ComputerFieldPage = new ComputerFieldPage(this);
+                CurrentPage = ComputerFieldPage;
+            }
+            else
+                MessageBox.Show("Please input all ships", "", MessageBoxButton.OK, MessageBoxImage.Error);
         }
         private void NewGameCommandAction(object p)
         {
-            OneDeckShip = 4;
-            TwoDeckShip = 3;
-            ThrieDeckShip = 2;
-            FourDeckShip = 1;
-
-            UsersField = new Field();
-            ComputerField = new Field();
-
-            Color = new ObservableCollection<Brush>(_color);
-
-            for (int i = 0; i < 121; i++)
-            {
-                Ships[i] = new Ship
-                {
-                    Content = new Image(),
-                    isOnField = false,
-                    Border = new Thickness(0.5)
-                };
-            }
-            CurrentPage = new FieldCreatingPage();
+            CleanField();
         }
         private void ExitCommandAction(object p)
         {
@@ -238,41 +230,24 @@ namespace SeaBattle.ViewModel
         #endregion
 
         #region Private Methods
-        #region ColorEffects
-        private void ShowGrinHint(int cell, int i_index, int Direction = 1)
+        private void CleanField()
         {
-            Color[cell + i_index * Direction] = new SolidColorBrush(Colors.Green);
-            Color[cell + i_index * Direction].Opacity = 0.4;
-        }
-        private void ShowRedHint(int cell, int index, int Direction = 1)
-        {
-            for (int j = 0; j < shipsDecksCount; j++)
-            {
-                if (index + j == 11) break;
-                Color[cell + j * Direction] = new SolidColorBrush(Colors.Red);
-                Color[cell + j * Direction].Opacity = 0.4;
-            }
-        }
-        private void ReduceColor(int Cell, bool direction = true)
-        {
-            if (direction is true)
-                for (int i = 0; i < shipsDecksCount; i++)
-                {
-                    if (Cell + i >= 121) return;
-                    Color[Cell + i] = new SolidColorBrush(Colors.White);
-                    Color[Cell + i].Opacity = 1;
-                }
+            ShipsReplenishment();
+            UsersField = new Field();
+            ComputerField = new Field();
 
-            if (direction is false)
-                for (int i = 0; i < shipsDecksCount; i++)
-                {
-                    if (Cell + i * 11 > 121) return;
-                    Color[Cell + i * 11] = new SolidColorBrush(Colors.White);
-                    Color[Cell + i * 11].Opacity = 1;
-                }
+            Color = new ObservableCollection<Brush>(_color);
 
+            Ships = new ObservableCollection<Ship>(ships);
+            CurrentPage = new FieldCreatingPage(this);
         }
-        #endregion
+        private void ShipsReplenishment()
+        {
+            FourDeckShip = 1;
+            ThrieDeckShip = 2;
+            TwoDeckShip = 3;
+            OneDeckShip = 4;
+        }
         private void SearchShipsType(int cell, string ComparableString)
         {
 
@@ -466,6 +441,42 @@ namespace SeaBattle.ViewModel
             }
 
         }
+
+        #region ColorEffects
+        private void ShowGrinHint(int cell, int i_index, int Direction = 1)
+        {
+            Color[cell + i_index * Direction] = new SolidColorBrush(Colors.Green);
+            Color[cell + i_index * Direction].Opacity = 0.4;
+        }
+        private void ShowRedHint(int cell, int index, int Direction = 1)
+        {
+            for (int j = 0; j < shipsDecksCount; j++)
+            {
+                if (index + j == 11) break;
+                Color[cell + j * Direction] = new SolidColorBrush(Colors.Red);
+                Color[cell + j * Direction].Opacity = 0.4;
+            }
+        }
+        private void ReduceColor(int Cell, bool direction = true)
+        {
+            if (direction is true)
+                for (int i = 0; i < shipsDecksCount; i++)
+                {
+                    if (Cell + i >= 121) return;
+                    Color[Cell + i] = new SolidColorBrush(Colors.White);
+                    Color[Cell + i].Opacity = 1;
+                }
+
+            if (direction is false)
+                for (int i = 0; i < shipsDecksCount; i++)
+                {
+                    if (Cell + i * 11 > 121) return;
+                    Color[Cell + i * 11] = new SolidColorBrush(Colors.White);
+                    Color[Cell + i * 11].Opacity = 1;
+                }
+
+        }
+        #endregion
 
         #region ShowShips
         private void ShipsOptions(int cell, string Path, bool Direction = true)
@@ -663,7 +674,7 @@ namespace SeaBattle.ViewModel
         }
         #endregion
         #endregion
-
+         
     }
 }  
    

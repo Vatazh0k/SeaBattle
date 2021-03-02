@@ -19,9 +19,10 @@ namespace SeaBattle.View.Pages
     /// </summary>
     public partial class FieldCreatingPage : Page
     {
-        public FieldCreatingPage()
+        public FieldCreatingPage(MainWindowViewModel mainWindowViewModel)
         {
             InitializeComponent();
+            DataContext = mainWindowViewModel;
         }
     }
 }

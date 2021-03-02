@@ -19,9 +19,7 @@
             </Setter>
         </Style>
     </Page.Resources>
-    <Page.DataContext>
-        <vm:MainWindowViewModel/>
-    </Page.DataContext>
+ 
     <Grid>
 
         <Label Margin="142,89,78,91"
@@ -49,7 +47,7 @@
                 Margin="10,0,0,114"
                 FontSize="18"
                 FontStyle="Italic"
-                Command="{Binding CleanField}">
+                Command="{Binding CleanFieldCommand}">
             <Underline>CelanField</Underline>
         </Button>
 
