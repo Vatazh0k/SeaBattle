@@ -14,20 +14,82 @@ namespace SeaBattle.BuisnessLogic
         public string[,] field { get; set; } = new string[11, 11];
 
         private const string ShipsMark = "O";
-
         public Field()
         {
 
 
         }
-
-        public string[,] ChangeShipsDirection(string[,] field, int cell)
+        public bool ChangeShipsDirection(string[,] field, int cell, bool direction)
         {
             CellIndex indexes = CellsConverter.ConverCellsToIndexes(cell);
+            int CurrentDeck = 0;
 
-            int DecksInCurrentShip = 0;
+            int DecksInShipCount = CountingDecks(field, indexes.I_index, indexes.J_index, ref CurrentDeck, direction);
 
-            return field;
+            int FirstDeckOfHorizontalShip = indexes.J_index - CurrentDeck;
+            int FirstDeckOfVerticalShip = indexes.I_index - CurrentDeck;
+
+            if (direction is true)
+                for (int i = 0; i < DecksInShipCount; i++)
+                    field[indexes.I_index, FirstDeckOfHorizontalShip + i] = null;
+
+            if (direction is false)
+                for (int i = 0; i < DecksInShipCount; i++)
+                    field[FirstDeckOfVerticalShip + i, indexes.J_index] = null;
+
+            bool canPutShip = CanPutShip
+            (field, indexes.I_index, indexes.J_index, DecksInShipCount, !direction);
+
+            if (canPutShip is false)
+            {
+                if (direction is true)
+                    for (int i = 0; i < DecksInShipCount; i++)
+                        field[indexes.I_index, FirstDeckOfHorizontalShip + i] = ShipsMark;
+
+                if (direction is false)
+                    for (int i = 0; i < DecksInShipCount; i++)
+                        field[FirstDeckOfVerticalShip + i, indexes.J_index] = ShipsMark;
+                return false;
+            }
+            if (canPutShip is true)
+            {
+                if (Ships[CellNumber].isHorizontal is true)
+                {
+                    int Cell = CellNumber - CurrentDeck;
+                    for (int i = 0; i < DecksInShipCount; i++)
+                        Ships[Cell + i] = new Ship();
+
+                    ShowVerticalShips(DecksInShipCount, CellNumber);
+                    for (int i = 0; i < DecksInShipCount; i++)
+                        UsersField.field[indexes.I_index + i, indexes.J_index] = ShipsMark;
+
+                    return true;
+                }
+                if (Ships[CellNumber].isHorizontal is false)
+                {
+                    int Cell = CellNumber;
+                    switch (CurrentDeck)
+                    {
+                        default: break;
+                        case 0: Cell -= 11; break;
+                        case 1: Cell -= 22; break;
+                        case 2: Cell -= 33; break;
+                        case 3: Cell -= 44; break;
+
+                    }
+
+                    for (int i = 0; i < DecksInShipCount; i++)
+                        Ships[Cell += 11] = new Ship();
+
+                    ShowHorizontalShips(DecksInShipCount, CellNumber);
+                    for (int i = 0; i < DecksInShipCount; i++)
+                        UsersField.field[indexes.I_index, indexes.J_index + i] = ShipsMark;
+
+                    return true;
+                }
+            }
+
+            return true;
         }
         public int CountingDecks(string[,] Field, int i, int j, ref int firtShipDeck, bool isHorizontal = true)
         {
@@ -82,8 +144,6 @@ namespace SeaBattle.BuisnessLogic
                     if (j + 1 <= 10 && Field[i, j + 1] is ShipsMark) return true;
          
                     if (i + 1 <= 10 && Field[i + 1, j] is ShipsMark) return false;
-
-
                 }
             }
 
@@ -172,16 +232,6 @@ namespace SeaBattle.BuisnessLogic
         {
 
             return Field;
-        }
-        public string[,] PutShipInCurrentCell(string[,] field, int cell, int ShipsSize)
-        {
-            CellIndex Indexes = CellsConverter.ConverCellsToIndexes(cell);
-
-            if (CanPutShip(field, Indexes.I_index, Indexes.J_index, ShipsSize))
-                for (int i = 0; i < ShipsSize; i++)
-                    field[Indexes.I_index, Indexes.J_index + i] = ShipsMark;
-                
-            return field;
         }
 
         #region Private Methods

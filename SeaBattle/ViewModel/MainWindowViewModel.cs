@@ -151,7 +151,6 @@ namespace SeaBattle.ViewModel
             UsersField.FieldAutoGeneration(UsersField.field);
             Ships = ShipsAssignment(UsersField.field);
             CleanShips();
-            
         }
         private void CleanFieldCommandAction(object p)
         {
@@ -172,6 +171,8 @@ namespace SeaBattle.ViewModel
         }
         private void NewGameCommandAction(object p)
         {
+            ComputerField = new Field();
+            UsersField = new Field();
             CleanField();
         }
         private void ExitCommandAction(object p)
@@ -192,7 +193,9 @@ namespace SeaBattle.ViewModel
 
             if (Ships[Convert.ToInt32(cellNumber)].isOnField is true)
             {
-                ChangeShipsDirection(Convert.ToInt32(cellNumber));
+                int Cell = Convert.ToInt32(cellNumber);
+                if (UsersField.ChangeShipsDirection(UsersField.field, Cell, Ships[Cell].isHorizontal))
+                    ChangeShipsDirection(Cell);
                 return;
             }
 
@@ -237,8 +240,7 @@ namespace SeaBattle.ViewModel
         private void CleanField()
         {
             ShipsReplenishment();
-            UsersField = new Field();
-            ComputerField = new Field();
+            UsersField.CleanField(UsersField.field);
 
             Color = new ObservableCollection<Brush>(_color);
 
@@ -417,75 +419,8 @@ namespace SeaBattle.ViewModel
         }
         private void ChangeShipsDirection(int CellNumber)
         {
-            Color = new ObservableCollection<Brush>(colors);
-            CellIndex indexes = CellsConverter.ConverCellsToIndexes(CellNumber);
-            int CurrentDeck = 0;
 
-            int DecksInShipCount = UsersField.CountingDecks
-            (UsersField.field, indexes.I_index, indexes.J_index, ref CurrentDeck, Ships[CellNumber].isHorizontal);
-
-            int FirstDeckOfHorizontalShip = indexes.J_index - CurrentDeck;
-            int FirstDeckOfVerticalShip = indexes.I_index - CurrentDeck;
-
-            if (Ships[CellNumber].isHorizontal is true)
-                for (int i = 0; i < DecksInShipCount; i++)
-                    UsersField.field[indexes.I_index, FirstDeckOfHorizontalShip + i] = null;
-
-            if (Ships[CellNumber].isHorizontal is false)
-                for (int i = 0; i < DecksInShipCount; i++)
-                    UsersField.field[FirstDeckOfVerticalShip + i, indexes.J_index] = null;
-
-            bool canPutShip = UsersField.CanPutShip
-            (UsersField.field, indexes.I_index, indexes.J_index, DecksInShipCount, !Ships[CellNumber].isHorizontal);
-
-            if (canPutShip is false)
-            {
-                if (Ships[CellNumber].isHorizontal is true)
-                    for (int i = 0; i < DecksInShipCount; i++)
-                        UsersField.field[indexes.I_index, FirstDeckOfHorizontalShip + i] = ShipsMark;
-
-                if (Ships[CellNumber].isHorizontal is false)
-                    for (int i = 0; i < DecksInShipCount; i++)
-                        UsersField.field[FirstDeckOfVerticalShip + i, indexes.J_index] = ShipsMark;
-                return;
-            }
-            if (canPutShip is true)
-            {
-                if (Ships[CellNumber].isHorizontal is true)
-                {
-                    int Cell = CellNumber - CurrentDeck;
-                    for (int i = 0; i < DecksInShipCount; i++)
-                        Ships[Cell + i] = new Ship();
-
-                    ShowVerticalShips(DecksInShipCount, CellNumber);
-                    for (int i = 0; i < DecksInShipCount; i++)
-                        UsersField.field[indexes.I_index + i, indexes.J_index] = ShipsMark;
-
-                    return;
-                }
-                if (Ships[CellNumber].isHorizontal is false)
-                {
-                    int Cell = CellNumber;
-                    switch (CurrentDeck)
-                    {
-                        default: break;
-                        case 0: Cell -= 11; break;
-                        case 1: Cell -= 22; break;
-                        case 2: Cell -= 33; break;
-                        case 3: Cell -= 44; break;
-
-                    }
-
-                    for (int i = 0; i < DecksInShipCount; i++)
-                        Ships[Cell += 11] = new Ship();
-
-                    ShowHorizontalShips(DecksInShipCount, CellNumber);
-                    for (int i = 0; i < DecksInShipCount; i++)
-                        UsersField.field[indexes.I_index, indexes.J_index + i] = ShipsMark;
-
-                    return;
-                }
-            }
+         
 
         }
 
