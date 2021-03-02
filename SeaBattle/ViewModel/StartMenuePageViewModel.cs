@@ -47,7 +47,7 @@ namespace SeaBattle.ViewModel
 
         private void StartCommandAction(object p)
         {
-            FieldCreatingPage = new FieldCreatingPage(mainWindowViewModel);
+            FieldCreatingPage = new FieldCreatingPage();
             mainWindowViewModel.OneDeckShip = 4;
             mainWindowViewModel.TwoDeckShip = 3;
             mainWindowViewModel.ThrieDeckShip = 2;

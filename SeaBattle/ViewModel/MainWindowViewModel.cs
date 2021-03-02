@@ -35,6 +35,7 @@ namespace SeaBattle.ViewModel
         private string cellNumber;
         private int shipsDecksCount;
         private bool shipsDirection = true;
+        private bool isDroped = true;
         private int FirstDecksIndex;
 
 
@@ -45,9 +46,20 @@ namespace SeaBattle.ViewModel
         #endregion
 
         #region PUblic Data
+        public Page StartMenue { get; set; }
         public IEnumerable<SolidColorBrush> colors { get; }
         public IEnumerable<Ship> ships { get; }
-
+        #region Commands
+        public ICommand ShipsAutoGeneration { get; set; }
+        public ICommand ReadyCommand { get; set; }
+        public ICommand CleanField { get; set; }
+        public ICommand DragCommand { get; set; }
+        public ICommand NewShipAssignmentCommand { get; set; }
+        public ICommand ExitCommand { get; set; }
+        public ICommand RulesCommand { get; set; }
+        public ICommand CreatingShipsCommand { get; set; }
+        public ICommand NewGameCommand { get; set; }
+        #endregion
         public ObservableCollection<Brush> Color
         {
             get => _color;
@@ -84,15 +96,6 @@ namespace SeaBattle.ViewModel
             get { return _fourDeckShip; }
             set => Set(ref _fourDeckShip, value);
         }
-        public Page StartMenue { get; set; }
-
-
-        public ICommand DragCommand { get; set; }
-        public ICommand NewShipAssignmentCommand { get; set; }
-        public ICommand ExitCommand { get; set; }
-        public ICommand RulesCommand { get; set; }
-        public ICommand CreatingShipsCommand { get; set; }
-        public ICommand NewGameCommand { get; set; }
         #endregion
         #endregion
 
@@ -105,6 +108,10 @@ namespace SeaBattle.ViewModel
             RulesCommand = new Command(RulesCommandAction, CanUseRulesCommand);
             NewShipAssignmentCommand = new Command(ShipAssignmentCommandAction, CanUseNewShipAssignmentCommand);
             NewGameCommand = new Command(NewGameCommandAction, CanUseNewGameCommand);
+
+            ShipsAutoGeneration = new Command(ShipsAutoGenerationAction, CanUseCommands);
+            ReadyCommand = new Command(ReadyCommandAction, CanUseCommands);
+            CleanField = new Command(CelanTheFieldAction, CanUseCommands);
             #endregion
             StartMenue = new StartMenuePage(this);
             CurrentPage = StartMenue;
@@ -132,10 +139,22 @@ namespace SeaBattle.ViewModel
                 return true;
             return false;
         }
-
+        private bool CanUseCommands(object p) => true;
         #endregion
 
         #region Commands Actions
+        private void ShipsAutoGenerationAction(object p)
+        {
+
+        }
+        private void ReadyCommandAction(object p)
+        {
+
+        }
+        private void CelanTheFieldAction(object p)
+        {
+
+        }
         private void NewGameCommandAction(object p)
         {
             OneDeckShip = 4;
@@ -157,7 +176,7 @@ namespace SeaBattle.ViewModel
                     Border = new Thickness(0.5)
                 };
             }
-            CurrentPage = new FieldCreatingPage(this);
+            CurrentPage = new FieldCreatingPage();
         }
         private void ExitCommandAction(object p)
         {
@@ -239,7 +258,7 @@ namespace SeaBattle.ViewModel
             if (direction is true)
                 for (int i = 0; i < shipsDecksCount; i++)
                 {
-                    if (Cell + i > 121) return;
+                    if (Cell + i >= 121) return;
                     Color[Cell + i] = new SolidColorBrush(Colors.White);
                     Color[Cell + i].Opacity = 1;
                 }
@@ -447,6 +466,7 @@ namespace SeaBattle.ViewModel
             }
 
         }
+
         #region ShowShips
         private void ShipsOptions(int cell, string Path, bool Direction = true)
         {
@@ -532,32 +552,26 @@ namespace SeaBattle.ViewModel
             Button lb = sender as Button;
             shipsDecksCount = CountingDecks(lb.Name);
             if (lb.Content is null) return;
+            isDroped = false;
             shipsDirection = Ships[Convert.ToInt32(cellNumber)].isHorizontal;
             DragDrop.DoDragDrop(lb, lb.Content, DragDropEffects.Copy);
-            if(lb.Content is null)
+            if(isDroped is false)
                 switch (shipsDecksCount)
                 {
-                    default:
-                        break;
-                    case 4:
-                        FourDeckShip++;
-                        break;
-                    case 3:
-                        ThrieDeckShip++;
-                        break;
-                    case 2:
-                        TwoDeckShip++;
-                        break;
-                    case 1:
-                        OneDeckShip++;
-                        break;
+                    default: break;
+                    case 4:FourDeckShip++; break;
+                    case 3:ThrieDeckShip++; break;
+                    case 2:TwoDeckShip++; break;
+                    case 1:OneDeckShip++; break;
                 }
         }
         public void DropAction(object sender, DragEventArgs e)
         {
+            isDroped = true;
             FrameworkElement feSource = e.Source as FrameworkElement;
             int PreviousCell = Convert.ToInt32(cellNumber);
             CellIndex PreviousCellIndexes = CellsConverter.ConverCellsToIndexes(Convert.ToInt32(PreviousCell));
+            Color = new ObservableCollection<Brush>(colors);
 
             int NewCell = SearchCell(feSource.Name);
             if (NewCell is -1)

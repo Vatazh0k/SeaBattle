@@ -19,7 +19,9 @@
             </Setter>
         </Style>
     </Page.Resources>
-
+    <Page.DataContext>
+        <vm:MainWindowViewModel/>
+    </Page.DataContext>
     <Grid>
 
         <Label Margin="142,89,78,91"
