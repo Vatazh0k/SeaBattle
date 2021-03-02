@@ -147,7 +147,11 @@ namespace SeaBattle.ViewModel
         #region Commands Actions
         private void ShipsAutoGenerationAction(object p)
         {
-
+            CleanField();
+            UsersField.FieldAutoGeneration(UsersField.field);
+            Ships = ShipsAssignment(UsersField.field);
+            CleanShips();
+            
         }
         private void CleanFieldCommandAction(object p)
         {
@@ -241,12 +245,47 @@ namespace SeaBattle.ViewModel
             Ships = new ObservableCollection<Ship>(ships);
             CurrentPage = new FieldCreatingPage(this);
         }
+        private ObservableCollection<Ship> ShipsAssignment(string[,] Field)
+        {
+            int DecksCount;
+            bool Direction;
+            for (int i = 0; i < 11; i++)
+            {
+                for (int j = 0; j < 11; j++)
+                {
+                    if (Ships[GetCell(i, j)].isOnField is true) continue;
+                    if (Field[i, j] is ShipsMark)
+                    {
+                        int FirstDeckInde = 0;
+                        Direction = UsersField.DeterminingTheDirection(i, j, UsersField.field);
+                        DecksCount = UsersField.CountingDecks(UsersField.field, i, j, ref FirstDeckInde, Direction);
+                        if (Direction)
+                        {
+                            ShowHorizontalShips(DecksCount, GetCell(i, j));
+                        }
+                        if (!Direction)
+                        {
+                            ShowVerticalShips(DecksCount, GetCell(i, j));
+                        }
+                    }
+                }
+            }
+
+            return Ships;
+        }
         private void ShipsReplenishment()
         {
             FourDeckShip = 1;
             ThrieDeckShip = 2;
             TwoDeckShip = 3;
             OneDeckShip = 4;
+        }
+        private void CleanShips()
+        {
+            FourDeckShip = 0;
+            ThrieDeckShip = 0;
+            TwoDeckShip = 0;
+            OneDeckShip = 0;
         }
         private void SearchShipsType(int cell, string ComparableString)
         {
@@ -285,9 +324,17 @@ namespace SeaBattle.ViewModel
                 case 4: FourDeckShip--; break;
             }
         }
+        private int GetCell(int i, int j)
+        {
+            return i * 11 + j;
+        }
         private bool CanPutShip(int Cell, int DecksCount, int FirstDeckIndex = 0, bool Direction = true)
         {
-            Cell -= FirstDeckIndex;
+            if (Direction is true)
+                Cell -= FirstDeckIndex;
+            else
+                Cell -= FirstDeckIndex * 11;
+
             CellIndex Indexes = CellsConverter.ConverCellsToIndexes(Cell);
             bool CanPutShip = UsersField.CanPutShip(UsersField.field, Indexes.I_index, Indexes.J_index, DecksCount, Direction);
 
@@ -324,7 +371,7 @@ namespace SeaBattle.ViewModel
             CellIndex Indexes = CellsConverter.ConverCellsToIndexes(Cell);
 
             int FirstDecksIndex = 0;
-            int DecksCount = GameProcess.CountingDecks(UsersField.field, Indexes.I_index, Indexes.J_index, ref FirstDecksIndex, Ships[Cell].isHorizontal);
+            int DecksCount = UsersField.CountingDecks(UsersField.field, Indexes.I_index, Indexes.J_index, ref FirstDecksIndex, Ships[Cell].isHorizontal);
 
 
 
@@ -374,7 +421,7 @@ namespace SeaBattle.ViewModel
             CellIndex indexes = CellsConverter.ConverCellsToIndexes(CellNumber);
             int CurrentDeck = 0;
 
-            int DecksInShipCount = GameProcess.CountingDecks
+            int DecksInShipCount = UsersField.CountingDecks
             (UsersField.field, indexes.I_index, indexes.J_index, ref CurrentDeck, Ships[CellNumber].isHorizontal);
 
             int FirstDeckOfHorizontalShip = indexes.J_index - CurrentDeck;
@@ -621,7 +668,7 @@ namespace SeaBattle.ViewModel
 
                 if (UsersField.field[_cellIndexes.I_index, _cellIndexes.J_index] is null)
                     goto PositionValidation;
-                int DecksCount = GameProcess.CountingDecks
+                int DecksCount = UsersField.CountingDecks
                 (UsersField.field, _cellIndexes.I_index, _cellIndexes.J_index, ref FirstDecksIndex, Ships[Convert.ToInt32(cellNumber)].isHorizontal);
                 DeleteShip(Convert.ToInt32(cellNumber), _cellIndexes, FirstDecksIndex, DecksCount);
             }

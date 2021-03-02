@@ -174,8 +174,9 @@ namespace SeaBattle.ViewModel
                             int FirstIndex = _indexes.I_index;
                             int SecondIndex = _indexes.J_index;
 
-                            int DecksCount = GameProcess.CountingDecks
-                        (userField, _indexes.I_index, _indexes.J_index, ref IndexOfTheFirstShipsDeck, vm.Ships[Cell].isHorizontal);
+                            int DecksCount = 4;
+                        //    int DecksCount = GameProcess.CountingDecks
+                        //(userField, _indexes.I_index, _indexes.J_index, ref IndexOfTheFirstShipsDeck, vm.Ships[Cell].isHorizontal);
 
                             _ = vm.Ships[Cell].isHorizontal is false ?
                            FirstIndex = _indexes.I_index - IndexOfTheFirstShipsDeck :

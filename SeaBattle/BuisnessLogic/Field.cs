@@ -29,13 +29,73 @@ namespace SeaBattle.BuisnessLogic
 
             return field;
         }
+        public int CountingDecks(string[,] Field, int i, int j, ref int firtShipDeck, bool isHorizontal = true)
+        {
+            const string MissedMark = "X";
+            int GeneralDeksCountInShip = 1;
+            firtShipDeck = 0;
+            try
+            {
+                for (int k = 1; k <= 4; k++)
+                {
+                    int firstIndex = i;
+                    int secondIndex = j;
+
+                    _ = isHorizontal is true ? secondIndex = j + k : firstIndex = i + k;
+
+                    if (String.IsNullOrEmpty(Field[firstIndex, secondIndex]) || (Field[firstIndex, secondIndex] == MissedMark))
+                        break;
+
+                    GeneralDeksCountInShip++;
+                }
+            }
+            catch (Exception) { }
+            try
+            {
+                for (int k = -1; k >= -4; k--)
+                {
+                    int firstIndex = i;
+                    int secondIndex = j;
+
+                    _ = isHorizontal is true ? secondIndex = j + k : firstIndex = i + k;
+
+                    if (String.IsNullOrEmpty(Field[firstIndex, secondIndex]) || (Field[firstIndex, secondIndex] == MissedMark))
+                        break;
+
+                    firtShipDeck++;
+                    GeneralDeksCountInShip++;
+                }
+            }
+            catch (Exception) { }
+
+            return GeneralDeksCountInShip;
+
+        }
+        public bool DeterminingTheDirection(int IndexOfFirstDeck, int secondIndex, string[,] Field)
+        {
+            bool isHorizontal = true;
+            
+            for (int i = IndexOfFirstDeck; i < 11; i++)
+            {
+                for (int j = secondIndex; j < 11; j++)
+                {
+                    if (j + 1 <= 10 && Field[i, j + 1] is ShipsMark) return true;
+         
+                    if (i + 1 <= 10 && Field[i + 1, j] is ShipsMark) return false;
+
+
+                }
+            }
+
+            return isHorizontal;
+        }
         public string[,] FieldAutoGeneration(string[,] Field)
         {
             var Random = new Random();
-            int ShipCount = 4;
-            int DeksCount = 1;
+            int ShipCount = 1;
+            int DeksCount = 4;
 
-            for (int i = ShipCount; i >= 1; i--)
+            for (int i = ShipCount; i <= 4; i++)
             {
                 for (int j = 1; j <= ShipCount; j++)
                 {
@@ -46,7 +106,7 @@ namespace SeaBattle.BuisnessLogic
 
                     bool isHorizontal = direction is 1 ? true : false;
 
-                    bool canPutShip = CanPutShip(Field, firstIndex, DeksCount, DeksCount, isHorizontal);
+                    bool canPutShip = CanPutShip(Field, firstIndex, secondIndex, DeksCount, isHorizontal);
 
                     if (canPutShip is false)
                     {
@@ -58,18 +118,18 @@ namespace SeaBattle.BuisnessLogic
 
                         for (int k = 0; k < DeksCount; k++)
                         {
-                            //if (isHorizontal is true)
-                            //    ComputerField[firstIndex, secondIndex + k + 1] = ShipsMark;
+                            if (isHorizontal is true)
+                                Field[firstIndex, secondIndex + k ] = ShipsMark;
 
-                            //if (isHorizontal is false)
-                            //    ComputerField[firstIndex + k + 1, secondIndex] = ShipsMark;
+                            if (isHorizontal is false)
+                                Field[firstIndex + k, secondIndex] = ShipsMark;
                         }
 
                     }
                 }
 
-                ShipCount--;
-                DeksCount++;
+                ShipCount++;
+                DeksCount--;
             }
             return Field;
         }
