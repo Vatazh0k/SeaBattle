@@ -28,22 +28,20 @@ namespace SeaBattle.ViewModel
         private ObservableCollection<Brush> _color;
         private ObservableCollection<Ship> _ships;
         private Page _CurrentPage;
-        private const string ShipsMark = "O";
+        private Field UsersField;
+        private Field ComputerField;
 
+        private const string ShipsMark = "O";
         private string cellNumber;
         private int shipsDecksCount;
         private bool shipsDirection = true;
         private int FirstDecksIndex;
-
-        Field UsersField;
-        Field ComputerField;
 
 
         private int _oneDeckShip;
         private int _twoDeckShip;
         private int _thireDeckShip;
         private int _fourDeckShip;
-
         #endregion
 
         #region PUblic Data
@@ -145,6 +143,11 @@ namespace SeaBattle.ViewModel
             ThrieDeckShip = 2;
             FourDeckShip = 1;
 
+            UsersField = new Field();
+            ComputerField = new Field();
+
+            Color = new ObservableCollection<Brush>(_color);
+
             for (int i = 0; i < 121; i++)
             {
                 Ships[i] = new Ship
@@ -199,24 +202,15 @@ namespace SeaBattle.ViewModel
             cellNumber = null;
             switch (ShipsName)
             {
-                default:
-                    break;
-                case "FourDeckShip":
-                    shipsDecksCount = 4;
-                    if (FourDeckShip is 0) return;
-                    break;
-                case "ThrieDeckShip":
-                    shipsDecksCount = 3;
-                    if (ThrieDeckShip is 0) return;
-                    break;
-                case "DoubleDeckShip":
-                    shipsDecksCount = 2;
-                    if (TwoDeckShip is 0) return;
-                    break;
-                case "OneDeckShip":
-                    shipsDecksCount = 1;
-                    if (OneDeckShip is 0) return;
-                    break;
+                default:  break;
+                case "FourDeckShip": shipsDecksCount = 4;
+                    if (FourDeckShip is 0) return; break;
+                case "ThrieDeckShip": shipsDecksCount = 3;
+                    if (ThrieDeckShip is 0) return; break;
+                case "DoubleDeckShip": shipsDecksCount = 2;
+                    if (TwoDeckShip is 0) return; break;
+                case "OneDeckShip": shipsDecksCount = 1;
+                    if (OneDeckShip is 0) return; break;
             }
             shipsDirection = true;
             DragDrop.DoDragDrop(lb, lb.Content, DragDropEffects.Copy);
@@ -225,103 +219,41 @@ namespace SeaBattle.ViewModel
         #endregion
 
         #region Private Methods
-        private void ChangeShipsDirection(int CellNumber)
+        #region ColorEffects
+        private void ShowGrinHint(int cell, int i_index, int Direction = 1)
         {
-            Color = new ObservableCollection<Brush>(colors);
-            CellIndex indexes = CellsConverter.ConverCellsToIndexes(CellNumber);
-            int CurrentDeck = 0;
-
-            int DecksInShipCount = GameProcess.CountingDecks
-            (UsersField.field, indexes.I_index, indexes.J_index, ref CurrentDeck, Ships[CellNumber].isHorizontal);
-
-            int FirstDeckOfHorizontalShip = indexes.J_index - CurrentDeck;
-            int FirstDeckOfVerticalShip = indexes.I_index - CurrentDeck;
-
-            if (Ships[CellNumber].isHorizontal is true)
-                for (int i = 0; i < DecksInShipCount; i++)
-                    UsersField.field[indexes.I_index, FirstDeckOfHorizontalShip + i] = null;
-
-            if (Ships[CellNumber].isHorizontal is false)
-                for (int i = 0; i < DecksInShipCount; i++)
-                    UsersField.field[FirstDeckOfVerticalShip + i, indexes.J_index] = null;
-
-            bool canPutShip = UsersField.CanPutShip
-            (UsersField.field, indexes.I_index, indexes.J_index, DecksInShipCount, !Ships[CellNumber].isHorizontal);
-
-            if (canPutShip is false)
+            Color[cell + i_index * Direction] = new SolidColorBrush(Colors.Green);
+            Color[cell + i_index * Direction].Opacity = 0.4;
+        }
+        private void ShowRedHint(int cell, int index, int Direction = 1)
+        {
+            for (int j = 0; j < shipsDecksCount; j++)
             {
-                if (Ships[CellNumber].isHorizontal is true)
-                    for (int i = 0; i < DecksInShipCount; i++)
-                        UsersField.field[indexes.I_index, FirstDeckOfHorizontalShip + i] = ShipsMark;
-
-                if (Ships[CellNumber].isHorizontal is false)
-                    for (int i = 0; i < DecksInShipCount; i++)
-                        UsersField.field[FirstDeckOfVerticalShip + i, indexes.J_index] = ShipsMark;//МЕТОДОМ!!! переставлять верт корабли
-                //if (Ships[CellNumber].isHorizontal is true)
-                //    CantPutVerticalShipHint(DecksInShipCount, indexes, UsersField.field, CellNumber);
-
-                //if (Ships[CellNumber].isHorizontal is false)
-                //    CantPutHorizontalShipHint(DecksInShipCount, indexes, UsersField.field, CellNumber);
-                return;
+                if (index + j == 11) break;
+                Color[cell + j * Direction] = new SolidColorBrush(Colors.Red);
+                Color[cell + j * Direction].Opacity = 0.4;
             }
-            if (canPutShip is true)
-            {
-                if (Ships[CellNumber].isHorizontal is true)
+        }
+        private void ReduceColor(int Cell, bool direction = true)
+        {
+            if (direction is true)
+                for (int i = 0; i < shipsDecksCount; i++)
                 {
-                    int Cell = CellNumber - CurrentDeck;
-
-                    for (int i = 0; i < DecksInShipCount; i++)
-                    {
-                        Ships[Cell + i] = new Ship();
-                    }
-
-                    ShowVerticalShips(DecksInShipCount, CellNumber);
-                    for (int i = 0; i < DecksInShipCount; i++)
-                    {
-                        UsersField.field[indexes.I_index + i, indexes.J_index ] = ShipsMark;
-                    }
-                    return;
+                    if (Cell + i > 121) return;
+                    Color[Cell + i] = new SolidColorBrush(Colors.White);
+                    Color[Cell + i].Opacity = 1;
                 }
-                if (Ships[CellNumber].isHorizontal is false)
+
+            if (direction is false)
+                for (int i = 0; i < shipsDecksCount; i++)
                 {
-                    int Cell = CellNumber;
-
-                    switch (CurrentDeck)
-                    {
-                        default:
-                            break;
-
-                        case 0:
-                            Cell -= 11;
-                            break;
-
-                        case 1:
-                            Cell -= 22;
-                            break;
-                        case 2:
-                            Cell -= 33;
-                            break;
-                        case 3:
-                            Cell -= 44;
-                            break;
-
-                    }
-
-                    for (int i = 0; i < DecksInShipCount; i++)
-                    {
-                        Ships[Cell += 11] = new Ship();
-                    }
-
-                    ShowHorizontalShips(DecksInShipCount, CellNumber);
-                    for (int i = 0; i < DecksInShipCount; i++)
-                    {
-                        UsersField.field[indexes.I_index, indexes.J_index + i] = ShipsMark;
-                    }
-                    return;
+                    if (Cell + i * 11 > 121) return;
+                    Color[Cell + i * 11] = new SolidColorBrush(Colors.White);
+                    Color[Cell + i * 11].Opacity = 1;
                 }
-            }
 
         }
+        #endregion
         private void SearchShipsType(int cell, string ComparableString)
         {
 
@@ -347,119 +279,18 @@ namespace SeaBattle.ViewModel
             }
 
         }
-        private void ShipsOptions(int cell, string Path, bool Direction = true)
-        {
-            Ships[cell] = new Ship
-            {
-                Content = new Image
-                {
-                    Source = new BitmapImage(new Uri(Path, UriKind.Relative)),
-                    Stretch = Stretch.Fill
-                },
-                isHorizontal = Direction,
-                isOnField = true,
-                Border = new Thickness(1),
-            };
-        }
         private void ReduceShipsCount(int DeckCount)
         {
             switch (DeckCount)
             {
-                default:
-                    break;
+                default: break;
 
-                case 1:
-                    OneDeckShip--;
-                    break;
-                case 2:
-                    TwoDeckShip--;
-                    break;
-                case 3:
-                    ThrieDeckShip--;
-                    break;
-                case 4:
-                    FourDeckShip--;
-                    break;
+                case 1: OneDeckShip--; break;
+                case 2: TwoDeckShip--; break;
+                case 3: ThrieDeckShip--; break;
+                case 4: FourDeckShip--; break;
             }
         }
-        private void ReduceColor(int Cell, bool direction = true)
-        {
-            if(direction is true)
-            for (int i = 0; i < shipsDecksCount; i++)
-            {
-                Color[Cell + i] = new SolidColorBrush(Colors.White);
-                Color[Cell + i].Opacity = 1;
-            }
-
-            if (direction is false)
-            for (int i = 0; i < shipsDecksCount; i++)
-            {
-                Color[Cell + i*11] = new SolidColorBrush(Colors.White);
-                Color[Cell + i*11].Opacity = 1;
-            }
-
-        }
-        private ObservableCollection<Ship> ShowVerticalShips(int DecksCount, int cell)
-        {
-            switch (DecksCount)
-            {
-                default:
-                    break;
-
-                case 1:
-                    ShipsOptions(cell, PathToShipContent.Vertical_OneDeckShip, false);
-                    break;
-                case 2:
-                    ShipsOptions(cell, PathToShipContent.Vertical_TwoDeckShip_FirstDeck, false);
-                    ShipsOptions(cell + 11, PathToShipContent.Vertical_TwoDeckShip_SecondDeck, false);
-                    break;
-                case 3:
-                    ShipsOptions(cell, PathToShipContent.Vertical_ThrieDeckShip_FirstDeck, false);
-                    ShipsOptions(cell + 11, PathToShipContent.Vertical_ThrieDeckShip_SecondDeck, false);
-                    ShipsOptions(cell + 22, PathToShipContent.Vertical_ThrieDeckShip_ThirdDeck, false);
-                    break;
-                case 4:
-                    ShipsOptions(cell, PathToShipContent.Vertical_FourDeckShip_FirstDeck, false);
-                    ShipsOptions(cell + 11, PathToShipContent.Vertical_FourDeckShip_SecondDeck, false);
-                    ShipsOptions(cell + 22, PathToShipContent.Vertical_FourDeckShip_ThirdDeck, false);
-                    ShipsOptions(cell + 33, PathToShipContent.Vertical_FourDeckShip_FourDeck, false);
-                    break;
-
-            }
-
-            return Ships;
-        }
-        private ObservableCollection<Ship> ShowHorizontalShips(int DecksCount, int cell)
-        {
-            switch (DecksCount)
-            {
-                default:
-                    break;
-
-                case 1:
-                    ShipsOptions(cell, PathToShipContent.OneDeckShip);
-                    break;
-                case 2:
-                    ShipsOptions(cell, PathToShipContent.TwoDeckShip_FirstDeck);
-                    ShipsOptions(cell + 1, PathToShipContent.TwoDeckShip_SecondDeck);
-                    break;
-                case 3:
-                    ShipsOptions(cell, PathToShipContent.ThrieDeckShip_FirstDeck);
-                    ShipsOptions(cell + 1, PathToShipContent.ThrieDeckShip_SecondDeck);
-                    ShipsOptions(cell + 2, PathToShipContent.ThrieDeckShip_ThirdDeck);
-                    break;
-                case 4:
-                    ShipsOptions(cell, PathToShipContent.FourDeckShip_FirstDeck);
-                    ShipsOptions(cell + 1, PathToShipContent.FourDeckShip_SecondDeck);
-                    ShipsOptions(cell + 2, PathToShipContent.FourDeckShip_ThirdDeck);
-                    ShipsOptions(cell + 3, PathToShipContent.FourDeckShip_FourDeck);
-                    break;
-
-            }
-
-
-            return Ships;
-        } 
         private bool CanPutShip(int Cell, int DecksCount, int FirstDeckIndex = 0, bool Direction = true)
         {
             Cell -= FirstDeckIndex;
@@ -530,16 +361,6 @@ namespace SeaBattle.ViewModel
                 }
             }
         }
-        public void DragTheShipOnTheFieldAction(object sender, MouseButtonEventArgs e)
-        {
-            Color = new ObservableCollection<Brush>(colors);
-            Button lb = sender as Button;
-            shipsDecksCount = CountingDecks(lb.Name);
-            if (lb.Content is null) return;
-            shipsDirection = Ships[Convert.ToInt32(cellNumber)].isHorizontal;
-            DragDrop.DoDragDrop(lb, lb.Content, DragDropEffects.Copy);
-
-        }
         private int SearchCell(string CellName)
         {
             string CellsNumber = "";
@@ -552,6 +373,185 @@ namespace SeaBattle.ViewModel
             if (isParsed is false) return -1;
 
             return NewCell;
+        }
+        private void ChangeShipsDirection(int CellNumber)
+        {
+            Color = new ObservableCollection<Brush>(colors);
+            CellIndex indexes = CellsConverter.ConverCellsToIndexes(CellNumber);
+            int CurrentDeck = 0;
+
+            int DecksInShipCount = GameProcess.CountingDecks
+            (UsersField.field, indexes.I_index, indexes.J_index, ref CurrentDeck, Ships[CellNumber].isHorizontal);
+
+            int FirstDeckOfHorizontalShip = indexes.J_index - CurrentDeck;
+            int FirstDeckOfVerticalShip = indexes.I_index - CurrentDeck;
+
+            if (Ships[CellNumber].isHorizontal is true)
+                for (int i = 0; i < DecksInShipCount; i++)
+                    UsersField.field[indexes.I_index, FirstDeckOfHorizontalShip + i] = null;
+
+            if (Ships[CellNumber].isHorizontal is false)
+                for (int i = 0; i < DecksInShipCount; i++)
+                    UsersField.field[FirstDeckOfVerticalShip + i, indexes.J_index] = null;
+
+            bool canPutShip = UsersField.CanPutShip
+            (UsersField.field, indexes.I_index, indexes.J_index, DecksInShipCount, !Ships[CellNumber].isHorizontal);
+
+            if (canPutShip is false)
+            {
+                if (Ships[CellNumber].isHorizontal is true)
+                    for (int i = 0; i < DecksInShipCount; i++)
+                        UsersField.field[indexes.I_index, FirstDeckOfHorizontalShip + i] = ShipsMark;
+
+                if (Ships[CellNumber].isHorizontal is false)
+                    for (int i = 0; i < DecksInShipCount; i++)
+                        UsersField.field[FirstDeckOfVerticalShip + i, indexes.J_index] = ShipsMark;
+                return;
+            }
+            if (canPutShip is true)
+            {
+                if (Ships[CellNumber].isHorizontal is true)
+                {
+                    int Cell = CellNumber - CurrentDeck;
+                    for (int i = 0; i < DecksInShipCount; i++)
+                        Ships[Cell + i] = new Ship();
+
+                    ShowVerticalShips(DecksInShipCount, CellNumber);
+                    for (int i = 0; i < DecksInShipCount; i++)
+                        UsersField.field[indexes.I_index + i, indexes.J_index] = ShipsMark;
+
+                    return;
+                }
+                if (Ships[CellNumber].isHorizontal is false)
+                {
+                    int Cell = CellNumber;
+                    switch (CurrentDeck)
+                    {
+                        default: break;
+                        case 0: Cell -= 11; break;
+                        case 1: Cell -= 22; break;
+                        case 2: Cell -= 33; break;
+                        case 3: Cell -= 44; break;
+
+                    }
+
+                    for (int i = 0; i < DecksInShipCount; i++)
+                        Ships[Cell += 11] = new Ship();
+
+                    ShowHorizontalShips(DecksInShipCount, CellNumber);
+                    for (int i = 0; i < DecksInShipCount; i++)
+                        UsersField.field[indexes.I_index, indexes.J_index + i] = ShipsMark;
+
+                    return;
+                }
+            }
+
+        }
+        #region ShowShips
+        private void ShipsOptions(int cell, string Path, bool Direction = true)
+        {
+            Ships[cell] = new Ship
+            {
+                Content = new Image
+                {
+                    Source = new BitmapImage(new Uri(Path, UriKind.Relative)),
+                    Stretch = Stretch.Fill
+                },
+                isHorizontal = Direction,
+                isOnField = true,
+                Border = new Thickness(1),
+            };
+        }
+        private ObservableCollection<Ship> ShowVerticalShips(int DecksCount, int cell)
+        {
+            switch (DecksCount)
+            {
+                default:
+                    break;
+
+                case 1:
+                    ShipsOptions(cell, PathToShipContent.Vertical_OneDeckShip, false);
+                    break;
+                case 2:
+                    ShipsOptions(cell, PathToShipContent.Vertical_TwoDeckShip_FirstDeck, false);
+                    ShipsOptions(cell + 11, PathToShipContent.Vertical_TwoDeckShip_SecondDeck, false);
+                    break;
+                case 3:
+                    ShipsOptions(cell, PathToShipContent.Vertical_ThrieDeckShip_FirstDeck, false);
+                    ShipsOptions(cell + 11, PathToShipContent.Vertical_ThrieDeckShip_SecondDeck, false);
+                    ShipsOptions(cell + 22, PathToShipContent.Vertical_ThrieDeckShip_ThirdDeck, false);
+                    break;
+                case 4:
+                    ShipsOptions(cell, PathToShipContent.Vertical_FourDeckShip_FirstDeck, false);
+                    ShipsOptions(cell + 11, PathToShipContent.Vertical_FourDeckShip_SecondDeck, false);
+                    ShipsOptions(cell + 22, PathToShipContent.Vertical_FourDeckShip_ThirdDeck, false);
+                    ShipsOptions(cell + 33, PathToShipContent.Vertical_FourDeckShip_FourDeck, false);
+                    break;
+
+            }
+
+            return Ships;
+        }
+        private ObservableCollection<Ship> ShowHorizontalShips(int DecksCount, int cell)
+        {
+            switch (DecksCount)
+            {
+                default:
+                    break;
+
+                case 1:
+                    ShipsOptions(cell, PathToShipContent.OneDeckShip);
+                    break;
+                case 2:
+                    ShipsOptions(cell, PathToShipContent.TwoDeckShip_FirstDeck);
+                    ShipsOptions(cell + 1, PathToShipContent.TwoDeckShip_SecondDeck);
+                    break;
+                case 3:
+                    ShipsOptions(cell, PathToShipContent.ThrieDeckShip_FirstDeck);
+                    ShipsOptions(cell + 1, PathToShipContent.ThrieDeckShip_SecondDeck);
+                    ShipsOptions(cell + 2, PathToShipContent.ThrieDeckShip_ThirdDeck);
+                    break;
+                case 4:
+                    ShipsOptions(cell, PathToShipContent.FourDeckShip_FirstDeck);
+                    ShipsOptions(cell + 1, PathToShipContent.FourDeckShip_SecondDeck);
+                    ShipsOptions(cell + 2, PathToShipContent.FourDeckShip_ThirdDeck);
+                    ShipsOptions(cell + 3, PathToShipContent.FourDeckShip_FourDeck);
+                    break;
+
+            }
+
+
+            return Ships;
+        }
+        #endregion
+
+        #region DragDrop
+        public void DragTheShipOnTheFieldAction(object sender, MouseButtonEventArgs e)
+        {
+            Color = new ObservableCollection<Brush>(colors);
+            Button lb = sender as Button;
+            shipsDecksCount = CountingDecks(lb.Name);
+            if (lb.Content is null) return;
+            shipsDirection = Ships[Convert.ToInt32(cellNumber)].isHorizontal;
+            DragDrop.DoDragDrop(lb, lb.Content, DragDropEffects.Copy);
+            if(lb.Content is null)
+                switch (shipsDecksCount)
+                {
+                    default:
+                        break;
+                    case 4:
+                        FourDeckShip++;
+                        break;
+                    case 3:
+                        ThrieDeckShip++;
+                        break;
+                    case 2:
+                        TwoDeckShip++;
+                        break;
+                    case 1:
+                        OneDeckShip++;
+                        break;
+                }
         }
         public void DropAction(object sender, DragEventArgs e)
         {
@@ -586,10 +586,7 @@ namespace SeaBattle.ViewModel
                 ReduceShipsCount(shipsDecksCount);
                 ReduceColor(NewCell, shipsDirection);
             }
-            if (canPutShip is false)
-            {
-                //redline
-            }
+          
         }
         public void DragLeave(object sender, DragEventArgs e)
         {   
@@ -598,12 +595,12 @@ namespace SeaBattle.ViewModel
                 CellIndex _cellIndexes = CellsConverter.ConverCellsToIndexes(Convert.ToInt32(cellNumber));
 
                 if (UsersField.field[_cellIndexes.I_index, _cellIndexes.J_index] is null)
-                    goto CheckThePositionValidation;
+                    goto PositionValidation;
                 int DecksCount = GameProcess.CountingDecks
                 (UsersField.field, _cellIndexes.I_index, _cellIndexes.J_index, ref FirstDecksIndex, Ships[Convert.ToInt32(cellNumber)].isHorizontal);
                 DeleteShip(Convert.ToInt32(cellNumber), _cellIndexes, FirstDecksIndex, DecksCount);
             }
-            CheckThePositionValidation:
+            PositionValidation:
             FrameworkElement feSource = e.Source as FrameworkElement;
 
             int cell = SearchCell(feSource.Name);
@@ -611,26 +608,7 @@ namespace SeaBattle.ViewModel
 
             CellIndex cellIndexes = CellsConverter.ConverCellsToIndexes(cell);
 
-            if (shipsDirection is true)
-            {
-                for (int i = 0; i < shipsDecksCount; i++)
-                {
-                    if (cellIndexes.J_index + i == 11) break;
-                    Color[cell + i] = new SolidColorBrush(Colors.White);
-                    Color[cell + i].Opacity = 1;
-
-                }
-            }
-            if (shipsDirection is false)
-            {
-                for (int i = 0; i < shipsDecksCount; i++)
-                {
-                    if (cellIndexes.I_index + i == 11) break;
-                    Color[cell + i*11] = new SolidColorBrush(Colors.White);
-                    Color[cell + i*11].Opacity = 1;
-
-                }
-            }
+            ReduceColor(cell, shipsDirection);
         }
         public void DragEnter(object sender, DragEventArgs e)
         {
@@ -649,16 +627,10 @@ namespace SeaBattle.ViewModel
                     if (!UsersField.CanPutShip(UsersField.field, cellIndexes.I_index, cellIndexes.J_index, shipsDecksCount))
                     {
 
-                        for (int j = 0; j < shipsDecksCount; j++)
-                        {
-                            if (cellIndexes.J_index + j == 11) break;
-                            Color[cell + j] = new SolidColorBrush(Colors.Red);
-                            Color[cell + j].Opacity = 0.4;
-                        }
+                        ShowRedHint(cell, cellIndexes.J_index);
                         return;
                     }
-                    Color[cell + i] = new SolidColorBrush(Colors.Green);
-                    Color[cell + i].Opacity = 0.4;
+                    ShowGrinHint(cell, i);
                 }
             }
             if (shipsDirection is false)
@@ -668,21 +640,16 @@ namespace SeaBattle.ViewModel
                     if (!UsersField.CanPutShip(UsersField.field, cellIndexes.I_index, cellIndexes.J_index, shipsDecksCount, false))
                     {
 
-                        for (int j = 0; j < shipsDecksCount; j++)
-                        {
-                            if (cellIndexes.I_index + j == 11) break;
-                            Color[cell + j*11] = new SolidColorBrush(Colors.Red);
-                            Color[cell + j*11].Opacity = 0.4;
-                        }
+                        ShowRedHint(cell, cellIndexes.I_index, 11);
                         return;
                     }
-                    Color[cell + i*11] = new SolidColorBrush(Colors.Green);
-                    Color[cell + i*11].Opacity = 0.4;
+                    ShowGrinHint(cell, i, 11);
                 }
             }
         }
         #endregion
+        #endregion
 
     }
 }  
-  
+   
