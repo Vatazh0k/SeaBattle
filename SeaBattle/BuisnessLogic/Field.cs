@@ -9,12 +9,13 @@ using System.Windows.Media;
 
 namespace SeaBattle.BuisnessLogic
 {
-    class Field
+    public class Field
     {
         public string[,] field { get; set; } = new string[11, 11];
 
         private const string ShipsMark = "O";
-        private const string MissedMark = "X";
+        private const string KilledMark = "X";
+        private const string MissedMark = " ";
         public Field()
         { }
         public bool ChangeShipsDirection(string[,] field, int cell)
@@ -82,16 +83,18 @@ namespace SeaBattle.BuisnessLogic
             return GeneralDeksCountInShip;
 
         }
-        public bool DeterminingTheDirection(int IndexOfFirstDeck, int secondIndex, string[,] Field)
+        public bool DeterminingTheDirection(int firstIndex, int secondIndex, string[,] Field)
         {
             bool isHorizontal = true;//random true or false
 
-            for (int i = IndexOfFirstDeck; i < 11; i++)
+            for (int i = firstIndex; i < 11; i++)
             {
                 for (int j = secondIndex; j < 11; j++)
                 {
                     if (Field[i, j - 1] is ShipsMark || (j + 1 <= 10 && Field[i, j + 1] is ShipsMark)) return true;
+                    if (Field[i, j - 1] is KilledMark || (j + 1 <= 10 && Field[i, j + 1] is KilledMark)) return true;
 
+                    if (Field[i - 1, j] is KilledMark || (i + 1 <= 10 && Field[i + 1, j] is KilledMark)) return false;
                     if (Field[i - 1, j] is ShipsMark || (i + 1 <= 10 && Field[i + 1, j] is ShipsMark)) return false;
                 }
             }
@@ -177,13 +180,98 @@ namespace SeaBattle.BuisnessLogic
         {
             return Field = new string[11, 11];
         }
+        public bool CanMakeDamage(string[,] field, int Cell)
+        {
+            CellIndex Indexes = CellsConverter.ConverCellsToIndexes(Cell);
+            if (field[Indexes.I_index, Indexes.J_index] is KilledMark ||
+                field[Indexes.I_index, Indexes.J_index] is MissedMark)
+            {
+                return false;
+            }
+            return true;
+        }
         public string[,] Damaging(string[,] Field, CellIndex Indexes)
         {
+
+            bool isMissed = IsMissed(Field, Indexes);
+
+            if (isMissed is true)
+            {
+                Field[Indexes.I_index, Indexes.J_index] = MissedMark;
+                return Field;
+            }
+
+            Field[Indexes.I_index, Indexes.J_index] = KilledMark;
+
+            bool isShipKilled = IsKilled(Field, Indexes);
+
+            if (isShipKilled is false)
+                return Field;
+
+            ShipsFuneral(Field, Indexes);
 
             return Field;
         }
 
         #region Private Methods
+        private void ShipsFuneral(string[,] field, CellIndex Indexes)
+        {
+            int FirstShipsDeck = 0;
+
+            bool direction = DeterminingTheDirection(Indexes.I_index, Indexes.J_index, field);
+            int DecksCount = CountingDecks(field, Indexes, ref FirstShipsDeck, direction);
+
+            int y_Axis_Ships = Indexes.I_index + 1;
+            int x_Axis_Ships = Indexes.J_index + DecksCount - FirstShipsDeck;
+
+            if (direction is false)
+            {
+                y_Axis_Ships = Indexes.I_index + DecksCount - FirstShipsDeck;
+                x_Axis_Ships = Indexes.J_index + 1;
+            }
+
+            for (int n = Indexes.I_index - 1; n <= y_Axis_Ships; n++)
+            {
+                for (int m = Indexes.J_index - 1; m <= x_Axis_Ships; m++)
+                {
+                    if (n == 11 || n == -1) continue;
+                    if (m == 11 || n == -1) break;
+                    if (field[n, m] == KilledMark) continue;
+                    field[n, m] = MissedMark;
+                }
+            }
+
+        }
+        private bool IsKilled(string[,] field, CellIndex Indexes)
+        {
+            int FirstShipsDeck = 0;
+            bool direction = DeterminingTheDirection(Indexes.I_index, Indexes.J_index, field);
+
+            int DecksCount = CountingDecks(field, Indexes, ref FirstShipsDeck, direction);
+
+            for (int i = 0; i < DecksCount; i++)
+            {
+                int I = Indexes.I_index;
+                int J = Indexes.J_index;
+
+                _ = direction is true ? 
+                    J = Indexes.J_index - FirstShipsDeck + i:
+                    I = Indexes.I_index - FirstShipsDeck + i;
+
+                if (field[I, J] is KilledMark)
+                    continue;
+
+                return false;
+               
+            }
+            return true;
+        }
+        private bool IsMissed(string[,] Field, CellIndex indexes)
+        {
+            if (Field[indexes.I_index, indexes.J_index] is ShipsMark) 
+            return false;
+            return true;
+        }
         private void ShipsModification(bool direction, CellIndex indexes, int CurrentDeck, int DecksCount, string mark)
         {
             if (direction is true)

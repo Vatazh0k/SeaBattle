@@ -8,7 +8,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -163,7 +162,7 @@ namespace SeaBattle.ViewModel
               ThrieDeckShip is 0 && FourDeckShip is 0)
             {
                 ShipsReplenishment();
-                ComputerFieldPage = new ComputerFieldPage(this);
+                ComputerFieldPage = new ComputerFieldPage(UsersField, ComputerField, this);
                 CurrentPage = ComputerFieldPage;
             }
             else
@@ -690,5 +689,4 @@ namespace SeaBattle.ViewModel
         #endregion
 
     }
-}  
-   
+}        

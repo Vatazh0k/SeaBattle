@@ -7,6 +7,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resource\Images\DeadShip\FirstDeck_DoubleDeckShip.png" />
+    <None Remove="Resource\Images\DeadShip\FirstDeck_FourDeckShip.png" />
+    <None Remove="Resource\Images\DeadShip\FirstDeck_ThrieDeckShip.png" />
+    <None Remove="Resource\Images\DeadShip\FourDeck_FourDeckShip.png" />
+    <None Remove="Resource\Images\DeadShip\OneDeckShip.png" />
+    <None Remove="Resource\Images\DeadShip\SecondDeck_DoubleDeckShip.png" />
+    <None Remove="Resource\Images\DeadShip\SecondDeck_FourDeckShip.png" />
+    <None Remove="Resource\Images\DeadShip\SecondDeck_ThrieDeckShip.png" />
+    <None Remove="Resource\Images\DeadShip\ThirdDeck_ThrieDeckShip.png" />
+    <None Remove="Resource\Images\DeadShip\ThrieDeck_FourDeckShip.png" />
     <None Remove="Resource\Images\DoubleDeckShip.png" />
     <None Remove="Resource\Images\ForPages\DoubleDeckShipForPage.png" />
     <None Remove="Resource\Images\ForPages\FourDeckShipForPage.png" />
@@ -14,7 +24,6 @@
     <None Remove="Resource\Images\ForPages\ThrieDeckShipForPage.png" />
     <None Remove="Resource\Images\FourDeckShip.png" />
     <None Remove="Resource\Images\OneDeckShip.png" />
-    <None Remove="Resource\Images\ShipsForField\DethShip.png" />
     <None Remove="Resource\Images\ShipsForField\EmptyCell.png" />
     <None Remove="Resource\Images\ShipsForField\FirstDeck_DoubleDeckShip.png" />
     <None Remove="Resource\Images\ShipsForField\FirstDeck_FourDeckShip.png" />
@@ -39,6 +48,16 @@
     <None Remove="Resource\Images\VerticalShipsForField\SecondDeck_ThrieDeckShip.png" />
     <None Remove="Resource\Images\VerticalShipsForField\ThirdDeck_ThrieDeckShip.png" />
     <None Remove="Resource\Images\VerticalShipsForField\ThrieDeck_FourDeckShip.png" />
+    <None Remove="Resource\Images\Vertical_DeadShip\FirstDeck_DoubleDeckShip.png" />
+    <None Remove="Resource\Images\Vertical_DeadShip\FirstDeck_FourDeckShip.png" />
+    <None Remove="Resource\Images\Vertical_DeadShip\FirstDeck_ThrieDeckShip.png" />
+    <None Remove="Resource\Images\Vertical_DeadShip\FourDeck_FourDeckShip.png" />
+    <None Remove="Resource\Images\Vertical_DeadShip\OneDeckShip.png" />
+    <None Remove="Resource\Images\Vertical_DeadShip\SecondDeck_DoubleDeckShip.png" />
+    <None Remove="Resource\Images\Vertical_DeadShip\SecondDeck_FourDeckShip.png" />
+    <None Remove="Resource\Images\Vertical_DeadShip\SecondDeck_ThrieDeckShip.png" />
+    <None Remove="Resource\Images\Vertical_DeadShip\ThirdDeck_ThrieDeckShip.png" />
+    <None Remove="Resource\Images\Vertical_DeadShip\ThrieDeck_FourDeckShip.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -48,6 +67,36 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Resource\Images\DeadShip\FirstDeck_DoubleDeckShip.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resource\Images\DeadShip\FirstDeck_FourDeckShip.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resource\Images\DeadShip\FirstDeck_ThrieDeckShip.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resource\Images\DeadShip\FourDeck_FourDeckShip.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resource\Images\DeadShip\OneDeckShip.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resource\Images\DeadShip\SecondDeck_DoubleDeckShip.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resource\Images\DeadShip\SecondDeck_FourDeckShip.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resource\Images\DeadShip\SecondDeck_ThrieDeckShip.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resource\Images\DeadShip\ThirdDeck_ThrieDeckShip.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resource\Images\DeadShip\ThrieDeck_FourDeckShip.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Resource\Images\DoubleDeckShip.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
@@ -67,9 +116,6 @@
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Resource\Images\OneDeckShip.png">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resource\Images\ShipsForField\DethShip.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Resource\Images\ShipsForField\EmptyCell.png">
@@ -142,6 +188,36 @@
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Resource\Images\VerticalShipsForField\ThrieDeck_FourDeckShip.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resource\Images\Vertical_DeadShip\FirstDeck_DoubleDeckShip.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resource\Images\Vertical_DeadShip\FirstDeck_FourDeckShip.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resource\Images\Vertical_DeadShip\FirstDeck_ThrieDeckShip.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resource\Images\Vertical_DeadShip\FourDeck_FourDeckShip.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resource\Images\Vertical_DeadShip\OneDeckShip.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resource\Images\Vertical_DeadShip\SecondDeck_DoubleDeckShip.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resource\Images\Vertical_DeadShip\SecondDeck_FourDeckShip.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resource\Images\Vertical_DeadShip\SecondDeck_ThrieDeckShip.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resource\Images\Vertical_DeadShip\ThirdDeck_ThrieDeckShip.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resource\Images\Vertical_DeadShip\ThrieDeck_FourDeckShip.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>

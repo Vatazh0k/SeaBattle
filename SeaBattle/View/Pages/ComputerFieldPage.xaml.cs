@@ -20,10 +20,10 @@ namespace SeaBattle.View.Pages
     /// </summary>
     public partial class ComputerFieldPage : Page
     {
-        public ComputerFieldPage(MainWindowViewModel mainWindowViewModel)
+        public ComputerFieldPage(Field Userfields, Field ComputerField, MainWindowViewModel mwvm)
         {
             InitializeComponent();
-            var vm = new ComputerFieldPageViewModel(mainWindowViewModel);
+            var vm = new ComputerFieldPageViewModel(Userfields, ComputerField, mwvm);
             DataContext = vm;
 
             ComputerFieldGenerate(vm);
