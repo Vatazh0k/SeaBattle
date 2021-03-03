@@ -19,79 +19,25 @@ namespace SeaBattle.BuisnessLogic
 
 
         }
-        public bool ChangeShipsDirection(string[,] field, int cell, bool direction)
+        public bool ChangeShipsDirection(string[,] field, int cell)
         {
             CellIndex indexes = CellsConverter.ConverCellsToIndexes(cell);
             int CurrentDeck = 0;
 
-            int DecksInShipCount = CountingDecks(field, indexes.I_index, indexes.J_index, ref CurrentDeck, direction);
+            bool direction = DeterminingTheDirection(indexes.I_index, indexes.J_index, field);
 
-            int FirstDeckOfHorizontalShip = indexes.J_index - CurrentDeck;
-            int FirstDeckOfVerticalShip = indexes.I_index - CurrentDeck;
+            int DecksInShipCount = CountingDecks(field, indexes, ref CurrentDeck, direction);
 
-            if (direction is true)
-                for (int i = 0; i < DecksInShipCount; i++)
-                    field[indexes.I_index, FirstDeckOfHorizontalShip + i] = null;
+            ShipsModification(direction, indexes, CurrentDeck, DecksInShipCount, null);
 
-            if (direction is false)
-                for (int i = 0; i < DecksInShipCount; i++)
-                    field[FirstDeckOfVerticalShip + i, indexes.J_index] = null;
+            bool canPutShip = CanPutShip(field, indexes.I_index, indexes.J_index, DecksInShipCount, !direction);
 
-            bool canPutShip = CanPutShip
-            (field, indexes.I_index, indexes.J_index, DecksInShipCount, !direction);
-
+            ShipsModification(direction, indexes, CurrentDeck, DecksInShipCount, ShipsMark);
             if (canPutShip is false)
-            {
-                if (direction is true)
-                    for (int i = 0; i < DecksInShipCount; i++)
-                        field[indexes.I_index, FirstDeckOfHorizontalShip + i] = ShipsMark;
-
-                if (direction is false)
-                    for (int i = 0; i < DecksInShipCount; i++)
-                        field[FirstDeckOfVerticalShip + i, indexes.J_index] = ShipsMark;
-                return false;
-            }
-            if (canPutShip is true)
-            {
-                if (Ships[CellNumber].isHorizontal is true)
-                {
-                    int Cell = CellNumber - CurrentDeck;
-                    for (int i = 0; i < DecksInShipCount; i++)
-                        Ships[Cell + i] = new Ship();
-
-                    ShowVerticalShips(DecksInShipCount, CellNumber);
-                    for (int i = 0; i < DecksInShipCount; i++)
-                        UsersField.field[indexes.I_index + i, indexes.J_index] = ShipsMark;
-
-                    return true;
-                }
-                if (Ships[CellNumber].isHorizontal is false)
-                {
-                    int Cell = CellNumber;
-                    switch (CurrentDeck)
-                    {
-                        default: break;
-                        case 0: Cell -= 11; break;
-                        case 1: Cell -= 22; break;
-                        case 2: Cell -= 33; break;
-                        case 3: Cell -= 44; break;
-
-                    }
-
-                    for (int i = 0; i < DecksInShipCount; i++)
-                        Ships[Cell += 11] = new Ship();
-
-                    ShowHorizontalShips(DecksInShipCount, CellNumber);
-                    for (int i = 0; i < DecksInShipCount; i++)
-                        UsersField.field[indexes.I_index, indexes.J_index + i] = ShipsMark;
-
-                    return true;
-                }
-            }
-
+            return false;
             return true;
         }
-        public int CountingDecks(string[,] Field, int i, int j, ref int firtShipDeck, bool isHorizontal = true)
+        public int CountingDecks(string[,] Field, CellIndex indexes, ref int firtShipDeck, bool isHorizontal = true)
         {
             const string MissedMark = "X";
             int GeneralDeksCountInShip = 1;
@@ -100,10 +46,10 @@ namespace SeaBattle.BuisnessLogic
             {
                 for (int k = 1; k <= 4; k++)
                 {
-                    int firstIndex = i;
-                    int secondIndex = j;
+                    int firstIndex = indexes.I_index;
+                    int secondIndex = indexes.J_index;
 
-                    _ = isHorizontal is true ? secondIndex = j + k : firstIndex = i + k;
+                    _ = isHorizontal is true ? secondIndex = indexes.J_index + k : firstIndex = indexes.I_index + k;
 
                     if (String.IsNullOrEmpty(Field[firstIndex, secondIndex]) || (Field[firstIndex, secondIndex] == MissedMark))
                         break;
@@ -116,10 +62,10 @@ namespace SeaBattle.BuisnessLogic
             {
                 for (int k = -1; k >= -4; k--)
                 {
-                    int firstIndex = i;
-                    int secondIndex = j;
+                    int firstIndex = indexes.I_index;
+                    int secondIndex = indexes.J_index;
 
-                    _ = isHorizontal is true ? secondIndex = j + k : firstIndex = i + k;
+                    _ = isHorizontal is true ? secondIndex = indexes.J_index + k : firstIndex = indexes.I_index + k;
 
                     if (String.IsNullOrEmpty(Field[firstIndex, secondIndex]) || (Field[firstIndex, secondIndex] == MissedMark))
                         break;
@@ -135,15 +81,15 @@ namespace SeaBattle.BuisnessLogic
         }
         public bool DeterminingTheDirection(int IndexOfFirstDeck, int secondIndex, string[,] Field)
         {
-            bool isHorizontal = true;
-            
+            bool isHorizontal = true;//random true or false
+
             for (int i = IndexOfFirstDeck; i < 11; i++)
             {
                 for (int j = secondIndex; j < 11; j++)
                 {
-                    if (j + 1 <= 10 && Field[i, j + 1] is ShipsMark) return true;
-         
-                    if (i + 1 <= 10 && Field[i + 1, j] is ShipsMark) return false;
+                    if (Field[i, j - 1] is ShipsMark || (j + 1 <= 10 && Field[i, j + 1] is ShipsMark)) return true;
+
+                    if (Field[i - 1, j] is ShipsMark || (i + 1 <= 10 && Field[i + 1, j] is ShipsMark)) return false;
                 }
             }
 
@@ -179,7 +125,7 @@ namespace SeaBattle.BuisnessLogic
                         for (int k = 0; k < DeksCount; k++)
                         {
                             if (isHorizontal is true)
-                                Field[firstIndex, secondIndex + k ] = ShipsMark;
+                                Field[firstIndex, secondIndex + k] = ShipsMark;
 
                             if (isHorizontal is false)
                                 Field[firstIndex + k, secondIndex] = ShipsMark;
@@ -224,9 +170,9 @@ namespace SeaBattle.BuisnessLogic
             }
             return true;
         }
-        public void CleanField(string[,] Field)
+        public string[,] CleanField(string[,] Field)
         {
-            Field = new string[11, 11];
+            return Field = new string[11, 11];
         }
         public string[,] Damaging(string[,] Field, CellIndex Indexes)
         {
@@ -235,7 +181,22 @@ namespace SeaBattle.BuisnessLogic
         }
 
         #region Private Methods
-      
+        private void ShipsModification(bool direction, CellIndex indexes, int CurrentDeck, int DecksCount, string mark)
+        {
+            if (direction is true)
+            {
+                int FirstDeckOfHorizontalShip = indexes.J_index - CurrentDeck;
+                for (int i = 0; i < DecksCount; i++)
+                    field[indexes.I_index, FirstDeckOfHorizontalShip + i] = mark;
+            }
+
+            if (direction is false)
+            {
+                int FirstDeckOfVerticalShip = indexes.I_index - CurrentDeck;
+                for (int i = 0; i < DecksCount; i++)
+                    field[FirstDeckOfVerticalShip + i, indexes.J_index] = mark;
+            }
+        }
         #endregion
     }
 }
