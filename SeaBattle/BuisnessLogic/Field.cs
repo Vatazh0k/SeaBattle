@@ -14,11 +14,9 @@ namespace SeaBattle.BuisnessLogic
         public string[,] field { get; set; } = new string[11, 11];
 
         private const string ShipsMark = "O";
+        private const string MissedMark = "X";
         public Field()
-        {
-
-
-        }
+        { }
         public bool ChangeShipsDirection(string[,] field, int cell)
         {
             CellIndex indexes = CellsConverter.ConverCellsToIndexes(cell);
@@ -39,7 +37,6 @@ namespace SeaBattle.BuisnessLogic
         }
         public int CountingDecks(string[,] Field, CellIndex indexes, ref int firtShipDeck, bool isHorizontal = true)
         {
-            const string MissedMark = "X";
             int GeneralDeksCountInShip = 1;
             firtShipDeck = 0;
             try
@@ -49,9 +46,12 @@ namespace SeaBattle.BuisnessLogic
                     int firstIndex = indexes.I_index;
                     int secondIndex = indexes.J_index;
 
-                    _ = isHorizontal is true ? secondIndex = indexes.J_index + k : firstIndex = indexes.I_index + k;
+                    _ = isHorizontal is true ? 
+                     secondIndex = indexes.J_index + k :
+                     firstIndex = indexes.I_index + k ;
 
-                    if (String.IsNullOrEmpty(Field[firstIndex, secondIndex]) || (Field[firstIndex, secondIndex] == MissedMark))
+                    if (String.IsNullOrEmpty(Field[firstIndex, secondIndex]) ||
+                       (Field[firstIndex, secondIndex] == MissedMark))
                         break;
 
                     GeneralDeksCountInShip++;
@@ -65,9 +65,12 @@ namespace SeaBattle.BuisnessLogic
                     int firstIndex = indexes.I_index;
                     int secondIndex = indexes.J_index;
 
-                    _ = isHorizontal is true ? secondIndex = indexes.J_index + k : firstIndex = indexes.I_index + k;
+                    _ = isHorizontal is true ? 
+                     secondIndex = indexes.J_index + k : 
+                     firstIndex = indexes.I_index + k;
 
-                    if (String.IsNullOrEmpty(Field[firstIndex, secondIndex]) || (Field[firstIndex, secondIndex] == MissedMark))
+                    if (String.IsNullOrEmpty(Field[firstIndex, secondIndex]) || 
+                       (Field[firstIndex, secondIndex] == MissedMark))
                         break;
 
                     firtShipDeck++;

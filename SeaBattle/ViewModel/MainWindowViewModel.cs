@@ -146,7 +146,7 @@ namespace SeaBattle.ViewModel
 
         #region Commands Actions
         private void ShipsAutoGenerationAction(object p)
-        { 
+        {
             CleanField();
             UsersField.FieldAutoGeneration(UsersField.field);
             Ships = ShipsAssignment(UsersField.field);
@@ -190,7 +190,7 @@ namespace SeaBattle.ViewModel
 
             if (Ships[Cell].isOnField is true)
             {
-                if (UsersField.ChangeShipsDirection(UsersField.field, Cell)) 
+                if (UsersField.ChangeShipsDirection(UsersField.field, Cell))
                     ChangeShipsDirection(Cell);
                 return;
             }
@@ -216,14 +216,18 @@ namespace SeaBattle.ViewModel
             cellNumber = null;
             switch (ShipsName)
             {
-                default:  break;
-                case "FourDeckShip": shipsDecksCount = 4;
+                default: break;
+                case "FourDeckShip":
+                    shipsDecksCount = 4;
                     if (FourDeckShip is 0) return; break;
-                case "ThrieDeckShip": shipsDecksCount = 3;
+                case "ThrieDeckShip":
+                    shipsDecksCount = 3;
                     if (ThrieDeckShip is 0) return; break;
-                case "DoubleDeckShip": shipsDecksCount = 2;
+                case "DoubleDeckShip":
+                    shipsDecksCount = 2;
                     if (TwoDeckShip is 0) return; break;
-                case "OneDeckShip": shipsDecksCount = 1;
+                case "OneDeckShip":
+                    shipsDecksCount = 1;
                     if (OneDeckShip is 0) return; break;
             }
             shipsDirection = true;
@@ -487,7 +491,7 @@ namespace SeaBattle.ViewModel
             if (direction is false)
                 for (int i = 0; i < shipsDecksCount; i++)
                 {
-                    if (Cell + GetCell(i,0) > 121) return;
+                    if (Cell + GetCell(i, 0) > 121) return;
                     Color[Cell + GetCell(i, 0)] = new SolidColorBrush(Colors.White);
                     Color[Cell + GetCell(i, 0)].Opacity = 1;
                 }
@@ -583,14 +587,14 @@ namespace SeaBattle.ViewModel
             isDroped = false;
             shipsDirection = Ships[Convert.ToInt32(cellNumber)].isHorizontal;
             DragDrop.DoDragDrop(lb, lb.Content, DragDropEffects.Copy);
-            if(isDroped is false)
+            if (isDroped is false)
                 switch (shipsDecksCount)
                 {
                     default: break;
-                    case 4:FourDeckShip++; break;
-                    case 3:ThrieDeckShip++; break;
-                    case 2:TwoDeckShip++; break;
-                    case 1:OneDeckShip++; break;
+                    case 4: FourDeckShip++; break;
+                    case 3: ThrieDeckShip++; break;
+                    case 2: TwoDeckShip++; break;
+                    case 1: OneDeckShip++; break;
                 }
         }
         public void DropAction(object sender, DragEventArgs e)
@@ -611,13 +615,13 @@ namespace SeaBattle.ViewModel
             if (cellNumber != null)
             {
                 bool _canPutShip = CanPutShip(NewCell, shipsDecksCount, 0, shipsDirection);
-               
+
                 if (_canPutShip is false)
                 {
                     CanPutShip(PreviousCell, shipsDecksCount, FirstDecksIndex, shipsDirection);
                 }
 
-                ReduceColor(NewCell, Ships[PreviousCell].isHorizontal);
+                ReduceColor(NewCell, shipsDirection);
                 cellNumber = null;
                 return;
             }
@@ -628,10 +632,10 @@ namespace SeaBattle.ViewModel
                 ReduceShipsCount(shipsDecksCount);
                 ReduceColor(NewCell, shipsDirection);
             }
-          
+
         }
         public void DragLeave(object sender, DragEventArgs e)
-        {   
+        {
             if (cellNumber != null)
             {
                 int Cell = Convert.ToInt32(cellNumber);
@@ -643,7 +647,7 @@ namespace SeaBattle.ViewModel
                 (UsersField.field, _cellIndexes, ref FirstDecksIndex, Ships[Cell].isHorizontal);
                 DeleteShip(Convert.ToInt32(cellNumber), _cellIndexes, FirstDecksIndex, DecksCount);
             }
-            PositionValidation:
+        PositionValidation:
             FrameworkElement feSource = e.Source as FrameworkElement;
 
             int cell = SearchCell(feSource.Name);
@@ -656,43 +660,35 @@ namespace SeaBattle.ViewModel
         public void DragEnter(object sender, DragEventArgs e)
         {
             FrameworkElement feSource = e.Source as FrameworkElement;
-
             int cell = SearchCell(feSource.Name);
             if (cell is -1) return;
-
             CellIndex cellIndexes = CellsConverter.ConverCellsToIndexes(cell);
 
-
             if (shipsDirection is true)
+            for (int i = shipsDecksCount - 1; i >= 0; i--)
             {
-                for (int i = shipsDecksCount - 1; i >= 0; i--)
+                if (!UsersField.CanPutShip(UsersField.field, cellIndexes.I_index, cellIndexes.J_index, shipsDecksCount))
                 {
-                    if (!UsersField.CanPutShip(UsersField.field, cellIndexes.I_index, cellIndexes.J_index, shipsDecksCount))
-                    {
-
-                        ShowRedHint(cell, cellIndexes.J_index);
-                        return;
-                    }
-                    ShowGrinHint(cell, i);
+                    ShowRedHint(cell, cellIndexes.J_index);
+                    return;
                 }
+                ShowGrinHint(cell, i);
             }
             if (shipsDirection is false)
+            for (int i = shipsDecksCount - 1; i >= 0; i--)
             {
-                for (int i = shipsDecksCount - 1; i >= 0; i--)
+                if (!UsersField.CanPutShip(UsersField.field, cellIndexes.I_index, cellIndexes.J_index, shipsDecksCount, false))
                 {
-                    if (!UsersField.CanPutShip(UsersField.field, cellIndexes.I_index, cellIndexes.J_index, shipsDecksCount, false))
-                    {
-
-                        ShowRedHint(cell, cellIndexes.I_index, 11);
-                        return;
-                    }
-                    ShowGrinHint(cell, i, 11);
+                    ShowRedHint(cell, cellIndexes.I_index, 11);
+                    return;
                 }
+                ShowGrinHint(cell, i, 11);
             }
+
         }
         #endregion
         #endregion
-         
+
     }
 }  
    
