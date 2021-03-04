@@ -26,6 +26,7 @@ namespace SeaBattle.ViewModel
         private CellIndex _indexes;
 
 
+        private bool isInProcess = true;
         private bool isComputerMove = false;
         private string[,] TempArr = new string[11, 11];
         private const string KilledMark = "X";
@@ -89,7 +90,7 @@ namespace SeaBattle.ViewModel
         }
 
         #region Commands
-        private bool CanUseMakeDamageCommand(object p) => !isComputerMove;
+        private bool CanUseMakeDamageCommand(object p) => !isComputerMove && isInProcess;
         private void MakeDamageCommandAction(object p)
         {
             int Cell = SearchCell(p.ToString());
@@ -97,10 +98,31 @@ namespace SeaBattle.ViewModel
             if (UserField.CanMakeDamage(ComputerField.field, Cell) is false)
                 return;
 
+            isComputerMove = true;
             CellIndex indexes = CellsConverter.ConverCellsToIndexes(Cell);
             ComputerField.field = UserField.Damaging(ComputerField.field, indexes);
             Ships = CellAssignment(Ships, ComputerField.field, Cell);
 
+            if (isComputerMove is false)
+                return;
+
+            bool canDamage = false;
+            Random random = new Random(); ;
+            CellIndex index = new CellIndex();
+
+            while (canDamage != true)
+            {
+                index.I_index = random.Next(1, 11);
+                index.J_index = random.Next(1, 11);
+
+                Cell = CellsConverter.ConvertIndexesToCell(index);
+
+                canDamage = ComputerField.CanMakeDamage(UserField.field, Cell);
+               
+            }
+
+            UserField.field = ComputerField.Damaging(UserField.field, index);
+            
 
         }
         #endregion
@@ -110,14 +132,22 @@ namespace SeaBattle.ViewModel
         private ObservableCollection<Ship> CellAssignment(ObservableCollection<Ship> Ships, string[,] field, int cell)
         {
             CellIndex indexes = CellsConverter.ConverCellsToIndexes(cell);
+
+            if (Ships[GetCell(indexes.I_index, indexes.J_index)].isOnField is false && field[indexes.I_index, indexes.J_index] is MissedMark)
+            {
+                ShipsOptions(Ships, GetCell(indexes.I_index, indexes.J_index), PathToShipContent.MissedMark, 0.5);
+                isComputerMove = true;
+                MissCounter++;
+                return Ships;
+            }
+
             for (int i = 0; i < 11; i++)
             {
                 for (int j = 0; j < 11; j++)
                 {
                     if (Ships[GetCell(i, j)].isOnField is false && field[i, j] is MissedMark)
                     {
-                        ShipsOptions(Ships, GetCell(i,j), PathToShipContent.MissedMark, 0.5);
-                        //isComputerMove = true;
+                        ShipsOptions(Ships, GetCell(i, j), PathToShipContent.MissedMark, 0.5);
                         continue;
                     }
                     if (Ships[GetCell(i, j)].isOnField is false && field[i, j] is KilledMark)
@@ -132,7 +162,7 @@ namespace SeaBattle.ViewModel
                         {
                             int I = indexes.I_index;
                             int J = indexes.J_index;
-                            _ = Direction is true ? J += k : I += k;
+                            _ = Direction is true ? J += k - FirstDecksIndex : I += k - FirstDecksIndex;
                             if (I > 10 || J > 10) continue;
                             if (field[I, J] is KilledMark)
                             {
@@ -140,13 +170,21 @@ namespace SeaBattle.ViewModel
                                 continue;
                             }
                             isKilled = false;
+                            break;
                         }
                         if(isKilled is false) ShipsOptions(Ships, GetCell(i, j), PathToShipContent.KilledShip, 1);
                         if (isKilled is true && Ships[GetCell(i,j)].isOnField is false)
                         {
+                            int Cell = GetCell(i, j);
                             _ = Direction is true ? 
-                                ShowHorizontalShips(DecksCount, GetCell(i, j)):
-                                ShowDeadVerticalShips(DecksCount, GetCell(i, j));
+                                ShowHorizontalShips(DecksCount, Cell - FirstDecksIndex):
+                                ShowDeadVerticalShips(DecksCount, Cell - FirstDecksIndex*11);
+                            NumberOfRemainingComputerShips--;
+                            if (NumberOfRemainingComputerShips is 0)
+                            {
+                                MessageBox.Show("You win!", "Congratulation", MessageBoxButton.OK, MessageBoxImage.Information);
+                                isInProcess = false;
+                            }
                         }
                     }
                 }

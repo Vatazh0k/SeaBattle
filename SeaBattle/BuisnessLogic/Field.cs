@@ -224,20 +224,25 @@ namespace SeaBattle.BuisnessLogic
             int y_Axis_Ships = Indexes.I_index + 1;
             int x_Axis_Ships = Indexes.J_index + DecksCount - FirstShipsDeck;
 
+            int n = Indexes.I_index - 1;
+            int m = Indexes.J_index - 1 - FirstShipsDeck;
+
             if (direction is false)
             {
+                 n = Indexes.I_index - 1 - FirstShipsDeck;
+                 m = Indexes.J_index - 1;
+
                 y_Axis_Ships = Indexes.I_index + DecksCount - FirstShipsDeck;
                 x_Axis_Ships = Indexes.J_index + 1;
             }
-
-            for (int n = Indexes.I_index - 1; n <= y_Axis_Ships; n++)
+            for (int N = n; N <= y_Axis_Ships; N++)
             {
-                for (int m = Indexes.J_index - 1; m <= x_Axis_Ships; m++)
+                for (int M = m; M <= x_Axis_Ships; M++)
                 {
-                    if (n == 11 || n == -1) continue;
-                    if (m == 11 || n == -1) break;
-                    if (field[n, m] == KilledMark) continue;
-                    field[n, m] = MissedMark;
+                    if (N == 11 || N == -1) continue;
+                    if (M == 11 || M == -1) break;
+                    if (field[N, M] == KilledMark) continue;
+                    field[N, M] = MissedMark;
                 }
             }
 
