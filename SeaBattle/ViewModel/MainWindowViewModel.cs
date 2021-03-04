@@ -509,6 +509,7 @@ namespace SeaBattle.ViewModel
                     Stretch = Stretch.Fill
                 },
                 isHorizontal = Direction,
+                ContentPath = Path,
                 isOnField = true,
                 Border = new Thickness(1),
             };
@@ -521,22 +522,22 @@ namespace SeaBattle.ViewModel
                     break;
 
                 case 1:
-                    ShipsOptions(cell, PathToShipContent.Vertical_OneDeckShip, false);
+                    ShipsOptions(cell, PathToShipContent.VerticalShips[1], false);
                     break;
                 case 2:
-                    ShipsOptions(cell, PathToShipContent.Vertical_TwoDeckShip_FirstDeck, false);
-                    ShipsOptions(cell + 11, PathToShipContent.Vertical_TwoDeckShip_SecondDeck, false);
+                    ShipsOptions(cell, PathToShipContent.VerticalShips[2], false);
+                    ShipsOptions(cell + 11, PathToShipContent.VerticalShips[3], false);
                     break;
                 case 3:
-                    ShipsOptions(cell, PathToShipContent.Vertical_ThrieDeckShip_FirstDeck, false);
-                    ShipsOptions(cell + 11, PathToShipContent.Vertical_ThrieDeckShip_SecondDeck, false);
-                    ShipsOptions(cell + 22, PathToShipContent.Vertical_ThrieDeckShip_ThirdDeck, false);
+                    ShipsOptions(cell, PathToShipContent.VerticalShips[4], false);
+                    ShipsOptions(cell + 11, PathToShipContent.VerticalShips[5], false);
+                    ShipsOptions(cell + 22, PathToShipContent.VerticalShips[6], false);
                     break;
                 case 4:
-                    ShipsOptions(cell, PathToShipContent.Vertical_FourDeckShip_FirstDeck, false);
-                    ShipsOptions(cell + 11, PathToShipContent.Vertical_FourDeckShip_SecondDeck, false);
-                    ShipsOptions(cell + 22, PathToShipContent.Vertical_FourDeckShip_ThirdDeck, false);
-                    ShipsOptions(cell + 33, PathToShipContent.Vertical_FourDeckShip_FourDeck, false);
+                    ShipsOptions(cell, PathToShipContent.VerticalShips[7], false);
+                    ShipsOptions(cell + 11, PathToShipContent.VerticalShips[8], false);
+                    ShipsOptions(cell + 22, PathToShipContent.VerticalShips[9], false);
+                    ShipsOptions(cell + 33, PathToShipContent.VerticalShips[10], false);
                     break;
 
             }
@@ -551,22 +552,22 @@ namespace SeaBattle.ViewModel
                     break;
 
                 case 1:
-                    ShipsOptions(cell, PathToShipContent.OneDeckShip);
+                    ShipsOptions(cell, PathToShipContent.HorizontalShips[1]);
                     break;
                 case 2:
-                    ShipsOptions(cell, PathToShipContent.TwoDeckShip_FirstDeck);
-                    ShipsOptions(cell + 1, PathToShipContent.TwoDeckShip_SecondDeck);
+                    ShipsOptions(cell, PathToShipContent.HorizontalShips[2]);
+                    ShipsOptions(cell + 1, PathToShipContent.HorizontalShips[3]);
                     break;
                 case 3:
-                    ShipsOptions(cell, PathToShipContent.ThrieDeckShip_FirstDeck);
-                    ShipsOptions(cell + 1, PathToShipContent.ThrieDeckShip_SecondDeck);
-                    ShipsOptions(cell + 2, PathToShipContent.ThrieDeckShip_ThirdDeck);
+                    ShipsOptions(cell, PathToShipContent.HorizontalShips[4]);
+                    ShipsOptions(cell + 1, PathToShipContent.HorizontalShips[5]);
+                    ShipsOptions(cell + 2, PathToShipContent.HorizontalShips[6]);
                     break;
                 case 4:
-                    ShipsOptions(cell, PathToShipContent.FourDeckShip_FirstDeck);
-                    ShipsOptions(cell + 1, PathToShipContent.FourDeckShip_SecondDeck);
-                    ShipsOptions(cell + 2, PathToShipContent.FourDeckShip_ThirdDeck);
-                    ShipsOptions(cell + 3, PathToShipContent.FourDeckShip_FourDeck);
+                    ShipsOptions(cell, PathToShipContent.HorizontalShips[7]);
+                    ShipsOptions(cell + 1, PathToShipContent.HorizontalShips[8]);
+                    ShipsOptions(cell + 2, PathToShipContent.HorizontalShips[9]);
+                    ShipsOptions(cell + 3, PathToShipContent.HorizontalShips[10]);
                     break;
 
             }

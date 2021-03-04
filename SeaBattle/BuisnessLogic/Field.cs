@@ -243,7 +243,7 @@ namespace SeaBattle.BuisnessLogic
                 }
                 if (isHintButNotKilled is true)
                 {
-                    indexes = ChangeAttackDirection(indexes, Field);
+                    indexes = ChangeAttackDirection(indexes, Field);//Перепесать эту херь
                     if (Field[indexes.I_index, indexes.J_index] is KilledMark || Field[indexes.I_index, indexes.J_index] is MissedMark)
                     {
                         isPositiveDirection = !isPositiveDirection;

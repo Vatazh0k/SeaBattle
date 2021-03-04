@@ -14,6 +14,7 @@ namespace SeaBattle.Model
         public bool isOnField { get; set; } = false;
         public bool isHorizontal { get; set; } = true;
         public Image Content { get; set; }
+        public string ContentPath { get; set; }
         public Thickness Border { get; set; } = new Thickness(0.5);
     }
 }
