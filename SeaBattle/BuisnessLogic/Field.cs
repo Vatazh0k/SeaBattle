@@ -13,9 +13,23 @@ namespace SeaBattle.BuisnessLogic
     {
         public string[,] field { get; set; } = new string[11, 11];
 
+        #region ChangeAttackDirection_Data
+        int CountOfAttackInOneDirection = 0;
+        int totalShipsCount = 10;
+        bool isHorizontal = true;
+        bool isPositiveDirection = true;
+        bool isKilled = false;
+        bool isMissed = true;
+        bool isHintButNotKilled = false;
+        int fixed_I;
+        int fixed_J;
+        #endregion
+        #region Const_Data
         private const string ShipsMark = "O";
         private const string KilledMark = "X";
         private const string MissedMark = " ";
+        #endregion
+
         public Field()
         { }
         public bool ChangeShipsDirection(string[,] field, int cell)
@@ -190,18 +204,18 @@ namespace SeaBattle.BuisnessLogic
             }
             return true;
         }
-        public string[,] Damaging(string[,] Field, CellIndex Indexes)
+        public string[,] UserAttck(string[,] Field, CellIndex Indexes)
         {
 
             bool isMissed = IsMissed(Field, Indexes);
 
             if (isMissed is true)
             {
-                Field[Indexes.I_index, Indexes.J_index] = MissedMark;
+                MarkTheShip(Field, Indexes, MissedMark);
                 return Field;
             }
 
-            Field[Indexes.I_index, Indexes.J_index] = KilledMark;
+            MarkTheShip(Field, Indexes, KilledMark);
 
             bool isShipKilled = IsKilled(Field, Indexes);
 
@@ -212,8 +226,91 @@ namespace SeaBattle.BuisnessLogic
 
             return Field;
         }
+        public string[,] ComputerAttack(string[,] Field)
+        {
+            bool isComputerField = true;
+            CellIndex indexes = new CellIndex();
+            CountOfAttackInOneDirection = 0;
+            int AttackInOnePoint = 0;
+
+            while (isComputerField != false)
+            {
+                if (isHintButNotKilled is false)
+                {
+                    indexes = SearchRandomCell(Field);
+                    fixed_I = indexes.I_index;
+                    fixed_J = indexes.J_index;
+                }
+                if (isHintButNotKilled is true)
+                {
+                    indexes = ChangeAttackDirection(indexes, Field);
+                    if (Field[indexes.I_index, indexes.J_index] is KilledMark || Field[indexes.I_index, indexes.J_index] is MissedMark)
+                    {
+                        isPositiveDirection = !isPositiveDirection;
+                        CountOfAttackInOneDirection = 0;
+                        if (AttackInOnePoint is 2)
+                        {
+                            AttackInOnePoint = 0;
+                             isHorizontal = !isHorizontal;
+                            continue;
+                        }
+                        AttackInOnePoint++;
+                        continue;
+
+                    }
+                }
+
+                isMissed = IsMissed(Field, indexes);
+
+                if (isMissed is true)
+                {
+                    MarkTheShip(Field, indexes, MissedMark);
+                    isComputerField = false;
+                    if(isHintButNotKilled is false)
+                    isHintButNotKilled = false;
+                    if (CountOfAttackInOneDirection is 0)
+                    isHorizontal = !isHorizontal;
+                    if (CountOfAttackInOneDirection != 0)
+                    isPositiveDirection = !isPositiveDirection;
+                    return Field;
+                }
+
+                MarkTheShip(Field, indexes, KilledMark);
+
+                isKilled = IsKilled(Field, indexes);
+
+                if (isKilled is true)
+                {
+                    ShipsFuneral(Field, indexes);
+                    totalShipsCount--;
+                    isHintButNotKilled = false;
+                    if (totalShipsCount is 0) return Field;
+                    continue;
+                }
+                isHintButNotKilled = true;
+                CountOfAttackInOneDirection++;
+            }
+            return Field;
+        }
 
         #region Private Methods
+        private CellIndex SearchRandomCell( string[,] Field)
+        {
+            bool canDamage = false;
+            Random random = new Random();
+            CellIndex index = new CellIndex();
+
+            while (canDamage != true)
+            {
+                index.I_index = random.Next(1, 11);
+                index.J_index = random.Next(1, 11);
+
+                int Cell = CellsConverter.ConvertIndexesToCell(index);
+
+                canDamage = CanMakeDamage(Field, Cell);
+            }
+            return index;
+        }
         private void ShipsFuneral(string[,] field, CellIndex Indexes)
         {
             int FirstShipsDeck = 0;
@@ -277,6 +374,111 @@ namespace SeaBattle.BuisnessLogic
             return false;
             return true;
         }
+        private void MarkTheShip(string[,] Field, CellIndex Indexes, string Mark)
+        {
+            Field[Indexes.I_index, Indexes.J_index] = Mark;
+        }
+        private CellIndex ChangeAttackDirection(CellIndex indexes, string[,] Field)
+        {
+            if (CountOfAttackInOneDirection >= 1)
+            {
+            ChangeDirection:
+                if (isHorizontal)
+                {
+                    if (isPositiveDirection is true)
+                    {
+                        if (indexes.J_index + 1 <= 10)
+                        {
+                            indexes.J_index++;
+                            isPositiveDirection = true;
+                            return indexes;
+                        }
+                        isPositiveDirection = !isPositiveDirection;
+                    }
+                    if (isPositiveDirection is false)
+                    {
+                        if (indexes.J_index - 1 >= 1)
+                        {
+                            indexes.J_index--;
+                            isPositiveDirection = false;
+                            return indexes;
+                        }
+                        isPositiveDirection = !isPositiveDirection;
+                        goto ChangeDirection;
+                    }
+                }
+                if (!isHorizontal)
+                {
+                    if (isPositiveDirection is true)
+                    {
+                        if (indexes.I_index + 1 <= 10)
+                        {
+                            indexes.I_index++;
+                            isPositiveDirection = true;
+                            return indexes;
+                        }
+                        isPositiveDirection = !isPositiveDirection;
+                    }
+                    if (isPositiveDirection is false)
+                    {
+                        if (indexes.I_index - 1 >= 1)
+                        {
+                            indexes.I_index--;
+                            isPositiveDirection = false;
+                            return indexes;
+                        }
+                        isPositiveDirection = !isPositiveDirection;
+                        goto ChangeDirection;
+                    }
+                }
+            }
+
+        _ChangeDirection:
+            if (isHorizontal && isPositiveDirection)
+            {
+                if (fixed_J < 10 && fixed_J >= 1)
+                {
+                    indexes.I_index = fixed_I;
+                    indexes.J_index = fixed_J + 1;
+                    return indexes;
+                }
+                isPositiveDirection = !isPositiveDirection;
+            }
+            if (isHorizontal && !isPositiveDirection)
+            {
+                if (fixed_J > 1 && fixed_J <= 10)
+                {
+                    indexes.I_index = fixed_I;
+                    indexes.J_index = fixed_J - 1;
+                    return indexes;
+                }
+                isPositiveDirection = !isPositiveDirection;
+                goto _ChangeDirection;
+            }
+            if (!isHorizontal && isPositiveDirection)
+            {
+                if (fixed_I < 10 && fixed_I >= 1)
+                {
+                    indexes.I_index = fixed_I + 1;
+                    indexes.J_index = fixed_J;
+                    return indexes;
+                }
+                isPositiveDirection = !isPositiveDirection;
+            }
+            if (!isHorizontal && !isPositiveDirection)
+            {
+                if (fixed_I > 1 && fixed_I <= 10)
+                {
+                    indexes.I_index = fixed_I - 1;
+                    indexes.J_index = fixed_J;
+                    return indexes;
+                }
+                isPositiveDirection = !isPositiveDirection;
+                goto _ChangeDirection;
+            }
+
+            return indexes;
+        }
         private void ShipsModification(bool direction, CellIndex indexes, int CurrentDeck, int DecksCount, string mark)
         {
             if (direction is true)
@@ -293,6 +495,6 @@ namespace SeaBattle.BuisnessLogic
                     field[FirstDeckOfVerticalShip + i, indexes.J_index] = mark;
             }
         }
-        #endregion
+#endregion
     }
 }

@@ -10,6 +10,7 @@ namespace SeaBattle.Model
 {
     public class Ship
     {
+        public bool isDead { get; set; } = false;
         public bool isOnField { get; set; } = false;
         public bool isHorizontal { get; set; } = true;
         public Image Content { get; set; }
