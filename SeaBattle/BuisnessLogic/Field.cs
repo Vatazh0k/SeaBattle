@@ -81,45 +81,44 @@ namespace SeaBattle.BuisnessLogic
         {
             int GeneralDeksCountInShip = 1;
             firtShipDeck = 0;
-            try
+
+            for (int k = 1; k <= 4; k++)
             {
-                for (int k = 1; k <= 4; k++)
-                {
-                    int firstIndex = indexes.I_index;
-                    int secondIndex = indexes.J_index;
+                int firstIndex = indexes.I_index;
+                int secondIndex = indexes.J_index;
 
-                    _ = isHorizontal is true ? 
-                     secondIndex = indexes.J_index + k :
-                     firstIndex = indexes.I_index + k ;
+                _ = isHorizontal is true ?
+                 secondIndex = indexes.J_index + k :
+                 firstIndex = indexes.I_index + k;
 
-                    if (String.IsNullOrEmpty(Field[firstIndex, secondIndex]) ||
-                       (Field[firstIndex, secondIndex] == MissedMark))
-                        break;
+                if (secondIndex > 10 || firstIndex > 10) break;
 
-                    GeneralDeksCountInShip++;
-                }
+                if (String.IsNullOrEmpty(Field[firstIndex, secondIndex]) ||
+                   (Field[firstIndex, secondIndex] == MissedMark))
+                    break;
+
+                GeneralDeksCountInShip++;
             }
-            catch (Exception) { }
-            try
+
+            for (int k = -1; k >= -4; k--)
             {
-                for (int k = -1; k >= -4; k--)
-                {
-                    int firstIndex = indexes.I_index;
-                    int secondIndex = indexes.J_index;
+                int firstIndex = indexes.I_index;
+                int secondIndex = indexes.J_index;
 
-                    _ = isHorizontal is true ? 
-                     secondIndex = indexes.J_index + k : 
-                     firstIndex = indexes.I_index + k;
+                _ = isHorizontal is true ?
+                 secondIndex = indexes.J_index + k :
+                 firstIndex = indexes.I_index + k;
 
-                    if (String.IsNullOrEmpty(Field[firstIndex, secondIndex]) || 
-                       (Field[firstIndex, secondIndex] == MissedMark))
-                        break;
+                if (secondIndex < 0 || firstIndex < 0) break;
 
-                    firtShipDeck++;
-                    GeneralDeksCountInShip++;
-                }
+                if (String.IsNullOrEmpty(Field[firstIndex, secondIndex]) ||
+                   (Field[firstIndex, secondIndex] == MissedMark))
+                    break;
+
+                firtShipDeck++;
+                GeneralDeksCountInShip++;
             }
-            catch (Exception) { }
+
 
             return GeneralDeksCountInShip;
 
@@ -231,7 +230,6 @@ namespace SeaBattle.BuisnessLogic
             }
             return true;
         }
-
         public string[,] ComputerAttack(string[,] Field)
         {
             bool isComputerField = true;
@@ -249,7 +247,7 @@ namespace SeaBattle.BuisnessLogic
                 }
                 if (isHintButNotKilled is true)
                 {
-                    indexes = ChangeAttackDirection(indexes, Field);//Перепесать эту херь
+                    indexes = IsRightDirection(indexes);
                     if (Field[indexes.I_index, indexes.J_index] is KilledMark || Field[indexes.I_index, indexes.J_index] is MissedMark)
                     {
                         isPositiveDirection = !isPositiveDirection;
@@ -393,105 +391,72 @@ namespace SeaBattle.BuisnessLogic
         {
             Field[Indexes.I_index, Indexes.J_index] = Mark;
         }
-        private CellIndex ChangeAttackDirection(CellIndex indexes, string[,] Field)
+        private CellIndex ChangeAttackDirection(CellIndex indexes, CellIndex IndexToAdd)
         {
+            ChangeDirection:
+            if (isHorizontal is true && isPositiveDirection is true)
+            {
+                if (IndexToAdd.J_index + 1 <= 10 && IndexToAdd.J_index >= 1)
+                {
+                    indexes.J_index = IndexToAdd.J_index + 1;
+                    indexes.I_index = IndexToAdd.I_index;
+                    isPositiveDirection = true;
+                    return indexes;
+                }
+                isPositiveDirection = !isPositiveDirection;
+            }
+            if (isHorizontal is true && isPositiveDirection is false)
+            {
+                if (IndexToAdd.J_index - 1 >= 1 && IndexToAdd.J_index <= 10)
+                {
+                    indexes.J_index = IndexToAdd.J_index - 1;
+                    indexes.I_index = IndexToAdd.I_index;
+                    isPositiveDirection = false;
+                    return indexes;
+                }
+                isPositiveDirection = !isPositiveDirection;
+                goto ChangeDirection;
+            }
+
+            if (isHorizontal is false && isPositiveDirection is true)
+            {
+                if (IndexToAdd.I_index + 1 <= 10 && IndexToAdd.I_index >= 1)
+                {
+                    indexes.I_index = IndexToAdd.I_index + 1;
+                    indexes.J_index = IndexToAdd.J_index;
+                    isPositiveDirection = true;
+                    return indexes;
+                }
+                isPositiveDirection = !isPositiveDirection;
+            }
+            if (isHorizontal is false && isPositiveDirection is false)
+            {
+                if (IndexToAdd.I_index - 1 >= 1 && IndexToAdd.I_index <= 10)
+                {
+                    indexes.I_index = IndexToAdd.I_index - 1;
+                    indexes.J_index = IndexToAdd.J_index;
+                    return indexes;
+                }
+                isPositiveDirection = !isPositiveDirection;
+                goto ChangeDirection;
+            }
+            return indexes;
+        }
+        private CellIndex IsRightDirection(CellIndex indexes)
+        {
+            CellIndex IndexToAdd = new CellIndex();
+            IndexToAdd.I_index = fixed_I;
+            IndexToAdd.J_index = fixed_J;
             if (CountOfAttackInOneDirection >= 1)
             {
-            ChangeDirection:
-                if (isHorizontal)
-                {
-                    if (isPositiveDirection is true)
-                    {
-                        if (indexes.J_index + 1 <= 10)
-                        {
-                            indexes.J_index++;
-                            isPositiveDirection = true;
-                            return indexes;
-                        }
-                        isPositiveDirection = !isPositiveDirection;
-                    }
-                    if (isPositiveDirection is false)
-                    {
-                        if (indexes.J_index - 1 >= 1)
-                        {
-                            indexes.J_index--;
-                            isPositiveDirection = false;
-                            return indexes;
-                        }
-                        isPositiveDirection = !isPositiveDirection;
-                        goto ChangeDirection;
-                    }
-                }
-                if (!isHorizontal)
-                {
-                    if (isPositiveDirection is true)
-                    {
-                        if (indexes.I_index + 1 <= 10)
-                        {
-                            indexes.I_index++;
-                            isPositiveDirection = true;
-                            return indexes;
-                        }
-                        isPositiveDirection = !isPositiveDirection;
-                    }
-                    if (isPositiveDirection is false)
-                    {
-                        if (indexes.I_index - 1 >= 1)
-                        {
-                            indexes.I_index--;
-                            isPositiveDirection = false;
-                            return indexes;
-                        }
-                        isPositiveDirection = !isPositiveDirection;
-                        goto ChangeDirection;
-                    }
-                }
+                ChangeAttackDirection(indexes, indexes);
+                return indexes;
             }
+            ChangeAttackDirection(indexes, IndexToAdd);
 
-        _ChangeDirection:
-            if (isHorizontal && isPositiveDirection)
-            {
-                if (fixed_J < 10 && fixed_J >= 1)
-                {
-                    indexes.I_index = fixed_I;
-                    indexes.J_index = fixed_J + 1;
-                    return indexes;
-                }
-                isPositiveDirection = !isPositiveDirection;
-            }
-            if (isHorizontal && !isPositiveDirection)
-            {
-                if (fixed_J > 1 && fixed_J <= 10)
-                {
-                    indexes.I_index = fixed_I;
-                    indexes.J_index = fixed_J - 1;
-                    return indexes;
-                }
-                isPositiveDirection = !isPositiveDirection;
-                goto _ChangeDirection;
-            }
-            if (!isHorizontal && isPositiveDirection)
-            {
-                if (fixed_I < 10 && fixed_I >= 1)
-                {
-                    indexes.I_index = fixed_I + 1;
-                    indexes.J_index = fixed_J;
-                    return indexes;
-                }
-                isPositiveDirection = !isPositiveDirection;
-            }
-            if (!isHorizontal && !isPositiveDirection)
-            {
-                if (fixed_I > 1 && fixed_I <= 10)
-                {
-                    indexes.I_index = fixed_I - 1;
-                    indexes.J_index = fixed_J;
-                    return indexes;
-                }
-                isPositiveDirection = !isPositiveDirection;
-                goto _ChangeDirection;
-            }
 
+    
+            
             return indexes;
         }
         private void ShipsModification(bool direction, CellIndex indexes, int CurrentDeck, int DecksCount, string mark)
@@ -510,6 +475,6 @@ namespace SeaBattle.BuisnessLogic
                     field[FirstDeckOfVerticalShip + i, indexes.J_index] = mark;
             }
         }
-#endregion
+        #endregion
     }
 }

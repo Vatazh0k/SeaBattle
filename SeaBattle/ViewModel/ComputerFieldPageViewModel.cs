@@ -112,7 +112,6 @@ namespace SeaBattle.ViewModel
         }
         #endregion
 
-
         #region PrivateMethods
         private int SearchCell(string cell)
         {
@@ -144,12 +143,6 @@ namespace SeaBattle.ViewModel
                             {
                                 ShowKilledShip(indexes.I_index, indexes.J_index);
                                 ReduceTheShipsCount();
-                                if (vm.OneDeckShip is 0 && vm.TwoDeckShip is 0 &&
-                                    vm.ThrieDeckShip is 0 && vm.FourDeckShip is 0)
-                                {
-                                    MessageBox.Show("You lose!", "Try Again", MessageBoxButton.OK, MessageBoxImage.Information);
-                                    isInProcess = false;
-                                }
                             }), DispatcherPriority.Normal);
                             Thread.Sleep(500);
                         }
@@ -158,7 +151,15 @@ namespace SeaBattle.ViewModel
 
                 }
 
-                MissedMarkAssignment(UserField.field);
+                MissedMarkAssignment(UserField.field); 
+
+                if (vm.OneDeckShip is 0 && vm.TwoDeckShip is 0 &&
+                    vm.ThrieDeckShip is 0 && vm.FourDeckShip is 0)
+                {
+                    MessageBox.Show("You lose!", "Try Again", MessageBoxButton.OK, MessageBoxImage.Information);
+                    isInProcess = false;
+                    return;
+                }
                 isComputerMove = false;
             });
             return;
@@ -358,6 +359,6 @@ namespace SeaBattle.ViewModel
 
         #endregion
         #endregion
-    }
-}
+    } 
+} 
 
