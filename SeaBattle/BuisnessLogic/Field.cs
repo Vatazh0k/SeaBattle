@@ -13,6 +13,11 @@ namespace SeaBattle.BuisnessLogic
     {
         public string[,] field { get; set; } = new string[11, 11];
 
+        public int OneDeckShip { get; set; } = 4;
+        public int TwoDeckShip { get; set; } = 3;
+        public int ThrieDeckShip { get; set; } = 2;
+        public int FourDeckShip { get; set; } = 1;
+
         #region ChangeAttackDirection_Data
         int CountOfAttackInOneDirection = 0;
         int totalShipsCount = 10;
@@ -49,6 +54,28 @@ namespace SeaBattle.BuisnessLogic
             if (canPutShip is false)
             return false;
             return true;
+        }
+        public string[,] UserAttck(string[,] Field, CellIndex Indexes)
+        {
+
+            bool isMissed = IsMissed(Field, Indexes);
+
+            if (isMissed is true)
+            {
+                MarkTheShip(Field, Indexes, MissedMark);
+                return Field;
+            }
+
+            MarkTheShip(Field, Indexes, KilledMark);
+
+            bool isShipKilled = IsKilled(Field, Indexes);
+
+            if (isShipKilled is false)
+                return Field;
+
+            ShipsFuneral(Field, Indexes);
+
+            return Field;
         }
         public int CountingDecks(string[,] Field, CellIndex indexes, ref int firtShipDeck, bool isHorizontal = true)
         {
@@ -99,7 +126,7 @@ namespace SeaBattle.BuisnessLogic
         }
         public bool DeterminingTheDirection(int firstIndex, int secondIndex, string[,] Field)
         {
-            bool isHorizontal = true;//random true or false
+            bool isHorizontal = true;
 
             for (int i = firstIndex; i < 11; i++)
             {
@@ -204,28 +231,7 @@ namespace SeaBattle.BuisnessLogic
             }
             return true;
         }
-        public string[,] UserAttck(string[,] Field, CellIndex Indexes)
-        {
 
-            bool isMissed = IsMissed(Field, Indexes);
-
-            if (isMissed is true)
-            {
-                MarkTheShip(Field, Indexes, MissedMark);
-                return Field;
-            }
-
-            MarkTheShip(Field, Indexes, KilledMark);
-
-            bool isShipKilled = IsKilled(Field, Indexes);
-
-            if (isShipKilled is false)
-                return Field;
-
-            ShipsFuneral(Field, Indexes);
-
-            return Field;
-        }
         public string[,] ComputerAttack(string[,] Field)
         {
             bool isComputerField = true;
@@ -317,6 +323,15 @@ namespace SeaBattle.BuisnessLogic
 
             bool direction = DeterminingTheDirection(Indexes.I_index, Indexes.J_index, field);
             int DecksCount = CountingDecks(field, Indexes, ref FirstShipsDeck, direction);
+
+            switch (DecksCount)
+            {
+                default: break;
+                case 1: OneDeckShip--; break;
+                case 2: TwoDeckShip--; break;
+                case 3: ThrieDeckShip--; break;
+                case 4: FourDeckShip--; break;
+            }
 
             int y_Axis_Ships = Indexes.I_index + 1;
             int x_Axis_Ships = Indexes.J_index + DecksCount - FirstShipsDeck;

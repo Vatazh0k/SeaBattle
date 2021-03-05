@@ -187,12 +187,7 @@ namespace SeaBattle.ViewModel
             int Cell = SearchCell(p.ToString());
             cellNumber = Cell.ToString();
 
-            if (Ships[Cell].isOnField is true)
-            {
-                if (UsersField.ChangeShipsDirection(UsersField.field, Cell))
-                    ChangeShipsDirection(Cell);
-                return;
-            }
+            if (Ships[Cell].isOnField is true) return;           
 
             selectionWindow = new ShipSelectionWindow(this);
             selectionWindow.ShowDialog();
@@ -599,7 +594,6 @@ namespace SeaBattle.ViewModel
         }
         public void DropAction(object sender, DragEventArgs e)
         {
-            isDroped = true;
             FrameworkElement feSource = e.Source as FrameworkElement;
             int PreviousCell = Convert.ToInt32(cellNumber);
             CellIndex PreviousCellIndexes = CellsConverter.ConverCellsToIndexes(Convert.ToInt32(PreviousCell));
@@ -608,12 +602,22 @@ namespace SeaBattle.ViewModel
             int NewCell = SearchCell(feSource.Name);
             if (NewCell is -1)
             {
-                CanPutShip(PreviousCell, shipsDecksCount, FirstDecksIndex, shipsDirection);
+                if (isDroped is false)
+                {
+                    CanPutShip(PreviousCell, shipsDecksCount, FirstDecksIndex, shipsDirection);
+
+                    if (UsersField.ChangeShipsDirection(UsersField.field, Convert.ToInt32(cellNumber)))
+                        ChangeShipsDirection(Convert.ToInt32(cellNumber));
+                }
+                isDroped = true;
                 return;
             }
 
+            isDroped = true;
+
             if (cellNumber != null)
             {
+
                 bool _canPutShip = CanPutShip(NewCell, shipsDecksCount, 0, shipsDirection);
 
                 if (_canPutShip is false)
@@ -636,6 +640,7 @@ namespace SeaBattle.ViewModel
         }
         public void DragLeave(object sender, DragEventArgs e)
         {
+            isDroped = false;
             if (cellNumber != null)
             {
                 int Cell = Convert.ToInt32(cellNumber);
@@ -687,7 +692,7 @@ namespace SeaBattle.ViewModel
 
         }
         #endregion
-        #endregion
-
+        #endregion 
+         
     }
 }        

@@ -87,20 +87,19 @@ namespace SeaBattle.ViewModel
 
             _ships = new ObservableCollection<Ship>(ships);
 
-           // ComputerField.field = ComputerField.FieldAutoGeneration(ComputerField.field);
+            ComputerField.field = ComputerField.FieldAutoGeneration(ComputerField.field);
         }
 
         #region Commands
         private bool CanUseMakeDamageCommand(object p) => !isComputerMove && isInProcess;
         private void MakeDamageCommandAction(object p)
         {
-            int Cell = SearchCell(p.ToString());
+            int Cell = SearchCell(p.ToString()); 
+            CellIndex indexes = CellsConverter.ConverCellsToIndexes(Cell);
 
             if (UserField.CanMakeDamage(ComputerField.field, Cell) is false)
                 return;
 
-            isComputerMove = true;
-            CellIndex indexes = CellsConverter.ConverCellsToIndexes(Cell);
             ComputerField.field = UserField.UserAttck(ComputerField.field, indexes);
             Ships = ComputersShipsAssignment(ComputerField.field, Cell);
 
@@ -127,52 +126,30 @@ namespace SeaBattle.ViewModel
             }
             return Cell;
         }
-        private void UsersShipsAssignment(string[,] field)//начинать с целл потом новый цикл заканчивать целл, непорядок с кол во кораблей
+        private void UsersShipsAssignment(string[,] field)
         {
             isComputerMove = true;
+            CellIndex indexes = new CellIndex();
             Task.Run(() =>
             {
                 for (int i = 0; i < 11; i++)
                 {
                     for (int j = 0; j < 11; j++)
                     {
-                        isComputerMove = true;
-
+                        indexes.I_index = i; 
+                        indexes.J_index = j;
                         if (vm.Ships[GetCell(i, j)].isDead is false && field[i, j] is KilledMark)
                         {
                             Application.Current.Dispatcher.BeginInvoke(new Action(() =>
                             {
-                                bool isKilled = false;
-                                int FirstDecksIndex = 0;
-                                bool Direction = ComputerField.DeterminingTheDirection(i, j, field);
-                                CellIndex indexes = new CellIndex(); indexes.I_index = i; indexes.J_index = j;
-                                int DecksCount = ComputerField.CountingDecks(field, indexes, ref FirstDecksIndex, Direction);
-
-                                for (int k = 0; k < DecksCount; k++)
+                                ShowKilledShip(indexes.I_index, indexes.J_index);
+                                ReduceTheShipsCount();
+                                if (vm.OneDeckShip is 0 && vm.TwoDeckShip is 0 &&
+                                    vm.ThrieDeckShip is 0 && vm.FourDeckShip is 0)
                                 {
-                                    int I = indexes.I_index;
-                                    int J = indexes.J_index;
-                                    _ = Direction is true ? J += k - FirstDecksIndex : I += k - FirstDecksIndex;
-                                    if (I > 10 || J > 10) continue;
-                                    if (field[I, J] is KilledMark)
-                                    {
-                                        isKilled = true;
-                                        continue;
-                                    }
-                                    isKilled = false;
-                                    break;
+                                    MessageBox.Show("You lose!", "Try Again", MessageBoxButton.OK, MessageBoxImage.Information);
+                                    isInProcess = false;
                                 }
-                                if(isKilled is true)
-                                switch (DecksCount)
-                                {
-                                    default: break;
-                                    case 1: vm.OneDeckShip--; break;
-                                    case 2: vm.TwoDeckShip--; break;
-                                    case 3: vm.ThrieDeckShip--; break;
-                                    case 4: vm.FourDeckShip--; break;
-                                }
-                                indexes.I_index = i; indexes.J_index = j;
-                                ShowKilledShip(CellsConverter.ConvertIndexesToCell(indexes));
                             }), DispatcherPriority.Normal);
                             Thread.Sleep(500);
                         }
@@ -186,40 +163,105 @@ namespace SeaBattle.ViewModel
             });
             return;
         }
-        private void ShowKilledShip(int cell)
+        private ObservableCollection<Ship> ComputersShipsAssignment(string[,] field, int cell)
         {
-            int Key = 0;
-            if (vm.Ships[cell].isHorizontal is true) 
+            CellIndex indexes = CellsConverter.ConverCellsToIndexes(cell);
+
+            if (Ships[GetCell(indexes.I_index, indexes.J_index)].isOnField is false && field[indexes.I_index, indexes.J_index] is MissedMark)
             {
-                foreach (KeyValuePair<int, string> item in PathToShipContent.HorizontalShips)
-                {
-                    if (item.Value == vm.Ships[cell].ContentPath)
-                    {
-                        Key = item.Key;
-                        break;
-                    }
-                }
-                ShipsOptions(vm.Ships, cell, PathToShipContent.Horizontal_Dead_Ships[Key], 1);
-            }
-            if (vm.Ships[cell].isHorizontal is false)
-            {
-                foreach (KeyValuePair<int, string> item in PathToShipContent.VerticalShips)
-                {
-                    if (item.Value == vm.Ships[cell].ContentPath)
-                    {
-                        Key = item.Key;
-                        break;
-                    }
-                }
-                ShipsOptions(vm.Ships, cell, PathToShipContent.Vertical_Dead_Ships[Key], 1);
+                ShipsOptions(Ships, GetCell(indexes.I_index, indexes.J_index), PathToShipContent.MissedMark, 0.5);
+                isComputerMove = true;
+                MissCounter++;
+                return Ships;
             }
 
+            for (int i = 0; i < 11; i++)
+            {
+                for (int j = 0; j < 11; j++)
+                {
+                    if (Ships[GetCell(i, j)].isDead is false && field[i, j] is MissedMark)
+                    {
+                        ShipsOptions(Ships, GetCell(i, j), PathToShipContent.MissedMark, 0.5);
+                        continue;
+                    }
+                    if (Ships[GetCell(i, j)].isDead is false && field[i, j] is KilledMark)
+                    {
+                        isComputerMove = false;
+                        int FirstDecksIndex = 0;
+                        bool Direction = ComputerField.DeterminingTheDirection(indexes.I_index, indexes.J_index, field);
+                        int DecksCount = ComputerField.CountingDecks(field, indexes, ref FirstDecksIndex, Direction);
+                        bool isKilled = IsKilled(DecksCount, indexes, FirstDecksIndex, field, Direction);
+
+                        if (isKilled is false) ShipsOptions(Ships, GetCell(i, j), PathToShipContent.KilledShip, 1);
+                        if (isKilled is true)
+                        {
+                            int Cell = GetCell(i, j);
+                            _ = Direction is true ?
+                                ShowHorizontalShips(Ships, DecksCount, Cell - FirstDecksIndex) :
+                                ShowDeadVerticalShips(Ships, DecksCount, Cell - FirstDecksIndex * 11);
+                            NumberOfRemainingComputerShips--;
+                            if (NumberOfRemainingComputerShips is 0)
+                            {
+                                MessageBox.Show("You win!", "Congratulation", MessageBoxButton.OK, MessageBoxImage.Information);
+                                isInProcess = false;
+                            }
+                        }
+                    }
+                }
+            }
+
+            return Ships;
+        }
+        private bool IsKilled(int DecksCount, CellIndex indexes, int FirstDecksIndex, string[,] field, bool Direction)
+        {
+            bool isKilled = false;
+            for (int k = 0; k < DecksCount; k++)
+            {
+                int I = indexes.I_index;
+                int J = indexes.J_index;
+                _ = Direction is true ? J += k - FirstDecksIndex : I += k - FirstDecksIndex;
+                if (I > 10 || J > 10) continue;
+                if (field[I, J] is KilledMark)
+                {
+                    isKilled = true;
+                    continue;
+                }
+                isKilled = false;
+                break;
+            }
+            return isKilled;
         }
         private int GetCell(int i, int j)
         {
             return i * 11 + j;
         }
         #region Show Ships
+        private void ShowKilledShip(int i, int j)
+        {
+            int Key = 0;
+            if (vm.Ships[GetCell(i, j)].isHorizontal is true)
+            {
+                Key = PathToShipContent.HorizontalShips
+                .FirstOrDefault(x => x.Value == vm.Ships[GetCell(i, j)].ContentPath).Key;
+
+                ShipsOptions(vm.Ships, GetCell(i, j), PathToShipContent.Horizontal_Dead_Ships[Key], 1);
+            }
+            if (vm.Ships[GetCell(i, j)].isHorizontal is false)
+            {
+                Key = PathToShipContent.VerticalShips
+                .FirstOrDefault(x => x.Value == vm.Ships[GetCell(i, j)].ContentPath).Key;
+
+                ShipsOptions(vm.Ships, GetCell(i, j), PathToShipContent.Vertical_Dead_Ships[Key], 1);
+            }
+
+        }
+        private void ReduceTheShipsCount()
+        {
+            vm.OneDeckShip = ComputerField.OneDeckShip;
+            vm.TwoDeckShip = ComputerField.TwoDeckShip;
+            vm.ThrieDeckShip = ComputerField.ThrieDeckShip;
+            vm.FourDeckShip = ComputerField.FourDeckShip;
+        }
         private void ShipsOptions(ObservableCollection<Ship> Ships, int cell, string Path, double Thickness, bool Direction = true)
         {
             Ships[cell] = new Ship
@@ -295,69 +337,6 @@ namespace SeaBattle.ViewModel
 
             return Ships;
         }
-        private ObservableCollection<Ship> ComputersShipsAssignment(string[,] field, int cell)
-        {
-            CellIndex indexes = CellsConverter.ConverCellsToIndexes(cell);
-
-            if (Ships[GetCell(indexes.I_index, indexes.J_index)].isOnField is false && field[indexes.I_index, indexes.J_index] is MissedMark)
-            {
-                ShipsOptions(Ships, GetCell(indexes.I_index, indexes.J_index), PathToShipContent.MissedMark, 0.5);
-                isComputerMove = true;
-                MissCounter++;
-                return Ships;
-            }
-
-            for (int i = 0; i < 11; i++)
-            {
-                for (int j = 0; j < 11; j++)
-                {
-                    if (Ships[GetCell(i, j)].isDead is false && field[i, j] is MissedMark)
-                    {
-                        ShipsOptions(Ships, GetCell(i, j), PathToShipContent.MissedMark, 0.5);
-                        continue;
-                    }
-                    if (Ships[GetCell(i, j)].isDead is false && field[i, j] is KilledMark)
-                    {
-                        bool isKilled = false;
-                        isComputerMove = false;
-                        int FirstDecksIndex = 0;
-                        bool Direction = ComputerField.DeterminingTheDirection(indexes.I_index, indexes.J_index, field);
-                        int DecksCount = ComputerField.CountingDecks(field, indexes, ref FirstDecksIndex, Direction);
-
-                        for (int k = 0; k < DecksCount; k++)
-                        {
-                            int I = indexes.I_index;
-                            int J = indexes.J_index;
-                            _ = Direction is true ? J += k - FirstDecksIndex : I += k - FirstDecksIndex;
-                            if (I > 10 || J > 10) continue;
-                            if (field[I, J] is KilledMark)
-                            {
-                                isKilled = true;
-                                continue;
-                            }
-                            isKilled = false;
-                            break;
-                        }
-                        if (isKilled is false) ShipsOptions(Ships, GetCell(i, j), PathToShipContent.KilledShip, 1);
-                        if (isKilled is true && Ships[GetCell(i, j)].isDead is false)
-                        {
-                            int Cell = GetCell(i, j);
-                            _ = Direction is true ?
-                                ShowHorizontalShips(Ships, DecksCount, Cell - FirstDecksIndex) :
-                                ShowDeadVerticalShips(Ships, DecksCount, Cell - FirstDecksIndex * 11);
-                            NumberOfRemainingComputerShips--;
-                            if (NumberOfRemainingComputerShips is 0)
-                            {
-                                MessageBox.Show("You win!", "Congratulation", MessageBoxButton.OK, MessageBoxImage.Information);
-                                isInProcess = false;
-                            }
-                        }
-                    }
-                }
-            }
-
-            return Ships;
-        }
         private void MissedMarkAssignment(string[,] field)
         {
             Application.Current.Dispatcher.BeginInvoke(new Action(() =>
@@ -370,13 +349,13 @@ namespace SeaBattle.ViewModel
                         if (vm.Ships[GetCell(i, j)].isDead is false && field[i, j] is MissedMark)
                         {
                             ShipsOptions(vm.Ships, GetCell(i, j), PathToShipContent.MissedMark, 0.5);
-
                         }
                     }
                 }
                 isComputerMove = false;
             }));
         }
+
         #endregion
         #endregion
     }

@@ -125,7 +125,7 @@ namespace SeaBattle
             button[i, j].Command = vm.CreatingShipsCommand;
             button[i, j].CommandParameter = button[i, j].Name;
             button[i, j].AllowDrop = true;  
-            button[i, j].MouseDown += vm.DragTheShipOnTheFieldAction;
+            button[i, j].PreviewMouseLeftButtonDown += vm.DragTheShipOnTheFieldAction;
             button[i, j].DragEnter += vm.DragEnter;
             button[i, j].DragLeave += vm.DragLeave;
             button[i, j].Drop += vm.DropAction;
