@@ -42,6 +42,8 @@ namespace SeaBattle.BuisnessLogic
             CellIndex indexes = CellsConverter.ConverCellsToIndexes(cell);
             int CurrentDeck = 0;
 
+            if (cell is 0) return false;
+
             bool direction = DeterminingTheDirection(indexes.I_index, indexes.J_index, field);
 
             int DecksInShipCount = CountingDecks(field, indexes, ref CurrentDeck, direction);
