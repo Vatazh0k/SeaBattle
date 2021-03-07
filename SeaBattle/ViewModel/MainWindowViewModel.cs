@@ -261,7 +261,7 @@ namespace SeaBattle.ViewModel
                         indexes.I_index = i;
                         indexes.J_index = j;
                         Direction = UsersField.DeterminingTheDirection(i, j, UsersField.field);
-                        DecksCount = UsersField.CountingDecks(UsersField.field, indexes, ref FirstDeckInde, Direction);
+                        DecksCount = UsersField.CountingDecks(UsersField.field, indexes, ref FirstDeckInde);
                         if (Direction)
                         {
                             ShowHorizontalShips(DecksCount, GetCell(i, j));
@@ -370,7 +370,7 @@ namespace SeaBattle.ViewModel
             CellIndex Indexes = CellsConverter.ConverCellsToIndexes(Cell);
 
             int FirstDecksIndex = 0;
-            int DecksCount = UsersField.CountingDecks(UsersField.field, Indexes, ref FirstDecksIndex, Ships[Cell].isHorizontal);
+            int DecksCount = UsersField.CountingDecks(UsersField.field, Indexes, ref FirstDecksIndex);
 
 
 
@@ -418,7 +418,7 @@ namespace SeaBattle.ViewModel
         {
             int firstDecksIndex = 0;
             CellIndex Indexes = CellsConverter.ConverCellsToIndexes(CellNumber);
-            int DecksCount = UsersField.CountingDecks(UsersField.field, Indexes, ref firstDecksIndex, Ships[CellNumber].isHorizontal);
+            int DecksCount = UsersField.CountingDecks(UsersField.field, Indexes, ref firstDecksIndex);
 
             if (Ships[CellNumber].isHorizontal)
             {
@@ -648,8 +648,7 @@ namespace SeaBattle.ViewModel
 
                 if (UsersField.field[_cellIndexes.I_index, _cellIndexes.J_index] is null)
                     goto PositionValidation;
-                int DecksCount = UsersField.CountingDecks
-                (UsersField.field, _cellIndexes, ref FirstDecksIndex, Ships[Cell].isHorizontal);
+                int DecksCount = UsersField.CountingDecks(UsersField.field, _cellIndexes, ref FirstDecksIndex);
                 DeleteShip(Convert.ToInt32(cellNumber), _cellIndexes, FirstDecksIndex, DecksCount);
             }
         PositionValidation:

@@ -190,7 +190,7 @@ namespace SeaBattle.ViewModel
                         isComputerMove = false;
                         int FirstDecksIndex = 0;
                         bool Direction = ComputerField.DeterminingTheDirection(indexes.I_index, indexes.J_index, field);
-                        int DecksCount = ComputerField.CountingDecks(field, indexes, ref FirstDecksIndex, Direction);
+                        int DecksCount = ComputerField.CountingDecks(field, indexes, ref FirstDecksIndex);
                         bool isKilled = IsKilled(DecksCount, indexes, FirstDecksIndex, field, Direction);
 
                         if (isKilled is false) ShipsOptions(Ships, GetCell(i, j), PathToShipContent.KilledShip, 1);
