@@ -130,6 +130,7 @@ namespace SeaBattle.ViewModel
         private void UsersShipsAssignment(string[,] field)
         {
             isComputerMove = true;
+            bool isMissed = true;
             CellIndex indexes = new CellIndex();
             Task.Run(() =>
             {
@@ -141,6 +142,8 @@ namespace SeaBattle.ViewModel
                         indexes.J_index = j;
                         if (vm.Ships[GetCell(i, j)].isDead is false && field[i, j] is KilledMark)
                         {
+                            isMissed = false;
+                            vm.AttackHint = ShowAttackHint(i, j);
                             Application.Current.Dispatcher.BeginInvoke(new Action(() =>
                             {
                                 ShowKilledShip(indexes.I_index, indexes.J_index);
@@ -148,12 +151,12 @@ namespace SeaBattle.ViewModel
                             }), DispatcherPriority.Normal);
                             Thread.Sleep(500);
                         }
-
                     }
 
                 }
-
-                MissedMarkAssignment(UserField.field);
+                if(isMissed)
+                Thread.Sleep(1000);
+                MissedMarkAssignment(UserField.field, isMissed);
 
                 if (vm.OneDeckShip is 0 && vm.TwoDeckShip is 0 &&
                     vm.ThrieDeckShip is 0 && vm.FourDeckShip is 0)
@@ -165,6 +168,12 @@ namespace SeaBattle.ViewModel
                 isComputerMove = false;
             });
             return;
+        }
+        private string ShowAttackHint(int i, int j)
+        {
+            char[] Alphabet = new char[] { ' ', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J' };
+            vm.OpacityAttackHint = 1;
+            return "Last attack in cell " + i + Alphabet[j];
         }
         private ObservableCollection<Ship> ComputersShipsAssignment(string[,] field, int cell)
         {
@@ -340,7 +349,7 @@ namespace SeaBattle.ViewModel
 
             return Ships;
         }
-        private void MissedMarkAssignment(string[,] field)
+        private void MissedMarkAssignment(string[,] field, bool isMissed)
         {
             Application.Current.Dispatcher.BeginInvoke(new Action(() =>
             {
@@ -351,6 +360,7 @@ namespace SeaBattle.ViewModel
                         isComputerMove = true;
                         if (vm.Ships[GetCell(i, j)].isDead is false && field[i, j] is MissedMark)
                         {
+                            if (isMissed is true) vm.AttackHint = ShowAttackHint(i, j);
                             ShipsOptions(vm.Ships, GetCell(i, j), PathToShipContent.MissedMark, 0.5);
                         }
                     }

@@ -31,18 +31,23 @@ namespace SeaBattle.ViewModel
         private Field ComputerField;
 
         private const string ShipsMark = "O";
+        #region DragDropData
         private string cellNumber;
         private int shipsDecksCount;
         private bool shipsDirection = true;
         private bool isDroped = true;
         private int FirstDecksIndex;
+        #endregion
 
-
+        private string _AttackHint;
+        private double _OpacityAttackHint;
         private int _oneDeckShip;
         private int _twoDeckShip;
         private int _thireDeckShip;
         private int _fourDeckShip;
         #endregion
+
+     
 
         #region PUblic Data
         public Page StartMenue { get; set; }
@@ -96,6 +101,16 @@ namespace SeaBattle.ViewModel
             get { return _fourDeckShip; }
             set => Set(ref _fourDeckShip, value);
         }
+        public double OpacityAttackHint
+        {
+            get { return _OpacityAttackHint; }
+            set => Set(ref _OpacityAttackHint, value);
+        }
+        public string AttackHint
+        {
+            get { return _AttackHint; }
+            set => Set(ref _AttackHint, value);
+        }
         #endregion
         #endregion
 
@@ -126,7 +141,7 @@ namespace SeaBattle.ViewModel
             _color = new ObservableCollection<Brush>(colors);
             _ships = new ObservableCollection<Ship>(ships);
 
-        }
+        } 
 
         #region CanUseCommands
         private bool CanUseDragCommand(object p) => true;

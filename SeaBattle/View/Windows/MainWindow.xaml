@@ -90,7 +90,12 @@
                   Width="395"
                   Height="142">
 
-
+                <Label Content="{Binding AttackHint}"
+                       Opacity="{Binding OpacityAttackHint}"
+                       FontFamily="MV Boli"
+                       VerticalAlignment="Top"
+                       HorizontalAlignment="Center"
+                       FontSize="18"/>
 
                 <Label Margin="32,50,317,48"
                        Name="OneDeckShip">
