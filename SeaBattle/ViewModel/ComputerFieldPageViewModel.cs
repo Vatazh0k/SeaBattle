@@ -24,6 +24,7 @@ namespace SeaBattle.ViewModel
         private ObservableCollection<Ship> _ships;
         private Field UserField;
         private Field ComputerField;
+        private ComputerIntelligence ComputerIntelligence;
         private CellIndex _indexes;
 
 
@@ -68,6 +69,7 @@ namespace SeaBattle.ViewModel
             this.vm = vm;
             this.UserField = UserField;
             this.ComputerField = ComputerField;
+            ComputerIntelligence = new ComputerIntelligence(UserField, ComputerField);
 
             #region Commands
             MakeDamageCommand = new Command(MakeDamageCommandAction, CanUseMakeDamageCommand);
@@ -87,7 +89,7 @@ namespace SeaBattle.ViewModel
 
             _ships = new ObservableCollection<Ship>(ships);
 
-            ComputerField.field = ComputerField.FieldAutoGeneration();
+            ComputerField.field = ComputerIntelligence.FieldAutoGeneration();
         }
 
         #region Commands
@@ -100,13 +102,13 @@ namespace SeaBattle.ViewModel
             if (ComputerField.CanMakeDamage(Cell) is false)
                 return;
 
-            ComputerField.field = ComputerField.UserAttck(indexes);
+            ComputerField.field = ComputerField.Attck(indexes);
             Ships = ComputersShipsAssignment(ComputerField.field, Cell);
 
             if (isComputerMove is false)
                 return;
 
-            UserField.field = UserField.ComputerAttack();
+            UserField.field = ComputerIntelligence.ComputerAttack();
             UsersShipsAssignment(UserField.field);
 
         }
