@@ -10,8 +10,8 @@ namespace SeaBattle.Resource
         public int J_index { get; set; }
         public CellIndex(int i, int j)
         {
-            i = I_index;
-            j = J_index;
+            I_index = i;
+            J_index = j;
         }
         public CellIndex()
         {

@@ -87,26 +87,26 @@ namespace SeaBattle.ViewModel
 
             _ships = new ObservableCollection<Ship>(ships);
 
-            ComputerField.field = ComputerField.FieldAutoGeneration(ComputerField.field);
+            ComputerField.field = ComputerField.FieldAutoGeneration();
         }
 
         #region Commands
         private bool CanUseMakeDamageCommand(object p) => !isComputerMove && isInProcess;
         private void MakeDamageCommandAction(object p)
         {
-            int Cell = SearchCell(p.ToString()); 
+            int Cell = SearchCell(p.ToString());
             CellIndex indexes = CellsConverter.ConverCellsToIndexes(Cell);
 
-            if (UserField.CanMakeDamage(ComputerField.field, Cell) is false)
+            if (ComputerField.CanMakeDamage(Cell) is false)
                 return;
 
-            ComputerField.field = UserField.UserAttck(ComputerField.field, indexes);
+            ComputerField.field = ComputerField.UserAttck(indexes);
             Ships = ComputersShipsAssignment(ComputerField.field, Cell);
 
             if (isComputerMove is false)
                 return;
 
-            UserField.field = ComputerField.ComputerAttack(UserField.field);
+            UserField.field = UserField.ComputerAttack();
             UsersShipsAssignment(UserField.field);
 
         }
@@ -135,7 +135,7 @@ namespace SeaBattle.ViewModel
                 {
                     for (int j = 0; j < 11; j++)
                     {
-                        indexes.I_index = i; 
+                        indexes.I_index = i;
                         indexes.J_index = j;
                         if (vm.Ships[GetCell(i, j)].isDead is false && field[i, j] is KilledMark)
                         {
@@ -151,7 +151,7 @@ namespace SeaBattle.ViewModel
 
                 }
 
-                MissedMarkAssignment(UserField.field); 
+                MissedMarkAssignment(UserField.field);
 
                 if (vm.OneDeckShip is 0 && vm.TwoDeckShip is 0 &&
                     vm.ThrieDeckShip is 0 && vm.FourDeckShip is 0)
@@ -189,8 +189,8 @@ namespace SeaBattle.ViewModel
                     {
                         isComputerMove = false;
                         int FirstDecksIndex = 0;
-                        bool Direction = ComputerField.DeterminingTheDirection(indexes.I_index, indexes.J_index, field);
-                        int DecksCount = ComputerField.CountingDecks(field, indexes, ref FirstDecksIndex);
+                        bool Direction = ComputerField.DeterminingTheDirection(indexes.I_index, indexes.J_index);
+                        int DecksCount = ComputerField.CountingDecks(indexes, ref FirstDecksIndex);
                         bool isKilled = IsKilled(DecksCount, indexes, FirstDecksIndex, field, Direction);
 
                         if (isKilled is false) ShipsOptions(Ships, GetCell(i, j), PathToShipContent.KilledShip, 1);
@@ -258,10 +258,10 @@ namespace SeaBattle.ViewModel
         }
         private void ReduceTheShipsCount()
         {
-            vm.OneDeckShip = ComputerField.OneDeckShip;
-            vm.TwoDeckShip = ComputerField.TwoDeckShip;
-            vm.ThrieDeckShip = ComputerField.ThrieDeckShip;
-            vm.FourDeckShip = ComputerField.FourDeckShip;
+            vm.OneDeckShip = UserField.OneDeckShip;
+            vm.TwoDeckShip = UserField.TwoDeckShip;
+            vm.ThrieDeckShip = UserField.ThrieDeckShip;
+            vm.FourDeckShip = UserField.FourDeckShip;
         }
         private void ShipsOptions(ObservableCollection<Ship> Ships, int cell, string Path, double Thickness, bool Direction = true)
         {
@@ -292,14 +292,14 @@ namespace SeaBattle.ViewModel
                     ShipsOptions(Ships, cell + 11, PathToShipContent.Vertical_Dead_TwoDeckShip_SecondDeck, 1, false);
                     break;
                 case 3:
-                    ShipsOptions(Ships,cell, PathToShipContent.Vertical_Dead_ThrieDeckShip_FirstDeck, 1, false);
-                    ShipsOptions(Ships,cell + 11, PathToShipContent.Vertical_Dead_ThrieDeckShip_SecondDeck, 1, false);
+                    ShipsOptions(Ships, cell, PathToShipContent.Vertical_Dead_ThrieDeckShip_FirstDeck, 1, false);
+                    ShipsOptions(Ships, cell + 11, PathToShipContent.Vertical_Dead_ThrieDeckShip_SecondDeck, 1, false);
                     ShipsOptions(Ships, cell + 22, PathToShipContent.Vertical_Dead_ThrieDeckShip_ThirdDeck, 1, false);
                     break;
                 case 4:
-                    ShipsOptions(Ships,cell, PathToShipContent.Vertical_Dead_FourDeckShip_FirstDeck, 1, false);
-                    ShipsOptions(Ships,cell + 11, PathToShipContent.Vertical_Dead_FourDeckShip_SecondDeck, 1, false);
-                    ShipsOptions(Ships,cell + 22, PathToShipContent.Vertical_Dead_FourDeckShip_ThirdDeck, 1, false);
+                    ShipsOptions(Ships, cell, PathToShipContent.Vertical_Dead_FourDeckShip_FirstDeck, 1, false);
+                    ShipsOptions(Ships, cell + 11, PathToShipContent.Vertical_Dead_FourDeckShip_SecondDeck, 1, false);
+                    ShipsOptions(Ships, cell + 22, PathToShipContent.Vertical_Dead_FourDeckShip_ThirdDeck, 1, false);
                     ShipsOptions(Ships, cell + 33, PathToShipContent.Vertical_Dead_FourDeckShip_FourDeck, 1, false);
                     break;
 
@@ -359,6 +359,6 @@ namespace SeaBattle.ViewModel
 
         #endregion
         #endregion
-    } 
-} 
+    }
+}
 

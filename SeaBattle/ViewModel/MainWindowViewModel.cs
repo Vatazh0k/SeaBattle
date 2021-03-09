@@ -147,7 +147,7 @@ namespace SeaBattle.ViewModel
         private void ShipsAutoGenerationAction(object p)
         {
             CleanField();
-            UsersField.FieldAutoGeneration(UsersField.field);
+            UsersField.FieldAutoGeneration();
             Ships = ShipsAssignment(UsersField.field);
             CleanShips();
         }
@@ -187,7 +187,7 @@ namespace SeaBattle.ViewModel
             int Cell = SearchCell(p.ToString());
             cellNumber = Cell.ToString();
 
-            if (Ships[Cell].isOnField is true) return;           
+            if (Ships[Cell].isOnField is true) return;
 
             selectionWindow = new ShipSelectionWindow(this);
             selectionWindow.ShowDialog();
@@ -238,7 +238,7 @@ namespace SeaBattle.ViewModel
         private void CleanField()
         {
             ShipsReplenishment();
-            UsersField.field = UsersField.CleanField(UsersField.field);
+            UsersField.field = UsersField.CleanField();
 
             Color = new ObservableCollection<Brush>(_color);
 
@@ -260,8 +260,8 @@ namespace SeaBattle.ViewModel
                         int FirstDeckInde = 0;
                         indexes.I_index = i;
                         indexes.J_index = j;
-                        Direction = UsersField.DeterminingTheDirection(i, j, UsersField.field);
-                        DecksCount = UsersField.CountingDecks(UsersField.field, indexes, ref FirstDeckInde);
+                        Direction = UsersField.DeterminingTheDirection(i, j);
+                        DecksCount = UsersField.CountingDecks(indexes, ref FirstDeckInde);
                         if (Direction)
                         {
                             ShowHorizontalShips(DecksCount, GetCell(i, j));
@@ -335,7 +335,7 @@ namespace SeaBattle.ViewModel
                 Cell -= FirstDeckIndex * 11;
 
             CellIndex Indexes = CellsConverter.ConverCellsToIndexes(Cell);
-            bool CanPutShip = UsersField.CanPutShip(UsersField.field, Indexes.I_index, Indexes.J_index, DecksCount, Direction);
+            bool CanPutShip = UsersField.CanPutShip(Indexes.I_index, Indexes.J_index, DecksCount, Direction);
 
             if (CanPutShip is true)
             {
@@ -370,7 +370,7 @@ namespace SeaBattle.ViewModel
             CellIndex Indexes = CellsConverter.ConverCellsToIndexes(Cell);
 
             int FirstDecksIndex = 0;
-            int DecksCount = UsersField.CountingDecks(UsersField.field, Indexes, ref FirstDecksIndex);
+            int DecksCount = UsersField.CountingDecks(Indexes, ref FirstDecksIndex);
 
 
 
@@ -418,7 +418,7 @@ namespace SeaBattle.ViewModel
         {
             int firstDecksIndex = 0;
             CellIndex Indexes = CellsConverter.ConverCellsToIndexes(CellNumber);
-            int DecksCount = UsersField.CountingDecks(UsersField.field, Indexes, ref firstDecksIndex);
+            int DecksCount = UsersField.CountingDecks(Indexes, ref firstDecksIndex);
 
             if (Ships[CellNumber].isHorizontal)
             {
@@ -606,7 +606,7 @@ namespace SeaBattle.ViewModel
                 {
                     CanPutShip(PreviousCell, shipsDecksCount, FirstDecksIndex, shipsDirection);
 
-                    if (UsersField.ChangeShipsDirection(UsersField.field, Convert.ToInt32(cellNumber)))
+                    if (UsersField.ChangeShipsDirection(Convert.ToInt32(cellNumber)))
                         ChangeShipsDirection(Convert.ToInt32(cellNumber));
                 }
                 isDroped = true;
@@ -648,7 +648,7 @@ namespace SeaBattle.ViewModel
 
                 if (UsersField.field[_cellIndexes.I_index, _cellIndexes.J_index] is null)
                     goto PositionValidation;
-                int DecksCount = UsersField.CountingDecks(UsersField.field, _cellIndexes, ref FirstDecksIndex);
+                int DecksCount = UsersField.CountingDecks(_cellIndexes, ref FirstDecksIndex);
                 DeleteShip(Convert.ToInt32(cellNumber), _cellIndexes, FirstDecksIndex, DecksCount);
             }
         PositionValidation:
@@ -669,29 +669,29 @@ namespace SeaBattle.ViewModel
             CellIndex cellIndexes = CellsConverter.ConverCellsToIndexes(cell);
 
             if (shipsDirection is true)
-            for (int i = shipsDecksCount - 1; i >= 0; i--)
-            {
-                if (!UsersField.CanPutShip(UsersField.field, cellIndexes.I_index, cellIndexes.J_index, shipsDecksCount))
+                for (int i = shipsDecksCount - 1; i >= 0; i--)
                 {
-                    ShowRedHint(cell, cellIndexes.J_index);
-                    return;
+                    if (!UsersField.CanPutShip(cellIndexes.I_index, cellIndexes.J_index, shipsDecksCount))
+                    {
+                        ShowRedHint(cell, cellIndexes.J_index);
+                        return;
+                    }
+                    ShowGrinHint(cell, i);
                 }
-                ShowGrinHint(cell, i);
-            }
             if (shipsDirection is false)
-            for (int i = shipsDecksCount - 1; i >= 0; i--)
-            {
-                if (!UsersField.CanPutShip(UsersField.field, cellIndexes.I_index, cellIndexes.J_index, shipsDecksCount, false))
+                for (int i = shipsDecksCount - 1; i >= 0; i--)
                 {
-                    ShowRedHint(cell, cellIndexes.I_index, 11);
-                    return;
+                    if (!UsersField.CanPutShip(cellIndexes.I_index, cellIndexes.J_index, shipsDecksCount, false))
+                    {
+                        ShowRedHint(cell, cellIndexes.I_index, 11);
+                        return;
+                    }
+                    ShowGrinHint(cell, i, 11);
                 }
-                ShowGrinHint(cell, i, 11);
-            }
 
         }
         #endregion
-        #endregion 
-          
+        #endregion
+
     }
-}        
+}
