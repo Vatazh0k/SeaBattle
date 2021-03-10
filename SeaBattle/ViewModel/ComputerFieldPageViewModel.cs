@@ -28,7 +28,7 @@ namespace SeaBattle.ViewModel
         private CellIndex _indexes;
 
 
-        private bool isInProcess = true;
+        private bool GameInProcess = true;
         private bool isComputerMove = false;
         private string[,] TempArr = new string[11, 11];
         private const string KilledMark = "X";
@@ -75,7 +75,8 @@ namespace SeaBattle.ViewModel
             MakeDamageCommand = new Command(MakeDamageCommandAction, CanUseMakeDamageCommand);
             #endregion
 
-            var ships = Enumerable.Range(0, 121)
+            var ships = Enumerable
+            .Range(0, 121)
             .Select(i => new Ship
             {
                 Content = new Image
@@ -84,7 +85,6 @@ namespace SeaBattle.ViewModel
                     Stretch = Stretch.Fill
                 },
                 Border = new Thickness(0.5)
-
             });
 
             _ships = new ObservableCollection<Ship>(ships);
@@ -93,7 +93,7 @@ namespace SeaBattle.ViewModel
         }
 
         #region Commands
-        private bool CanUseMakeDamageCommand(object p) => !isComputerMove && isInProcess;
+        private bool CanUseMakeDamageCommand(object p) => !isComputerMove && GameInProcess;
         private void MakeDamageCommandAction(object p)
         {
             int Cell = SearchCell(p.ToString());
@@ -115,6 +115,35 @@ namespace SeaBattle.ViewModel
         #endregion
 
         #region PrivateMethods
+        private void UsersShipsAssignment(string[,] field)
+        {
+            bool isMissed = true;
+            Task.Run(() =>
+            {
+                for (int i = 0; i < 11; i++)
+                {
+                    for (int j = 0; j < 11; j++)
+                    {
+                        if (vm.Ships[GetCell(i, j)].isDead is false && field[i, j] is KilledMark)
+                        {
+                            isMissed = false;
+                            vm.AttackHint = ShowAttackHint(i, j);
+                            Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+                            {
+                                ShowKilledShip(i, j);
+                                ReduceTheShipsCount();
+                            }), DispatcherPriority.Normal);
+                            Thread.Sleep(500);
+                        }
+                    }
+                }
+
+                if(isMissed)
+                Thread.Sleep(700);
+                MissedMarkAssignment(UserField.field, isMissed);
+            });
+            return;
+        }
         private int SearchCell(string cell)
         {
             int Cell = 0;
@@ -126,48 +155,6 @@ namespace SeaBattle.ViewModel
                 Cell = Convert.ToInt32(cellString);
             }
             return Cell;
-        }
-        private void UsersShipsAssignment(string[,] field)
-        {
-            isComputerMove = true;
-            bool isMissed = true;
-            CellIndex indexes = new CellIndex();
-            Task.Run(() =>
-            {
-                for (int i = 0; i < 11; i++)
-                {
-                    for (int j = 0; j < 11; j++)
-                    {
-                        indexes.I_index = i;
-                        indexes.J_index = j;
-                        if (vm.Ships[GetCell(i, j)].isDead is false && field[i, j] is KilledMark)
-                        {
-                            isMissed = false;
-                            vm.AttackHint = ShowAttackHint(i, j);
-                            Application.Current.Dispatcher.BeginInvoke(new Action(() =>
-                            {
-                                ShowKilledShip(indexes.I_index, indexes.J_index);
-                                ReduceTheShipsCount();
-                            }), DispatcherPriority.Normal);
-                            Thread.Sleep(500);
-                        }
-                    }
-
-                }
-                if(isMissed)
-                Thread.Sleep(1000);
-                MissedMarkAssignment(UserField.field, isMissed);
-
-                if (vm.OneDeckShip is 0 && vm.TwoDeckShip is 0 &&
-                    vm.ThrieDeckShip is 0 && vm.FourDeckShip is 0)
-                {
-                    MessageBox.Show("You lose!", "Try Again", MessageBoxButton.OK, MessageBoxImage.Information);
-                    isInProcess = false;
-                    return;
-                }
-                isComputerMove = false;
-            });
-            return;
         }
         private string ShowAttackHint(int i, int j)
         {
@@ -215,7 +202,7 @@ namespace SeaBattle.ViewModel
                             if (NumberOfRemainingComputerShips is 0)
                             {
                                 MessageBox.Show("You win!", "Congratulation", MessageBoxButton.OK, MessageBoxImage.Information);
-                                isInProcess = false;
+                                GameInProcess = false;
                             }
                         }
                     }
@@ -357,13 +344,20 @@ namespace SeaBattle.ViewModel
                 {
                     for (int j = 0; j < 11; j++)
                     {
-                        isComputerMove = true;
                         if (vm.Ships[GetCell(i, j)].isDead is false && field[i, j] is MissedMark)
                         {
                             if (isMissed is true) vm.AttackHint = ShowAttackHint(i, j);
                             ShipsOptions(vm.Ships, GetCell(i, j), PathToShipContent.MissedMark, 0.5);
                         }
                     }
+                }
+
+                if (vm.OneDeckShip is 0 && vm.TwoDeckShip is 0 &&
+                  vm.ThrieDeckShip is 0 && vm.FourDeckShip is 0)
+                {
+                    MessageBox.Show("You lose!", "Try Again", MessageBoxButton.OK, MessageBoxImage.Information);
+                    GameInProcess = false;
+                    return;
                 }
                 isComputerMove = false;
             }));
