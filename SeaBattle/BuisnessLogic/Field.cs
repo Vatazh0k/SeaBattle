@@ -24,8 +24,6 @@ namespace SeaBattle.BuisnessLogic
         private const string MissedMark = " ";
         #endregion
 
-        public Field()
-        { }
         public bool ChangeShipsDirection(int cell)
         {
             CellIndex indexes = CellsConverter.ConverCellsToIndexes(cell);
